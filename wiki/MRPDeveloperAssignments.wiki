@@ -1,0 +1,13 @@
+#summary The current list of tasks assigned to developers.
+#labels Phase-Implementation
+
+= Introduction =
+
+Here is the current list of tasks assigned to developers of the MyRolePlay Project.
+
+
+= Current List of Developers =
+
+* Moncader
+* Quez
+
