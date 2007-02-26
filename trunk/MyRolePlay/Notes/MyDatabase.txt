@@ -1,0 +1,109 @@
+CREATE DATABASE databaseName
+REMOVE DATABASE databaseName
+RENAME DATABASE databaseName TO newDatabaseName
+ALTER DATABASE databaseName
+	CREATE TABLE tableName {(columnName, ...)}
+	REMOVE TABLE tableName
+	RENAME TABLE tableName TO newTableName
+	ALTER TABLE tableName	
+		ADD columnName
+		REMOVE columnName
+		RENAME columnName TO newColumnName
+		INSERT (value1, value2, ...)
+		DELETE WHERE columnName = $variable | 1|2|3|...  | "string"
+		ALTER columnName WHERE dataValue = $variable | 1|2|3|...  | "string" TO newDataValue
+READ DATABASE databaseName
+	GET columnName, ... FROM tableName TO $variable WHERE dataValue = $variable | 1|2|3|...  | "string"
+	SEARCH FOR $data IN columnName FROM tableName SEND TO $variable
+
+
+
+
+mdbOpenConsole("
+	CREATE DATABASE MyRolePlay
+	
+	ALTER DATABASE MyRolePlay (
+		CREATE TABLE Identification (profileName, firstName, middleName, surName, title, nickname)
+		CREATE TABLE Appearance (profileName, height, weight, eyeColour, description)
+
+		ALTER TABLE Identification (
+			ADD familyName
+
+			INSERT (\"FarlajFireSet\", \"Farlaj\", \"Magrik\", \"Trikara\", \"Executor of The Godslayic\", \"Farjy\", \"FamName\")
+			INSERT (\"Alternate ID\", \"Moncader\", \"Magrik\", \"Google\", \"sdafsdfyic\", \"Faadsfy\" \"FamilyName\")
+		)
+	)
+");
+
+
+
+
+MyRolePlay = {};
+
+table.insert(MyRolePlay, Identification);
+
+MyRolePlay.Identification = {};
+table.insert(MyRolePlay.Identification, profileName);
+table.insert(MyRolePlay.Identification, firstName);
+table.insert(MyRolePlay.Identification, middleName);
+table.insert(MyRolePlay.Identification, surName);
+table.insert(MyRolePlay.Identification, title);
+table.insert(MyRolePlay.Identification, nickname);
+
+MyRolePlay.Identification.profileName = {};
+MyRolePlay.Identification.firstName = {};
+MyRolePlay.Identification.middleName = {};
+MyRolePlay.Identification.surName = {};
+MyRolePlay.Identification.title = {};
+MyRolePlay.Identification.nickname = {};
+
+
+table.insert(MyRolePlay, Appearance);
+table.insert(MyRolePlay.Appearance, profileName);
+table.insert(MyRolePlay.Appearance, height);
+table.insert(MyRolePlay.Appearance, weight);
+table.insert(MyRolePlay.Appearance, eyeColour);
+table.insert(MyRolePlay.Appearance, description);
+
+MyRolePlay.Appearance.profileName = {};
+MyRolePlay.Appearance.height = {};
+MyRolePlay.Appearance.weight = {};
+MyRolePlay.Appearance.eyeColour = {};
+MyRolePlay.Appearance.description = {};
+
+table.insert(MyRolePlay.Identification, familyName);
+MyRolePlay.Identification.familyName = {};
+
+table.insert(MyRolePlay.Identification.profileName, table.getn(MyRolePlay.Identification.profileName) + 1);
+MyRolePlay.Identification.profileName[table.getn(MyRolePlay.Identification.profileName)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.firstName, table.getn(MyRolePlay.Identification.firstName) + 1);
+MyRolePlay.Identification.firstName[table.getn(MyRolePlay.Identification.firstName)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.middleName, table.getn(MyRolePlay.Identification.middleName) + 1);
+MyRolePlay.Identification.middleName[table.getn(MyRolePlay.Identification.middleName)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.surName, table.getn(MyRolePlay.Identification.surName) + 1);
+MyRolePlay.Identification.surName[table.getn(MyRolePlay.Identification.surName)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.title, table.getn(MyRolePlay.Identification.title) + 1);
+MyRolePlay.Identification.title[table.getn(MyRolePlay.Identification.title)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.nickname, table.getn(MyRolePlay.Identification.nickname) + 1);
+MyRolePlay.Identification.nickname[table.getn(MyRolePlay.Identification.nickname)] = "FarlajFireSet";
+
+
+table.insert(MyRolePlay.Identification.profileName, table.getn(MyRolePlay.Identification.profileName) + 1);
+MyRolePlay.Identification.profileName[table.getn(MyRolePlay.Identification.profileName)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.firstName, table.getn(MyRolePlay.Identification.firstName) + 1);
+MyRolePlay.Identification.firstName[table.getn(MyRolePlay.Identification.firstName)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.middleName, table.getn(MyRolePlay.Identification.middleName) + 1);
+MyRolePlay.Identification.middleName[table.getn(MyRolePlay.Identification.middleName)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.surName, table.getn(MyRolePlay.Identification.surName) + 1);
+MyRolePlay.Identification.surName[table.getn(MyRolePlay.Identification.surName)] = "FarlajFireSet";
+
+table.insert(MyRolePlay.Identification.title, table.getn(MyRolePlay.Identification.title) + 1);
+MyRolePlay.Identification.title[table.getn(MyRolePlay.Identification.title)] = "FarlajFireSet";

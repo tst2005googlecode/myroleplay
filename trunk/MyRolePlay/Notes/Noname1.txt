@@ -1,0 +1,2478 @@
+----------------------------------------------------------------------------------------------------------
+--			LOCALE										--
+----------------------------------------------------------------------------------------------------------
+if (GetLocale() == "enUS") then
+	MCO_LOCALE_MYTIME_MISSING_ERROR				= "ERROR: MyTime addon missing.";
+	MCO_LOCALE_FREE_CHANNEL_ERROR				= "Please free a channel if you would like to join ";
+	MCO_LOCALE_CHANNEL_INITIALIZED				= " Channel Initialized.";
+	MCO_LOCALE_DATAID_MISSING_ERROR				= "ERROR: Data Id is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
+	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+else
+	MCO_LOCALE_MYTIME_MISSING_ERROR				= "ERROR: MyTime addon missing.";
+	MCO_LOCALE_FREE_CHANNEL_ERROR				= "Please free a channel if you would like to join ";
+	MCO_LOCALE_CHANNEL_INITIALIZED				= " Channel Initialized.";
+	MCO_LOCALE_DATAID_MISSING_ERROR				= "ERROR: Data Id is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
+	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+end
+
+
+----------------------------------------------------------------------------------------------------------
+--			HEADER										--
+----------------------------------------------------------------------------------------------------------
+MCO_NAME = "MyCommunications";
+MCO_VERSION = 0.1;
+
+MyCommunication = {};
+MyCommunication.System = {};
+MyCommunication.System.Channels = {};
+
+mcoJoinedChannelList = {};
+
+mcoMessagesToSend = {};
+
+mcoEventList = {};
+
+MCO_DATA_TYPE_NIL = 0;
+MCO_DATA_TYPE_STRING = 1;
+MCO_DATA_TYPE_NUMBER = 2;
+MCO_DATA_TYPE_TABLE = 3;
+MCO_DATA_TYPE_FUNCTION = 4;
+MCO_DATA_TYPE_BOOLEAN = 5;
+
+mcoAbleToSendData = {};
+mcoChannelTimerId = {};
+---------------------------------------------------------
+--			FUNCTIONS                       --
+----------------------------------------------------------
+
+function mcoOnLoad()
+--/script NUM_CHAT_WINDOWS = 10;
+--/script CHAT_TELL_ALERT_TIME = 0;
+--/script SendChatMessage("test", "CHANNEL", GetDefaultLanguage("player"), 1);
+-- /script ChatTypeInfo["CHANNEL"].sticky = 1;
+ChatTypeInfo["CHANNEL"].sticky = 1;
+
+	if (not MTI_VERSION) then
+		mduDisplayMessage(MCO_LOCALE_MYTIME_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	end
+
+	--[[this:RegisterEvent("CHAT_MSG_CHANNEL");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_JOIN");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_LEAVE");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_LIST");
+	this:RegisterEvent("CHAT_MSG_EMOTE");
+	this:RegisterEvent("CHAT_MSG_GUILD");
+	this:RegisterEvent("CHAT_MSG_OFFICER");
+	this:RegisterEvent("CHAT_MSG_PARTY");
+	this:RegisterEvent("CHAT_MSG_RAID");
+	this:RegisterEvent("CHAT_MSG_RAID_LEADER");
+	this:RegisterEvent("CHAT_MSG_RAID_WARNING");
+	this:RegisterEvent("CHAT_MSG_SAY");
+	this:RegisterEvent("CHAT_MSG_SYSTEM");
+	this:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+	this:RegisterEvent("CHAT_MSG_WHISPER");
+	this:RegisterEvent("CHAT_MSG_WHISPER_INFORM");
+	this:RegisterEvent("CHAT_MSG_YELL");
+	this:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);]]
+	
+	--mcoJoinChannelId = mtiRegisterEvent(10, mcoJoinChannel, false);
+	--mcoJoinChannelWatcherId = mtiRegisterEvent(1, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoChannelJoined);
+	mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+	mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");
+
+	mtiRegisterEvent(0, mcoBeginTimer, false, "CHAT_MSG_CHANNEL");
+	mtiRegisterEvent(0, mcoTransmitData);
+end
+
+function mcoChannelJoined(arg1)
+	mduDisplayMessage(arg1 .. MCO_LOCALE_CHANNEL_INITIALIZED, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	table.insert(mcoChannelTimerId, arg1);
+	mcoChannelTimerId[arg1] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+	mduDisplayMessage(mcoChannelTimerId[arg1]);
+end
+
+function mcoRegisterAddonStartupChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	mcoJoinChannelId = mtiRegisterEvent(10, mcoJoinChannel, false);
+	mcoJoinChannelWatcherId = mtiRegisterEvent(1, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
+end
+
+function mcoJoinChannelWatcher()
+	if (arg1 == "YOU_JOINED") then
+		mcoRegisterChannel("MyWarcraft", "MyRolePlay", "Data", "Description");
+		mtiUnregisterEvent(mcoJoinChannelId);
+		mtiUnregisterEvent(mcoJoinChannelWatcherId);
+		--mcoOnEvent("MCO_CHANNEL_JOINED");
+	end	
+end
+
+function mcoJoinChannel()
+	mcoRegisterChannel("MyWarcraft", "MyRolePlay", "Data", "Description");
+	mtiUnregisterEvent(mcoJoinChannelId);
+	mtiUnregisterEvent(mcoJoinChannelWatcherId);
+	--mcoOnEvent("MCO_CHANNEL_JOINED");
+end
+
+function mcoRegisterEvent(event, eventFunction)
+	if (not mcoEventList[event]) then
+		table.insert(mcoEventList, event);
+		mcoEventList[event] = {};
+		mcoEventList[event].eventFunctions = {};
+		mcoManager:RegisterEvent(event);
+	end
+
+	table.insert(mcoEventList[event].eventFunctions, table.getn(mcoEventList[event].eventFunctions) + 1);
+	mcoEventList[event].eventFunctions[table.getn(mcoEventList[event].eventFunctions)] = eventFunction;
+end
+
+function mcoUnregisterEvent(event, eventFunction)
+	for i = 1, table.getn(mcoEventList[event].eventFunctions) do
+		if (mcoEventList[event].eventFunctions[i] == eventFunction) then
+			table.remove(mcoEventList[event].eventFunctions, i);
+
+			if (table.getn(mcoEventList[event]) == 0) then
+				table.remove(mcoEventList, event);
+				mcoManager:UnregisterEvent(event);
+			end
+
+			return;
+		end
+	end
+end
+
+function mcoOnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	for i, eventFunction in ipairs(mcoEventList) do
+		if (event == eventFunction) then
+			for j = 1, table.getn(mcoEventList[event].eventFunctions) do
+				mcoEventList[event].eventFunctions[j](arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+			end			
+		end
+	end
+end
+
+function mcoRegisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	if (string.len(subChannelOne) > 12 or string.len(subChannelTwo) > 12 or string.len(subChannelThree) > 12) then
+		mduDisplayMessage(MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	if (GetChannelName(masterChannel) > 0) then
+		if (not mcoJoinedChannelList[masterChannel]) then
+			table.insert(mcoJoinedChannelList, masterChannel);
+			mcoJoinedChannelList[masterChannel] = {};
+			mcoJoinedChannelList[masterChannel].DataId = {};
+		end
+
+		if (subChannelOne) then
+			if (not mcoJoinedChannelList[masterChannel][subChannelOne]) then
+				table.insert(mcoJoinedChannelList[masterChannel], subChannelOne);
+				mcoJoinedChannelList[masterChannel][subChannelOne] = {};
+				mcoJoinedChannelList[masterChannel][subChannelOne].DataId = {};
+			end
+
+			if (subChannelTwo) then
+				if (not mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo]) then
+					table.insert(mcoJoinedChannelList[masterChannel][subChannelOne], subChannelTwo);
+					mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo] = {};
+					mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo].DataId = {};
+				end
+
+				if (subChannelThree) then
+					if (not mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree]) then
+						table.insert(mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo], subChannelThree);
+						mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree] = {};
+						mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree].DataId = {};
+					end
+				end
+			end
+		end
+
+		mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+	end
+
+	if (GetChannelName(masterChannel) == 0) then
+		if (JoinChannelByName(masterChannel, MDU_EMPTY_STRING, nil) == nil) then
+			mduDisplayMessage(MCO_LOCALE_FREE_CHANNEL_ERROR .. masterChannel .. ".", MCO_NAME, .8, .8, 0, 1, 0, 0);
+		else
+			mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+			table.insert(mcoJoinedChannelList, masterChannel);
+			mcoJoinedChannelList[masterChannel] = {};
+			mcoJoinedChannelList[masterChannel].DataId = {};
+		end
+	end
+end
+
+function mcoUnregisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	
+end
+
+function mcoRegisterDataId(dataId, dataIdFunction, masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	dataId = tonumber(dataId);
+	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
+		if (masterChannel == channelLevelZero) then
+			if (subChannelOne) then
+				for j, channelLevelOne in ipairs(mcoJoinedChannelList[channelLevelZero]) do
+					if (subChannelOne == channelLevelOne) then
+						if (subChannelTwo) then
+							for j, channelLevelTwo in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne]) do
+								if (subChannelTwo == channelLevelTwo) then
+									if (subChannelThree) then
+										for j, channelLevelThree in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo]) do
+											if (subChannelThree == channelLevelThree) then
+												table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId, dataId);
+												mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId] = {};
+												mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId].dataIdFunction = dataIdFunction;
+
+												return;
+											end
+										end
+									end
+
+									table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId, dataId);
+									mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId] = {};
+									mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId].dataIdFunction = dataIdFunction;
+
+									return;
+								end
+							end							
+						end
+
+						table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId, dataId);
+						mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId] = {};
+						mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId].dataIdFunction = dataIdFunction;
+
+						return;
+					end
+				end				
+			end
+
+			table.insert(mcoJoinedChannelList[channelLevelZero].DataId, dataId);
+			mcoJoinedChannelList[channelLevelZero].DataId[dataId] = {};
+			mcoJoinedChannelList[channelLevelZero].DataId[dataId].dataIdFunction = dataIdFunction;
+			return;
+		end
+	end
+end
+
+function mcoUnregisterDataId(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	
+end
+
+function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subChannelThree, dataId, target)
+	if (data == nil) then
+		mduDisplayMessage(MCO_LOCALE_DATA_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	--[[if (mcoIndexOfChannel == nil) then
+		mduDisplayMessage(MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR .. masterChannel, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end]]
+
+	if (dataId == nil) then
+		mduDisplayMessage(MCO_LOCALE_DATAID_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	if (subChannelOne == nil) then
+		subChannelOne = "0";
+	end
+
+	if (subChannelTwo == nil) then
+		subChannelTwo = "0";
+	end
+
+	if (subChannelThree == nil) then
+		subChannelThree = "0";
+	end
+
+	if (target == nil) then
+		target = "0";
+	end
+
+	local dataType = type(data);
+	local dataTypeIndex = MCO_DATA_TYPE_NIL;
+
+	if (dataType == "string") then
+		dataTypeIndex = MCO_DATA_TYPE_STRING;
+	end
+
+	if (dataType == "number") then
+		dataTypeIndex = MCO_DATA_TYPE_NUMBER;
+	end
+
+	if (dataType == "table") then
+		dataTypeIndex = MCO_DATA_TYPE_TABLE;
+	end
+
+	if (dataType == "function") then
+		dataTypeIndex = MCO_DATA_TYPE_FUNCTION;
+	end
+
+	if (dataType == "boolean") then
+		dataTypeIndex = MCO_DATA_TYPE_BOOLEAN;
+	end
+
+	if (dataType == "nil") then
+		dataTypeIndex = MCO_DATA_TYPE_NIL;
+	end
+	
+	
+	if (not mcoMessagesToSend[masterChannel]) then
+		table.insert(mcoMessagesToSend, masterChannel);
+		mcoMessagesToSend[masterChannel] = {};
+	end
+
+	local tempIndex = table.getn(mcoMessagesToSend[masterChannel]) + 1;
+
+	table.insert(mcoMessagesToSend[masterChannel], tempIndex);
+	mcoMessagesToSend[masterChannel][tempIndex] = {};
+	mcoMessagesToSend[masterChannel][tempIndex].data = data;
+	mcoMessagesToSend[masterChannel][tempIndex].masterChannel = masterChannel;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelOne = subChannelOne;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelTwo = subChannelTwo;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelThree = subChannelThree;
+	mcoMessagesToSend[masterChannel][tempIndex].dataId = dataId;
+	mcoMessagesToSend[masterChannel][tempIndex].target = target;
+	mcoMessagesToSend[masterChannel][tempIndex].dataTypeIndex = dataTypeIndex;
+	mcoMessagesToSend[masterChannel][tempIndex].dataLength = string.len(data);
+end
+-- /script mduDisplayMessage(gcinfo());
+function mcoTransmitData(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+--mduDisplayMessage(tostring(mcoAbleToSendData[arg9]));
+	for i, channelName in ipairs(mcoAbleToSendData) do
+	--mduDisplayMessage(i .. channelName .. ": " .. tostring(mcoAbleToSendData[channelName]));
+		if (mcoAbleToSendData[channelName] == true) then
+			if ((not mcoMessagesToSend[channelName]) or (not mcoMessagesToSend[channelName][1])) then
+				return;
+			end
+
+			local mcoIndexOfChannel = GetChannelName(channelName);
+
+			if (mcoIndexOfChannel ~= nil) then
+				SendChatMessage("<mco" .. mcoMessagesToSend[channelName][1].subChannelOne .. "." .. mcoMessagesToSend[channelName][1].subChannelTwo .. "." .. mcoMessagesToSend[channelName][1].subChannelThree .. ">[" .. mcoMessagesToSend[channelName][1].target .. "]{" .. mcoMessagesToSend[channelName][1].dataId .. "}:" .. mcoMessagesToSend[channelName][1].dataTypeIndex .. ":`" .. mcoMessagesToSend[channelName][1].dataLength .. "`" .. mcoMessagesToSend[channelName][1].data, "CHANNEL", GetDefaultLanguage("player"), mcoIndexOfChannel);
+			else
+				mduDisplayMessage(MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR .. channelName, MCO_NAME, .8, .8, 0, 1, 0, 0);
+				return;
+			end
+
+			table.remove(mcoMessagesToSend[channelName], 1);
+
+			mcoCleanMessagesToSend(channelName);
+
+			mcoBeginTimer(_, _, _, _, _, _, _, _, channelName);
+		end
+	end
+end
+
+function mcoCleanMessagesToSend(channelName)
+	for i, indexName in ipairs(mcoMessagesToSend) do
+		if (indexName == channelName and table.getn(mcoMessagesToSend[channelName]) == 0) then
+			table.remove(mcoMessagesToSend, i);
+		end
+	end
+end
+
+function testers()
+	--[[SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);]]
+
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+	--SendChatMessage("t", "WHISPER", GetDefaultLanguage("player"), "Banzai");
+	--SendChatMessage("((t))", "GUILD", GetDefaultLanguage("player"));
+end
+
+function testers2()
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+end
+
+-- /script SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 5);SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 6);
+function mcoRecieveMessage(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	local masterChannel = arg9;
+
+	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
+		if (channelLevelZero == masterChannel) then
+			local _, _, subChannelOne, subChannelTwo, subChannelThree, target, dataId, dataType, dataLength, data = string.find(arg1, "<mco(%w+)%.(%w+)%.(%w+)>%[(%w+)%]{(%d+)}:(%d+):`(%d+)`(.+)");		
+			
+			if (subChannelOne == nil) then
+				return;
+			end
+
+			dataId = tonumber(dataId);
+
+			data = mcoConvertData(data, tonumber(dataType));			
+
+			if (subChannelOne ~= "0") then
+				for j, channelLevelOne in ipairs(mcoJoinedChannelList[channelLevelZero]) do
+					if (subChannelOne == channelLevelOne) then
+						if (subChannelTwo ~= "0") then
+							for j, channelLevelTwo in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne]) do
+								if (subChannelTwo == channelLevelTwo) then
+									if (subChannelThree ~= "0") then
+										for j, channelLevelThree in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo]) do
+											if (subChannelThree == channelLevelThree) then
+												for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId) do
+													if (dataId == tableDataId) then
+														mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId].dataIdFunction(data, target);
+													end
+												end
+
+												return;
+											end
+										end
+									end
+
+									for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId) do
+										if (dataId == tableDataId) then
+											mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId].dataIdFunction(data, target);
+										end
+									end
+
+									return;
+								end
+							end							
+						end
+
+						for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId) do
+							if (dataId == tableDataId) then
+								mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId].dataIdFunction(data, target);
+							end
+						end
+
+						return;
+					end
+				end
+			end
+
+			for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero].DataId) do
+				if (dataId == tableDataId) then
+					mcoJoinedChannelList[channelLevelZero].DataId[dataId].dataIdFunction(data, target);
+				end
+			end
+
+			return;
+		end
+	end
+end
+
+function mcoConvertData(data, dataType)
+	if (dataType == MCO_DATA_TYPE_NIL) then
+		return (nil);
+	end
+
+	if (dataType == MCO_DATA_TYPE_STRING) then
+		return (tostring(data));
+	end
+
+	if (dataType == MCO_DATA_TYPE_NUMBER) then
+		return (tonumber(data));
+	end
+
+	if (dataType == MCO_DATA_TYPE_TABLE) then
+		return (data);
+	end
+
+	if (dataType == MCO_DATA_TYPE_FUNCTION) then
+		return (data);
+	end
+
+	if (dataType == MCO_DATA_TYPE_BOOLEAN) then
+		if (data == "0" or data == "false") then
+			return (false);
+		end
+		
+		if (data >= "1" or data == "true") then
+			return (true);
+		end
+	end
+end
+
+function mcoConstructMessage()
+	
+end
+
+function mcoDeconstructMessage()
+	
+end
+
+function mcoEncodeMessage()
+	
+end
+
+function mcoDecodeMessage()
+	
+end
+
+function mcoChannelTimerEnable(_, _, _, _, _, _, _, _, arg9)
+--mduDisplayMessage(1);
+	--[[if (mtiGetTimerTime(mcoChannelTimerId[arg9]) == 0) then
+		mcoAbleToSendData[arg9] = true;
+	end]]
+	
+	for i, timerChannel in ipairs(mcoChannelTimerId) do
+		if ((mtiGetTimerTime(mcoChannelTimerId[timerChannel]) >= mtiGetTimerEndTime(mcoChannelTimerId[timerChannel])) or mtiGetTimerTime(mcoChannelTimerId[timerChannel]) == 0) then
+			if (not mcoAbleToSendData[timerChannel]) then
+				table.insert(mcoAbleToSendData, timerChannel);
+			end
+
+			mcoAbleToSendData[timerChannel] = true;
+		end
+	end
+end
+
+function mcoBeginTimer(_, _, _, _, _, _, _, _, channelName)
+	if (not mcoChannelTimerId[channelName]) then
+		table.insert(mcoChannelTimerId, channelName);
+		mcoChannelTimerId[channelName] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+	else
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+
+		mtiResetTimer(mcoChannelTimerId[channelName]);
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+	end	
+
+--mduDisplayMessage(channelName);
+--mduDisplayMessage(mcoChannelTimerId[channelName]);
+	
+end
+
+----------------------------------------------------------
+--			UTILITY FUNCTIONS               --
+----------------------------------------------------------
+--/script mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessageTest);mcoRegisterDataId(tostring(7), mcoTest, "mytest", nil, nil, nil);mcoSendMessage("TEST!","mytest",nil,nil,nil,tostring(7),"TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/7 tester
+
+function mcoTest(arg1, arg2)
+	mduDisplayMessage(arg1 .. "|" .. arg2, "TEST", .8, .8, 0, 1, 0, 0);
+end
+----------------------------------------------------------------------------------------------------------
+--			LOCALE										--
+----------------------------------------------------------------------------------------------------------
+if (GetLocale() == "enUS") then
+	MCO_LOCALE_MYTIME_MISSING_ERROR				= "ERROR: MyTime addon missing.";
+	MCO_LOCALE_FREE_CHANNEL_ERROR				= "Please free a channel if you would like to join ";
+	MCO_LOCALE_CHANNEL_INITIALIZED				= " Channel Initialized.";
+	MCO_LOCALE_DATAID_MISSING_ERROR				= "ERROR: Data Id is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
+	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+else
+	MCO_LOCALE_MYTIME_MISSING_ERROR				= "ERROR: MyTime addon missing.";
+	MCO_LOCALE_FREE_CHANNEL_ERROR				= "Please free a channel if you would like to join ";
+	MCO_LOCALE_CHANNEL_INITIALIZED				= " Channel Initialized.";
+	MCO_LOCALE_DATAID_MISSING_ERROR				= "ERROR: Data Id is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
+	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+end
+
+
+----------------------------------------------------------------------------------------------------------
+--			HEADER										--
+----------------------------------------------------------------------------------------------------------
+MCO_NAME = "MyCommunications";
+MCO_VERSION = 0.1;
+
+MyCommunication = {};
+MyCommunication.System = {};
+MyCommunication.System.Channels = {};
+
+mcoJoinedChannelList = {};
+
+mcoMessagesToSend = {};
+
+mcoEventList = {};
+
+MCO_DATA_TYPE_NIL = 0;
+MCO_DATA_TYPE_STRING = 1;
+MCO_DATA_TYPE_NUMBER = 2;
+MCO_DATA_TYPE_TABLE = 3;
+MCO_DATA_TYPE_FUNCTION = 4;
+MCO_DATA_TYPE_BOOLEAN = 5;
+
+mcoAbleToSendData = {};
+mcoChannelTimerId = {};
+---------------------------------------------------------
+--			FUNCTIONS                       --
+----------------------------------------------------------
+
+function mcoOnLoad()
+--/script NUM_CHAT_WINDOWS = 10;
+--/script CHAT_TELL_ALERT_TIME = 0;
+--/script SendChatMessage("test", "CHANNEL", GetDefaultLanguage("player"), 1);
+-- /script ChatTypeInfo["CHANNEL"].sticky = 1;
+ChatTypeInfo["CHANNEL"].sticky = 1;
+
+	if (not MTI_VERSION) then
+		mduDisplayMessage(MCO_LOCALE_MYTIME_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	end
+
+	--[[this:RegisterEvent("CHAT_MSG_CHANNEL");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_JOIN");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_LEAVE");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_LIST");
+	this:RegisterEvent("CHAT_MSG_EMOTE");
+	this:RegisterEvent("CHAT_MSG_GUILD");
+	this:RegisterEvent("CHAT_MSG_OFFICER");
+	this:RegisterEvent("CHAT_MSG_PARTY");
+	this:RegisterEvent("CHAT_MSG_RAID");
+	this:RegisterEvent("CHAT_MSG_RAID_LEADER");
+	this:RegisterEvent("CHAT_MSG_RAID_WARNING");
+	this:RegisterEvent("CHAT_MSG_SAY");
+	this:RegisterEvent("CHAT_MSG_SYSTEM");
+	this:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+	this:RegisterEvent("CHAT_MSG_WHISPER");
+	this:RegisterEvent("CHAT_MSG_WHISPER_INFORM");
+	this:RegisterEvent("CHAT_MSG_YELL");
+	this:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);]]
+	
+	--mcoJoinChannelId = mtiRegisterEvent(10, mcoJoinChannel, false);
+	--mcoJoinChannelWatcherId = mtiRegisterEvent(1, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoChannelJoined);
+	mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+	mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");
+
+	mtiRegisterEvent(0, mcoBeginTimer, false, "CHAT_MSG_CHANNEL");
+	mtiRegisterEvent(0, mcoTransmitData);
+end
+
+function mcoChannelJoined(arg1)
+	mduDisplayMessage(arg1 .. MCO_LOCALE_CHANNEL_INITIALIZED, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	table.insert(mcoChannelTimerId, arg1);
+	mcoChannelTimerId[arg1] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+	mduDisplayMessage(mcoChannelTimerId[arg1]);
+end
+
+function mcoRegisterAddonStartupChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	mcoJoinChannelId = mtiRegisterEvent(10, mcoJoinChannel, false);
+	mcoJoinChannelWatcherId = mtiRegisterEvent(1, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
+end
+
+function mcoJoinChannelWatcher()
+	if (arg1 == "YOU_JOINED") then
+		mcoRegisterChannel("MyWarcraft", "MyRolePlay", "Data", "Description");
+		mtiUnregisterEvent(mcoJoinChannelId);
+		mtiUnregisterEvent(mcoJoinChannelWatcherId);
+		--mcoOnEvent("MCO_CHANNEL_JOINED");
+	end	
+end
+
+function mcoJoinChannel()
+	mcoRegisterChannel("MyWarcraft", "MyRolePlay", "Data", "Description");
+	mtiUnregisterEvent(mcoJoinChannelId);
+	mtiUnregisterEvent(mcoJoinChannelWatcherId);
+	--mcoOnEvent("MCO_CHANNEL_JOINED");
+end
+
+function mcoRegisterEvent(event, eventFunction)
+	if (not mcoEventList[event]) then
+		table.insert(mcoEventList, event);
+		mcoEventList[event] = {};
+		mcoEventList[event].eventFunctions = {};
+		mcoManager:RegisterEvent(event);
+	end
+
+	table.insert(mcoEventList[event].eventFunctions, table.getn(mcoEventList[event].eventFunctions) + 1);
+	mcoEventList[event].eventFunctions[table.getn(mcoEventList[event].eventFunctions)] = eventFunction;
+end
+
+function mcoUnregisterEvent(event, eventFunction)
+	for i = 1, table.getn(mcoEventList[event].eventFunctions) do
+		if (mcoEventList[event].eventFunctions[i] == eventFunction) then
+			table.remove(mcoEventList[event].eventFunctions, i);
+
+			if (table.getn(mcoEventList[event]) == 0) then
+				table.remove(mcoEventList, event);
+				mcoManager:UnregisterEvent(event);
+			end
+
+			return;
+		end
+	end
+end
+
+function mcoOnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	for i, eventFunction in ipairs(mcoEventList) do
+		if (event == eventFunction) then
+			for j = 1, table.getn(mcoEventList[event].eventFunctions) do
+				mcoEventList[event].eventFunctions[j](arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+			end			
+		end
+	end
+end
+
+function mcoRegisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	if (string.len(subChannelOne) > 12 or string.len(subChannelTwo) > 12 or string.len(subChannelThree) > 12) then
+		mduDisplayMessage(MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	if (GetChannelName(masterChannel) > 0) then
+		if (not mcoJoinedChannelList[masterChannel]) then
+			table.insert(mcoJoinedChannelList, masterChannel);
+			mcoJoinedChannelList[masterChannel] = {};
+			mcoJoinedChannelList[masterChannel].DataId = {};
+		end
+
+		if (subChannelOne) then
+			if (not mcoJoinedChannelList[masterChannel][subChannelOne]) then
+				table.insert(mcoJoinedChannelList[masterChannel], subChannelOne);
+				mcoJoinedChannelList[masterChannel][subChannelOne] = {};
+				mcoJoinedChannelList[masterChannel][subChannelOne].DataId = {};
+			end
+
+			if (subChannelTwo) then
+				if (not mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo]) then
+					table.insert(mcoJoinedChannelList[masterChannel][subChannelOne], subChannelTwo);
+					mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo] = {};
+					mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo].DataId = {};
+				end
+
+				if (subChannelThree) then
+					if (not mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree]) then
+						table.insert(mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo], subChannelThree);
+						mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree] = {};
+						mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree].DataId = {};
+					end
+				end
+			end
+		end
+
+		mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+	end
+
+	if (GetChannelName(masterChannel) == 0) then
+		if (JoinChannelByName(masterChannel, MDU_EMPTY_STRING, nil) == nil) then
+			mduDisplayMessage(MCO_LOCALE_FREE_CHANNEL_ERROR .. masterChannel .. ".", MCO_NAME, .8, .8, 0, 1, 0, 0);
+		else
+			mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+			table.insert(mcoJoinedChannelList, masterChannel);
+			mcoJoinedChannelList[masterChannel] = {};
+			mcoJoinedChannelList[masterChannel].DataId = {};
+		end
+	end
+end
+
+function mcoUnregisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	
+end
+
+function mcoRegisterDataId(dataId, dataIdFunction, masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	dataId = tonumber(dataId);
+	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
+		if (masterChannel == channelLevelZero) then
+			if (subChannelOne) then
+				for j, channelLevelOne in ipairs(mcoJoinedChannelList[channelLevelZero]) do
+					if (subChannelOne == channelLevelOne) then
+						if (subChannelTwo) then
+							for j, channelLevelTwo in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne]) do
+								if (subChannelTwo == channelLevelTwo) then
+									if (subChannelThree) then
+										for j, channelLevelThree in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo]) do
+											if (subChannelThree == channelLevelThree) then
+												table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId, dataId);
+												mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId] = {};
+												mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId].dataIdFunction = dataIdFunction;
+
+												return;
+											end
+										end
+									end
+
+									table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId, dataId);
+									mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId] = {};
+									mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId].dataIdFunction = dataIdFunction;
+
+									return;
+								end
+							end							
+						end
+
+						table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId, dataId);
+						mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId] = {};
+						mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId].dataIdFunction = dataIdFunction;
+
+						return;
+					end
+				end				
+			end
+
+			table.insert(mcoJoinedChannelList[channelLevelZero].DataId, dataId);
+			mcoJoinedChannelList[channelLevelZero].DataId[dataId] = {};
+			mcoJoinedChannelList[channelLevelZero].DataId[dataId].dataIdFunction = dataIdFunction;
+			return;
+		end
+	end
+end
+
+function mcoUnregisterDataId(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	
+end
+
+function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subChannelThree, dataId, target)
+	if (data == nil) then
+		mduDisplayMessage(MCO_LOCALE_DATA_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	--[[if (mcoIndexOfChannel == nil) then
+		mduDisplayMessage(MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR .. masterChannel, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end]]
+
+	if (dataId == nil) then
+		mduDisplayMessage(MCO_LOCALE_DATAID_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	if (subChannelOne == nil) then
+		subChannelOne = "0";
+	end
+
+	if (subChannelTwo == nil) then
+		subChannelTwo = "0";
+	end
+
+	if (subChannelThree == nil) then
+		subChannelThree = "0";
+	end
+
+	if (target == nil) then
+		target = "0";
+	end
+
+	local dataType = type(data);
+	local dataTypeIndex = MCO_DATA_TYPE_NIL;
+
+	if (dataType == "string") then
+		dataTypeIndex = MCO_DATA_TYPE_STRING;
+	end
+
+	if (dataType == "number") then
+		dataTypeIndex = MCO_DATA_TYPE_NUMBER;
+	end
+
+	if (dataType == "table") then
+		dataTypeIndex = MCO_DATA_TYPE_TABLE;
+	end
+
+	if (dataType == "function") then
+		dataTypeIndex = MCO_DATA_TYPE_FUNCTION;
+	end
+
+	if (dataType == "boolean") then
+		dataTypeIndex = MCO_DATA_TYPE_BOOLEAN;
+	end
+
+	if (dataType == "nil") then
+		dataTypeIndex = MCO_DATA_TYPE_NIL;
+	end
+	
+	
+	if (not mcoMessagesToSend[masterChannel]) then
+		table.insert(mcoMessagesToSend, masterChannel);
+		mcoMessagesToSend[masterChannel] = {};
+	end
+
+	local tempIndex = table.getn(mcoMessagesToSend[masterChannel]) + 1;
+
+	table.insert(mcoMessagesToSend[masterChannel], tempIndex);
+	mcoMessagesToSend[masterChannel][tempIndex] = {};
+	mcoMessagesToSend[masterChannel][tempIndex].data = data;
+	mcoMessagesToSend[masterChannel][tempIndex].masterChannel = masterChannel;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelOne = subChannelOne;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelTwo = subChannelTwo;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelThree = subChannelThree;
+	mcoMessagesToSend[masterChannel][tempIndex].dataId = dataId;
+	mcoMessagesToSend[masterChannel][tempIndex].target = target;
+	mcoMessagesToSend[masterChannel][tempIndex].dataTypeIndex = dataTypeIndex;
+	mcoMessagesToSend[masterChannel][tempIndex].dataLength = string.len(data);
+end
+-- /script mduDisplayMessage(gcinfo());
+function mcoTransmitData(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+--mduDisplayMessage(tostring(mcoAbleToSendData[arg9]));
+	for i, channelName in ipairs(mcoAbleToSendData) do
+	--mduDisplayMessage(i .. channelName .. ": " .. tostring(mcoAbleToSendData[channelName]));
+		if (mcoAbleToSendData[channelName] == true) then
+			if ((not mcoMessagesToSend[channelName]) or (not mcoMessagesToSend[channelName][1])) then
+				return;
+			end
+
+			local mcoIndexOfChannel = GetChannelName(channelName);
+
+			if (mcoIndexOfChannel ~= nil) then
+				SendChatMessage("<mco" .. mcoMessagesToSend[channelName][1].subChannelOne .. "." .. mcoMessagesToSend[channelName][1].subChannelTwo .. "." .. mcoMessagesToSend[channelName][1].subChannelThree .. ">[" .. mcoMessagesToSend[channelName][1].target .. "]{" .. mcoMessagesToSend[channelName][1].dataId .. "}:" .. mcoMessagesToSend[channelName][1].dataTypeIndex .. ":`" .. mcoMessagesToSend[channelName][1].dataLength .. "`" .. mcoMessagesToSend[channelName][1].data, "CHANNEL", GetDefaultLanguage("player"), mcoIndexOfChannel);
+			else
+				mduDisplayMessage(MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR .. channelName, MCO_NAME, .8, .8, 0, 1, 0, 0);
+				return;
+			end
+
+			table.remove(mcoMessagesToSend[channelName], 1);
+
+			mcoCleanMessagesToSend(channelName);
+
+			mcoBeginTimer(_, _, _, _, _, _, _, _, channelName);
+		end
+	end
+end
+
+function mcoCleanMessagesToSend(channelName)
+	for i, indexName in ipairs(mcoMessagesToSend) do
+		if (indexName == channelName and table.getn(mcoMessagesToSend[channelName]) == 0) then
+			table.remove(mcoMessagesToSend, i);
+		end
+	end
+end
+
+function testers()
+	--[[SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);]]
+
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+	--SendChatMessage("t", "WHISPER", GetDefaultLanguage("player"), "Banzai");
+	--SendChatMessage("((t))", "GUILD", GetDefaultLanguage("player"));
+end
+
+function testers2()
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+end
+
+-- /script SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 5);SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 6);
+function mcoRecieveMessage(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	local masterChannel = arg9;
+
+	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
+		if (channelLevelZero == masterChannel) then
+			local _, _, subChannelOne, subChannelTwo, subChannelThree, target, dataId, dataType, dataLength, data = string.find(arg1, "<mco(%w+)%.(%w+)%.(%w+)>%[(%w+)%]{(%d+)}:(%d+):`(%d+)`(.+)");		
+			
+			if (subChannelOne == nil) then
+				return;
+			end
+
+			dataId = tonumber(dataId);
+
+			data = mcoConvertData(data, tonumber(dataType));			
+
+			if (subChannelOne ~= "0") then
+				for j, channelLevelOne in ipairs(mcoJoinedChannelList[channelLevelZero]) do
+					if (subChannelOne == channelLevelOne) then
+						if (subChannelTwo ~= "0") then
+							for j, channelLevelTwo in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne]) do
+								if (subChannelTwo == channelLevelTwo) then
+									if (subChannelThree ~= "0") then
+										for j, channelLevelThree in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo]) do
+											if (subChannelThree == channelLevelThree) then
+												for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId) do
+													if (dataId == tableDataId) then
+														mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId].dataIdFunction(data, target);
+													end
+												end
+
+												return;
+											end
+										end
+									end
+
+									for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId) do
+										if (dataId == tableDataId) then
+											mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId].dataIdFunction(data, target);
+										end
+									end
+
+									return;
+								end
+							end							
+						end
+
+						for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId) do
+							if (dataId == tableDataId) then
+								mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId].dataIdFunction(data, target);
+							end
+						end
+
+						return;
+					end
+				end
+			end
+
+			for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero].DataId) do
+				if (dataId == tableDataId) then
+					mcoJoinedChannelList[channelLevelZero].DataId[dataId].dataIdFunction(data, target);
+				end
+			end
+
+			return;
+		end
+	end
+end
+
+function mcoConvertData(data, dataType)
+	if (dataType == MCO_DATA_TYPE_NIL) then
+		return (nil);
+	end
+
+	if (dataType == MCO_DATA_TYPE_STRING) then
+		return (tostring(data));
+	end
+
+	if (dataType == MCO_DATA_TYPE_NUMBER) then
+		return (tonumber(data));
+	end
+
+	if (dataType == MCO_DATA_TYPE_TABLE) then
+		return (data);
+	end
+
+	if (dataType == MCO_DATA_TYPE_FUNCTION) then
+		return (data);
+	end
+
+	if (dataType == MCO_DATA_TYPE_BOOLEAN) then
+		if (data == "0" or data == "false") then
+			return (false);
+		end
+		
+		if (data >= "1" or data == "true") then
+			return (true);
+		end
+	end
+end
+
+function mcoConstructMessage()
+	
+end
+
+function mcoDeconstructMessage()
+	
+end
+
+function mcoEncodeMessage()
+	
+end
+
+function mcoDecodeMessage()
+	
+end
+
+function mcoChannelTimerEnable(_, _, _, _, _, _, _, _, arg9)
+--mduDisplayMessage(1);
+	--[[if (mtiGetTimerTime(mcoChannelTimerId[arg9]) == 0) then
+		mcoAbleToSendData[arg9] = true;
+	end]]
+	
+	for i, timerChannel in ipairs(mcoChannelTimerId) do
+		if ((mtiGetTimerTime(mcoChannelTimerId[timerChannel]) >= mtiGetTimerEndTime(mcoChannelTimerId[timerChannel])) or mtiGetTimerTime(mcoChannelTimerId[timerChannel]) == 0) then
+			if (not mcoAbleToSendData[timerChannel]) then
+				table.insert(mcoAbleToSendData, timerChannel);
+			end
+
+			mcoAbleToSendData[timerChannel] = true;
+		end
+	end
+end
+
+function mcoBeginTimer(_, _, _, _, _, _, _, _, channelName)
+	if (not mcoChannelTimerId[channelName]) then
+		table.insert(mcoChannelTimerId, channelName);
+		mcoChannelTimerId[channelName] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+	else
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+
+		mtiResetTimer(mcoChannelTimerId[channelName]);
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+	end	
+
+--mduDisplayMessage(channelName);
+--mduDisplayMessage(mcoChannelTimerId[channelName]);
+	
+end
+
+----------------------------------------------------------
+--			UTILITY FUNCTIONS               --
+----------------------------------------------------------
+--/script mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessageTest);mcoRegisterDataId(tostring(7), mcoTest, "mytest", nil, nil, nil);mcoSendMessage("TEST!","mytest",nil,nil,nil,tostring(7),"TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/7 tester
+
+function mcoTest(arg1, arg2)
+	mduDisplayMessage(arg1 .. "|" .. arg2, "TEST", .8, .8, 0, 1, 0, 0);
+end
+----------------------------------------------------------------------------------------------------------
+--			LOCALE										--
+----------------------------------------------------------------------------------------------------------
+if (GetLocale() == "enUS") then
+	MCO_LOCALE_MYTIME_MISSING_ERROR				= "ERROR: MyTime addon missing.";
+	MCO_LOCALE_FREE_CHANNEL_ERROR				= "Please free a channel if you would like to join ";
+	MCO_LOCALE_CHANNEL_INITIALIZED				= " Channel Initialized.";
+	MCO_LOCALE_DATAID_MISSING_ERROR				= "ERROR: Data Id is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
+	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+else
+	MCO_LOCALE_MYTIME_MISSING_ERROR				= "ERROR: MyTime addon missing.";
+	MCO_LOCALE_FREE_CHANNEL_ERROR				= "Please free a channel if you would like to join ";
+	MCO_LOCALE_CHANNEL_INITIALIZED				= " Channel Initialized.";
+	MCO_LOCALE_DATAID_MISSING_ERROR				= "ERROR: Data Id is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
+	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+end
+
+
+----------------------------------------------------------------------------------------------------------
+--			HEADER										--
+----------------------------------------------------------------------------------------------------------
+MCO_NAME = "MyCommunications";
+MCO_VERSION = 0.1;
+
+MyCommunication = {};
+MyCommunication.System = {};
+MyCommunication.System.Channels = {};
+
+mcoJoinedChannelList = {};
+
+mcoMessagesToSend = {};
+
+mcoEventList = {};
+
+MCO_DATA_TYPE_NIL = 0;
+MCO_DATA_TYPE_STRING = 1;
+MCO_DATA_TYPE_NUMBER = 2;
+MCO_DATA_TYPE_TABLE = 3;
+MCO_DATA_TYPE_FUNCTION = 4;
+MCO_DATA_TYPE_BOOLEAN = 5;
+
+mcoAbleToSendData = {};
+mcoChannelTimerId = {};
+---------------------------------------------------------
+--			FUNCTIONS                       --
+----------------------------------------------------------
+
+function mcoOnLoad()
+--/script NUM_CHAT_WINDOWS = 10;
+--/script CHAT_TELL_ALERT_TIME = 0;
+--/script SendChatMessage("test", "CHANNEL", GetDefaultLanguage("player"), 1);
+-- /script ChatTypeInfo["CHANNEL"].sticky = 1;
+ChatTypeInfo["CHANNEL"].sticky = 1;
+
+	if (not MTI_VERSION) then
+		mduDisplayMessage(MCO_LOCALE_MYTIME_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	end
+
+	--[[this:RegisterEvent("CHAT_MSG_CHANNEL");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_JOIN");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_LEAVE");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_LIST");
+	this:RegisterEvent("CHAT_MSG_EMOTE");
+	this:RegisterEvent("CHAT_MSG_GUILD");
+	this:RegisterEvent("CHAT_MSG_OFFICER");
+	this:RegisterEvent("CHAT_MSG_PARTY");
+	this:RegisterEvent("CHAT_MSG_RAID");
+	this:RegisterEvent("CHAT_MSG_RAID_LEADER");
+	this:RegisterEvent("CHAT_MSG_RAID_WARNING");
+	this:RegisterEvent("CHAT_MSG_SAY");
+	this:RegisterEvent("CHAT_MSG_SYSTEM");
+	this:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+	this:RegisterEvent("CHAT_MSG_WHISPER");
+	this:RegisterEvent("CHAT_MSG_WHISPER_INFORM");
+	this:RegisterEvent("CHAT_MSG_YELL");
+	this:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);]]
+	
+	--mcoJoinChannelId = mtiRegisterEvent(10, mcoJoinChannel, false);
+	--mcoJoinChannelWatcherId = mtiRegisterEvent(1, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoChannelJoined);
+	mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+	mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");
+
+	mtiRegisterEvent(0, mcoBeginTimer, false, "CHAT_MSG_CHANNEL");
+	mtiRegisterEvent(0, mcoTransmitData);
+end
+
+function mcoChannelJoined(arg1)
+	mduDisplayMessage(arg1 .. MCO_LOCALE_CHANNEL_INITIALIZED, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	table.insert(mcoChannelTimerId, arg1);
+	mcoChannelTimerId[arg1] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+	mduDisplayMessage(mcoChannelTimerId[arg1]);
+end
+
+function mcoRegisterAddonStartupChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	mcoJoinChannelId = mtiRegisterEvent(10, mcoJoinChannel, false);
+	mcoJoinChannelWatcherId = mtiRegisterEvent(1, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
+end
+
+function mcoJoinChannelWatcher()
+	if (arg1 == "YOU_JOINED") then
+		mcoRegisterChannel("MyWarcraft", "MyRolePlay", "Data", "Description");
+		mtiUnregisterEvent(mcoJoinChannelId);
+		mtiUnregisterEvent(mcoJoinChannelWatcherId);
+		--mcoOnEvent("MCO_CHANNEL_JOINED");
+	end	
+end
+
+function mcoJoinChannel()
+	mcoRegisterChannel("MyWarcraft", "MyRolePlay", "Data", "Description");
+	mtiUnregisterEvent(mcoJoinChannelId);
+	mtiUnregisterEvent(mcoJoinChannelWatcherId);
+	--mcoOnEvent("MCO_CHANNEL_JOINED");
+end
+
+function mcoRegisterEvent(event, eventFunction)
+	if (not mcoEventList[event]) then
+		table.insert(mcoEventList, event);
+		mcoEventList[event] = {};
+		mcoEventList[event].eventFunctions = {};
+		mcoManager:RegisterEvent(event);
+	end
+
+	table.insert(mcoEventList[event].eventFunctions, table.getn(mcoEventList[event].eventFunctions) + 1);
+	mcoEventList[event].eventFunctions[table.getn(mcoEventList[event].eventFunctions)] = eventFunction;
+end
+
+function mcoUnregisterEvent(event, eventFunction)
+	for i = 1, table.getn(mcoEventList[event].eventFunctions) do
+		if (mcoEventList[event].eventFunctions[i] == eventFunction) then
+			table.remove(mcoEventList[event].eventFunctions, i);
+
+			if (table.getn(mcoEventList[event]) == 0) then
+				table.remove(mcoEventList, event);
+				mcoManager:UnregisterEvent(event);
+			end
+
+			return;
+		end
+	end
+end
+
+function mcoOnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	for i, eventFunction in ipairs(mcoEventList) do
+		if (event == eventFunction) then
+			for j = 1, table.getn(mcoEventList[event].eventFunctions) do
+				mcoEventList[event].eventFunctions[j](arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+			end			
+		end
+	end
+end
+
+function mcoRegisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	if (string.len(subChannelOne) > 12 or string.len(subChannelTwo) > 12 or string.len(subChannelThree) > 12) then
+		mduDisplayMessage(MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	if (GetChannelName(masterChannel) > 0) then
+		if (not mcoJoinedChannelList[masterChannel]) then
+			table.insert(mcoJoinedChannelList, masterChannel);
+			mcoJoinedChannelList[masterChannel] = {};
+			mcoJoinedChannelList[masterChannel].DataId = {};
+		end
+
+		if (subChannelOne) then
+			if (not mcoJoinedChannelList[masterChannel][subChannelOne]) then
+				table.insert(mcoJoinedChannelList[masterChannel], subChannelOne);
+				mcoJoinedChannelList[masterChannel][subChannelOne] = {};
+				mcoJoinedChannelList[masterChannel][subChannelOne].DataId = {};
+			end
+
+			if (subChannelTwo) then
+				if (not mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo]) then
+					table.insert(mcoJoinedChannelList[masterChannel][subChannelOne], subChannelTwo);
+					mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo] = {};
+					mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo].DataId = {};
+				end
+
+				if (subChannelThree) then
+					if (not mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree]) then
+						table.insert(mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo], subChannelThree);
+						mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree] = {};
+						mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree].DataId = {};
+					end
+				end
+			end
+		end
+
+		mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+	end
+
+	if (GetChannelName(masterChannel) == 0) then
+		if (JoinChannelByName(masterChannel, MDU_EMPTY_STRING, nil) == nil) then
+			mduDisplayMessage(MCO_LOCALE_FREE_CHANNEL_ERROR .. masterChannel .. ".", MCO_NAME, .8, .8, 0, 1, 0, 0);
+		else
+			mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+			table.insert(mcoJoinedChannelList, masterChannel);
+			mcoJoinedChannelList[masterChannel] = {};
+			mcoJoinedChannelList[masterChannel].DataId = {};
+		end
+	end
+end
+
+function mcoUnregisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	
+end
+
+function mcoRegisterDataId(dataId, dataIdFunction, masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	dataId = tonumber(dataId);
+	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
+		if (masterChannel == channelLevelZero) then
+			if (subChannelOne) then
+				for j, channelLevelOne in ipairs(mcoJoinedChannelList[channelLevelZero]) do
+					if (subChannelOne == channelLevelOne) then
+						if (subChannelTwo) then
+							for j, channelLevelTwo in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne]) do
+								if (subChannelTwo == channelLevelTwo) then
+									if (subChannelThree) then
+										for j, channelLevelThree in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo]) do
+											if (subChannelThree == channelLevelThree) then
+												table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId, dataId);
+												mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId] = {};
+												mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId].dataIdFunction = dataIdFunction;
+
+												return;
+											end
+										end
+									end
+
+									table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId, dataId);
+									mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId] = {};
+									mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId].dataIdFunction = dataIdFunction;
+
+									return;
+								end
+							end							
+						end
+
+						table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId, dataId);
+						mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId] = {};
+						mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId].dataIdFunction = dataIdFunction;
+
+						return;
+					end
+				end				
+			end
+
+			table.insert(mcoJoinedChannelList[channelLevelZero].DataId, dataId);
+			mcoJoinedChannelList[channelLevelZero].DataId[dataId] = {};
+			mcoJoinedChannelList[channelLevelZero].DataId[dataId].dataIdFunction = dataIdFunction;
+			return;
+		end
+	end
+end
+
+function mcoUnregisterDataId(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	
+end
+
+function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subChannelThree, dataId, target)
+	if (data == nil) then
+		mduDisplayMessage(MCO_LOCALE_DATA_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	--[[if (mcoIndexOfChannel == nil) then
+		mduDisplayMessage(MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR .. masterChannel, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end]]
+
+	if (dataId == nil) then
+		mduDisplayMessage(MCO_LOCALE_DATAID_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	if (subChannelOne == nil) then
+		subChannelOne = "0";
+	end
+
+	if (subChannelTwo == nil) then
+		subChannelTwo = "0";
+	end
+
+	if (subChannelThree == nil) then
+		subChannelThree = "0";
+	end
+
+	if (target == nil) then
+		target = "0";
+	end
+
+	local dataType = type(data);
+	local dataTypeIndex = MCO_DATA_TYPE_NIL;
+
+	if (dataType == "string") then
+		dataTypeIndex = MCO_DATA_TYPE_STRING;
+	end
+
+	if (dataType == "number") then
+		dataTypeIndex = MCO_DATA_TYPE_NUMBER;
+	end
+
+	if (dataType == "table") then
+		dataTypeIndex = MCO_DATA_TYPE_TABLE;
+	end
+
+	if (dataType == "function") then
+		dataTypeIndex = MCO_DATA_TYPE_FUNCTION;
+	end
+
+	if (dataType == "boolean") then
+		dataTypeIndex = MCO_DATA_TYPE_BOOLEAN;
+	end
+
+	if (dataType == "nil") then
+		dataTypeIndex = MCO_DATA_TYPE_NIL;
+	end
+	
+	
+	if (not mcoMessagesToSend[masterChannel]) then
+		table.insert(mcoMessagesToSend, masterChannel);
+		mcoMessagesToSend[masterChannel] = {};
+	end
+
+	local tempIndex = table.getn(mcoMessagesToSend[masterChannel]) + 1;
+
+	table.insert(mcoMessagesToSend[masterChannel], tempIndex);
+	mcoMessagesToSend[masterChannel][tempIndex] = {};
+	mcoMessagesToSend[masterChannel][tempIndex].data = data;
+	mcoMessagesToSend[masterChannel][tempIndex].masterChannel = masterChannel;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelOne = subChannelOne;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelTwo = subChannelTwo;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelThree = subChannelThree;
+	mcoMessagesToSend[masterChannel][tempIndex].dataId = dataId;
+	mcoMessagesToSend[masterChannel][tempIndex].target = target;
+	mcoMessagesToSend[masterChannel][tempIndex].dataTypeIndex = dataTypeIndex;
+	mcoMessagesToSend[masterChannel][tempIndex].dataLength = string.len(data);
+end
+-- /script mduDisplayMessage(gcinfo());
+function mcoTransmitData(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+--mduDisplayMessage(tostring(mcoAbleToSendData[arg9]));
+	for i, channelName in ipairs(mcoAbleToSendData) do
+	--mduDisplayMessage(i .. channelName .. ": " .. tostring(mcoAbleToSendData[channelName]));
+		if (mcoAbleToSendData[channelName] == true) then
+			if ((not mcoMessagesToSend[channelName]) or (not mcoMessagesToSend[channelName][1])) then
+				return;
+			end
+
+			local mcoIndexOfChannel = GetChannelName(channelName);
+
+			if (mcoIndexOfChannel ~= nil) then
+				SendChatMessage("<mco" .. mcoMessagesToSend[channelName][1].subChannelOne .. "." .. mcoMessagesToSend[channelName][1].subChannelTwo .. "." .. mcoMessagesToSend[channelName][1].subChannelThree .. ">[" .. mcoMessagesToSend[channelName][1].target .. "]{" .. mcoMessagesToSend[channelName][1].dataId .. "}:" .. mcoMessagesToSend[channelName][1].dataTypeIndex .. ":`" .. mcoMessagesToSend[channelName][1].dataLength .. "`" .. mcoMessagesToSend[channelName][1].data, "CHANNEL", GetDefaultLanguage("player"), mcoIndexOfChannel);
+			else
+				mduDisplayMessage(MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR .. channelName, MCO_NAME, .8, .8, 0, 1, 0, 0);
+				return;
+			end
+
+			table.remove(mcoMessagesToSend[channelName], 1);
+
+			mcoCleanMessagesToSend(channelName);
+
+			mcoBeginTimer(_, _, _, _, _, _, _, _, channelName);
+		end
+	end
+end
+
+function mcoCleanMessagesToSend(channelName)
+	for i, indexName in ipairs(mcoMessagesToSend) do
+		if (indexName == channelName and table.getn(mcoMessagesToSend[channelName]) == 0) then
+			table.remove(mcoMessagesToSend, i);
+		end
+	end
+end
+
+function testers()
+	--[[SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);]]
+
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+	--SendChatMessage("t", "WHISPER", GetDefaultLanguage("player"), "Banzai");
+	--SendChatMessage("((t))", "GUILD", GetDefaultLanguage("player"));
+end
+
+function testers2()
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+end
+
+-- /script SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 5);SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 6);
+function mcoRecieveMessage(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	local masterChannel = arg9;
+
+	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
+		if (channelLevelZero == masterChannel) then
+			local _, _, subChannelOne, subChannelTwo, subChannelThree, target, dataId, dataType, dataLength, data = string.find(arg1, "<mco(%w+)%.(%w+)%.(%w+)>%[(%w+)%]{(%d+)}:(%d+):`(%d+)`(.+)");		
+			
+			if (subChannelOne == nil) then
+				return;
+			end
+
+			dataId = tonumber(dataId);
+
+			data = mcoConvertData(data, tonumber(dataType));			
+
+			if (subChannelOne ~= "0") then
+				for j, channelLevelOne in ipairs(mcoJoinedChannelList[channelLevelZero]) do
+					if (subChannelOne == channelLevelOne) then
+						if (subChannelTwo ~= "0") then
+							for j, channelLevelTwo in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne]) do
+								if (subChannelTwo == channelLevelTwo) then
+									if (subChannelThree ~= "0") then
+										for j, channelLevelThree in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo]) do
+											if (subChannelThree == channelLevelThree) then
+												for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId) do
+													if (dataId == tableDataId) then
+														mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId].dataIdFunction(data, target);
+													end
+												end
+
+												return;
+											end
+										end
+									end
+
+									for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId) do
+										if (dataId == tableDataId) then
+											mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId].dataIdFunction(data, target);
+										end
+									end
+
+									return;
+								end
+							end							
+						end
+
+						for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId) do
+							if (dataId == tableDataId) then
+								mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId].dataIdFunction(data, target);
+							end
+						end
+
+						return;
+					end
+				end
+			end
+
+			for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero].DataId) do
+				if (dataId == tableDataId) then
+					mcoJoinedChannelList[channelLevelZero].DataId[dataId].dataIdFunction(data, target);
+				end
+			end
+
+			return;
+		end
+	end
+end
+
+function mcoConvertData(data, dataType)
+	if (dataType == MCO_DATA_TYPE_NIL) then
+		return (nil);
+	end
+
+	if (dataType == MCO_DATA_TYPE_STRING) then
+		return (tostring(data));
+	end
+
+	if (dataType == MCO_DATA_TYPE_NUMBER) then
+		return (tonumber(data));
+	end
+
+	if (dataType == MCO_DATA_TYPE_TABLE) then
+		return (data);
+	end
+
+	if (dataType == MCO_DATA_TYPE_FUNCTION) then
+		return (data);
+	end
+
+	if (dataType == MCO_DATA_TYPE_BOOLEAN) then
+		if (data == "0" or data == "false") then
+			return (false);
+		end
+		
+		if (data >= "1" or data == "true") then
+			return (true);
+		end
+	end
+end
+
+function mcoConstructMessage()
+	
+end
+
+function mcoDeconstructMessage()
+	
+end
+
+function mcoEncodeMessage()
+	
+end
+
+function mcoDecodeMessage()
+	
+end
+
+function mcoChannelTimerEnable(_, _, _, _, _, _, _, _, arg9)
+--mduDisplayMessage(1);
+	--[[if (mtiGetTimerTime(mcoChannelTimerId[arg9]) == 0) then
+		mcoAbleToSendData[arg9] = true;
+	end]]
+	
+	for i, timerChannel in ipairs(mcoChannelTimerId) do
+		if ((mtiGetTimerTime(mcoChannelTimerId[timerChannel]) >= mtiGetTimerEndTime(mcoChannelTimerId[timerChannel])) or mtiGetTimerTime(mcoChannelTimerId[timerChannel]) == 0) then
+			if (not mcoAbleToSendData[timerChannel]) then
+				table.insert(mcoAbleToSendData, timerChannel);
+			end
+
+			mcoAbleToSendData[timerChannel] = true;
+		end
+	end
+end
+
+function mcoBeginTimer(_, _, _, _, _, _, _, _, channelName)
+	if (not mcoChannelTimerId[channelName]) then
+		table.insert(mcoChannelTimerId, channelName);
+		mcoChannelTimerId[channelName] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+	else
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+
+		mtiResetTimer(mcoChannelTimerId[channelName]);
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+	end	
+
+--mduDisplayMessage(channelName);
+--mduDisplayMessage(mcoChannelTimerId[channelName]);
+	
+end
+
+----------------------------------------------------------
+--			UTILITY FUNCTIONS               --
+----------------------------------------------------------
+--/script mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessageTest);mcoRegisterDataId(tostring(7), mcoTest, "mytest", nil, nil, nil);mcoSendMessage("TEST!","mytest",nil,nil,nil,tostring(7),"TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/7 tester
+
+function mcoTest(arg1, arg2)
+	mduDisplayMessage(arg1 .. "|" .. arg2, "TEST", .8, .8, 0, 1, 0, 0);
+end
+----------------------------------------------------------------------------------------------------------
+--			LOCALE										--
+----------------------------------------------------------------------------------------------------------
+if (GetLocale() == "enUS") then
+	MCO_LOCALE_MYTIME_MISSING_ERROR				= "ERROR: MyTime addon missing.";
+	MCO_LOCALE_FREE_CHANNEL_ERROR				= "Please free a channel if you would like to join ";
+	MCO_LOCALE_CHANNEL_INITIALIZED				= " Channel Initialized.";
+	MCO_LOCALE_DATAID_MISSING_ERROR				= "ERROR: Data Id is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
+	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+else
+	MCO_LOCALE_MYTIME_MISSING_ERROR				= "ERROR: MyTime addon missing.";
+	MCO_LOCALE_FREE_CHANNEL_ERROR				= "Please free a channel if you would like to join ";
+	MCO_LOCALE_CHANNEL_INITIALIZED				= " Channel Initialized.";
+	MCO_LOCALE_DATAID_MISSING_ERROR				= "ERROR: Data Id is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
+	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
+	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+end
+
+
+----------------------------------------------------------------------------------------------------------
+--			HEADER										--
+----------------------------------------------------------------------------------------------------------
+MCO_NAME = "MyCommunications";
+MCO_VERSION = 0.1;
+
+MyCommunication = {};
+MyCommunication.System = {};
+MyCommunication.System.Channels = {};
+
+mcoJoinedChannelList = {};
+
+mcoMessagesToSend = {};
+
+mcoEventList = {};
+
+MCO_DATA_TYPE_NIL = 0;
+MCO_DATA_TYPE_STRING = 1;
+MCO_DATA_TYPE_NUMBER = 2;
+MCO_DATA_TYPE_TABLE = 3;
+MCO_DATA_TYPE_FUNCTION = 4;
+MCO_DATA_TYPE_BOOLEAN = 5;
+
+mcoAbleToSendData = {};
+mcoChannelTimerId = {};
+---------------------------------------------------------
+--			FUNCTIONS                       --
+----------------------------------------------------------
+
+function mcoOnLoad()
+--/script NUM_CHAT_WINDOWS = 10;
+--/script CHAT_TELL_ALERT_TIME = 0;
+--/script SendChatMessage("test", "CHANNEL", GetDefaultLanguage("player"), 1);
+-- /script ChatTypeInfo["CHANNEL"].sticky = 1;
+ChatTypeInfo["CHANNEL"].sticky = 1;
+
+	if (not MTI_VERSION) then
+		mduDisplayMessage(MCO_LOCALE_MYTIME_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	end
+
+	--[[this:RegisterEvent("CHAT_MSG_CHANNEL");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_JOIN");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_LEAVE");
+	this:RegisterEvent("CHAT_MSG_CHANNEL_LIST");
+	this:RegisterEvent("CHAT_MSG_EMOTE");
+	this:RegisterEvent("CHAT_MSG_GUILD");
+	this:RegisterEvent("CHAT_MSG_OFFICER");
+	this:RegisterEvent("CHAT_MSG_PARTY");
+	this:RegisterEvent("CHAT_MSG_RAID");
+	this:RegisterEvent("CHAT_MSG_RAID_LEADER");
+	this:RegisterEvent("CHAT_MSG_RAID_WARNING");
+	this:RegisterEvent("CHAT_MSG_SAY");
+	this:RegisterEvent("CHAT_MSG_SYSTEM");
+	this:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+	this:RegisterEvent("CHAT_MSG_WHISPER");
+	this:RegisterEvent("CHAT_MSG_WHISPER_INFORM");
+	this:RegisterEvent("CHAT_MSG_YELL");
+	this:RegisterEvent("CHAT_MSG_TEXT_EMOTE");
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoTestFunction);]]
+	
+	--mcoJoinChannelId = mtiRegisterEvent(10, mcoJoinChannel, false);
+	--mcoJoinChannelWatcherId = mtiRegisterEvent(1, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
+	mcoRegisterEvent("MCO_CHANNEL_JOINED", mcoChannelJoined);
+	mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+	mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");
+
+	mtiRegisterEvent(0, mcoBeginTimer, false, "CHAT_MSG_CHANNEL");
+	mtiRegisterEvent(0, mcoTransmitData);
+end
+
+function mcoChannelJoined(arg1)
+	mduDisplayMessage(arg1 .. MCO_LOCALE_CHANNEL_INITIALIZED, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	table.insert(mcoChannelTimerId, arg1);
+	mcoChannelTimerId[arg1] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+	mduDisplayMessage(mcoChannelTimerId[arg1]);
+end
+
+function mcoRegisterAddonStartupChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	mcoJoinChannelId = mtiRegisterEvent(10, mcoJoinChannel, false);
+	mcoJoinChannelWatcherId = mtiRegisterEvent(1, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
+end
+
+function mcoJoinChannelWatcher()
+	if (arg1 == "YOU_JOINED") then
+		mcoRegisterChannel("MyWarcraft", "MyRolePlay", "Data", "Description");
+		mtiUnregisterEvent(mcoJoinChannelId);
+		mtiUnregisterEvent(mcoJoinChannelWatcherId);
+		--mcoOnEvent("MCO_CHANNEL_JOINED");
+	end	
+end
+
+function mcoJoinChannel()
+	mcoRegisterChannel("MyWarcraft", "MyRolePlay", "Data", "Description");
+	mtiUnregisterEvent(mcoJoinChannelId);
+	mtiUnregisterEvent(mcoJoinChannelWatcherId);
+	--mcoOnEvent("MCO_CHANNEL_JOINED");
+end
+
+function mcoRegisterEvent(event, eventFunction)
+	if (not mcoEventList[event]) then
+		table.insert(mcoEventList, event);
+		mcoEventList[event] = {};
+		mcoEventList[event].eventFunctions = {};
+		mcoManager:RegisterEvent(event);
+	end
+
+	table.insert(mcoEventList[event].eventFunctions, table.getn(mcoEventList[event].eventFunctions) + 1);
+	mcoEventList[event].eventFunctions[table.getn(mcoEventList[event].eventFunctions)] = eventFunction;
+end
+
+function mcoUnregisterEvent(event, eventFunction)
+	for i = 1, table.getn(mcoEventList[event].eventFunctions) do
+		if (mcoEventList[event].eventFunctions[i] == eventFunction) then
+			table.remove(mcoEventList[event].eventFunctions, i);
+
+			if (table.getn(mcoEventList[event]) == 0) then
+				table.remove(mcoEventList, event);
+				mcoManager:UnregisterEvent(event);
+			end
+
+			return;
+		end
+	end
+end
+
+function mcoOnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	for i, eventFunction in ipairs(mcoEventList) do
+		if (event == eventFunction) then
+			for j = 1, table.getn(mcoEventList[event].eventFunctions) do
+				mcoEventList[event].eventFunctions[j](arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+			end			
+		end
+	end
+end
+
+function mcoRegisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	if (string.len(subChannelOne) > 12 or string.len(subChannelTwo) > 12 or string.len(subChannelThree) > 12) then
+		mduDisplayMessage(MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	if (GetChannelName(masterChannel) > 0) then
+		if (not mcoJoinedChannelList[masterChannel]) then
+			table.insert(mcoJoinedChannelList, masterChannel);
+			mcoJoinedChannelList[masterChannel] = {};
+			mcoJoinedChannelList[masterChannel].DataId = {};
+		end
+
+		if (subChannelOne) then
+			if (not mcoJoinedChannelList[masterChannel][subChannelOne]) then
+				table.insert(mcoJoinedChannelList[masterChannel], subChannelOne);
+				mcoJoinedChannelList[masterChannel][subChannelOne] = {};
+				mcoJoinedChannelList[masterChannel][subChannelOne].DataId = {};
+			end
+
+			if (subChannelTwo) then
+				if (not mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo]) then
+					table.insert(mcoJoinedChannelList[masterChannel][subChannelOne], subChannelTwo);
+					mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo] = {};
+					mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo].DataId = {};
+				end
+
+				if (subChannelThree) then
+					if (not mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree]) then
+						table.insert(mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo], subChannelThree);
+						mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree] = {};
+						mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree].DataId = {};
+					end
+				end
+			end
+		end
+
+		mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+	end
+
+	if (GetChannelName(masterChannel) == 0) then
+		if (JoinChannelByName(masterChannel, MDU_EMPTY_STRING, nil) == nil) then
+			mduDisplayMessage(MCO_LOCALE_FREE_CHANNEL_ERROR .. masterChannel .. ".", MCO_NAME, .8, .8, 0, 1, 0, 0);
+		else
+			mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+			table.insert(mcoJoinedChannelList, masterChannel);
+			mcoJoinedChannelList[masterChannel] = {};
+			mcoJoinedChannelList[masterChannel].DataId = {};
+		end
+	end
+end
+
+function mcoUnregisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	
+end
+
+function mcoRegisterDataId(dataId, dataIdFunction, masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	dataId = tonumber(dataId);
+	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
+		if (masterChannel == channelLevelZero) then
+			if (subChannelOne) then
+				for j, channelLevelOne in ipairs(mcoJoinedChannelList[channelLevelZero]) do
+					if (subChannelOne == channelLevelOne) then
+						if (subChannelTwo) then
+							for j, channelLevelTwo in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne]) do
+								if (subChannelTwo == channelLevelTwo) then
+									if (subChannelThree) then
+										for j, channelLevelThree in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo]) do
+											if (subChannelThree == channelLevelThree) then
+												table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId, dataId);
+												mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId] = {};
+												mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId].dataIdFunction = dataIdFunction;
+
+												return;
+											end
+										end
+									end
+
+									table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId, dataId);
+									mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId] = {};
+									mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId].dataIdFunction = dataIdFunction;
+
+									return;
+								end
+							end							
+						end
+
+						table.insert(mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId, dataId);
+						mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId] = {};
+						mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId].dataIdFunction = dataIdFunction;
+
+						return;
+					end
+				end				
+			end
+
+			table.insert(mcoJoinedChannelList[channelLevelZero].DataId, dataId);
+			mcoJoinedChannelList[channelLevelZero].DataId[dataId] = {};
+			mcoJoinedChannelList[channelLevelZero].DataId[dataId].dataIdFunction = dataIdFunction;
+			return;
+		end
+	end
+end
+
+function mcoUnregisterDataId(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	
+end
+
+function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subChannelThree, dataId, target)
+	if (data == nil) then
+		mduDisplayMessage(MCO_LOCALE_DATA_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	--[[if (mcoIndexOfChannel == nil) then
+		mduDisplayMessage(MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR .. masterChannel, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end]]
+
+	if (dataId == nil) then
+		mduDisplayMessage(MCO_LOCALE_DATAID_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
+		return;
+	end
+
+	if (subChannelOne == nil) then
+		subChannelOne = "0";
+	end
+
+	if (subChannelTwo == nil) then
+		subChannelTwo = "0";
+	end
+
+	if (subChannelThree == nil) then
+		subChannelThree = "0";
+	end
+
+	if (target == nil) then
+		target = "0";
+	end
+
+	local dataType = type(data);
+	local dataTypeIndex = MCO_DATA_TYPE_NIL;
+
+	if (dataType == "string") then
+		dataTypeIndex = MCO_DATA_TYPE_STRING;
+	end
+
+	if (dataType == "number") then
+		dataTypeIndex = MCO_DATA_TYPE_NUMBER;
+	end
+
+	if (dataType == "table") then
+		dataTypeIndex = MCO_DATA_TYPE_TABLE;
+	end
+
+	if (dataType == "function") then
+		dataTypeIndex = MCO_DATA_TYPE_FUNCTION;
+	end
+
+	if (dataType == "boolean") then
+		dataTypeIndex = MCO_DATA_TYPE_BOOLEAN;
+	end
+
+	if (dataType == "nil") then
+		dataTypeIndex = MCO_DATA_TYPE_NIL;
+	end
+	
+	
+	if (not mcoMessagesToSend[masterChannel]) then
+		table.insert(mcoMessagesToSend, masterChannel);
+		mcoMessagesToSend[masterChannel] = {};
+	end
+
+	local tempIndex = table.getn(mcoMessagesToSend[masterChannel]) + 1;
+
+	table.insert(mcoMessagesToSend[masterChannel], tempIndex);
+	mcoMessagesToSend[masterChannel][tempIndex] = {};
+	mcoMessagesToSend[masterChannel][tempIndex].data = data;
+	mcoMessagesToSend[masterChannel][tempIndex].masterChannel = masterChannel;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelOne = subChannelOne;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelTwo = subChannelTwo;
+	mcoMessagesToSend[masterChannel][tempIndex].subChannelThree = subChannelThree;
+	mcoMessagesToSend[masterChannel][tempIndex].dataId = dataId;
+	mcoMessagesToSend[masterChannel][tempIndex].target = target;
+	mcoMessagesToSend[masterChannel][tempIndex].dataTypeIndex = dataTypeIndex;
+	mcoMessagesToSend[masterChannel][tempIndex].dataLength = string.len(data);
+end
+-- /script mduDisplayMessage(gcinfo());
+function mcoTransmitData(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+--mduDisplayMessage(tostring(mcoAbleToSendData[arg9]));
+	for i, channelName in ipairs(mcoAbleToSendData) do
+	--mduDisplayMessage(i .. channelName .. ": " .. tostring(mcoAbleToSendData[channelName]));
+		if (mcoAbleToSendData[channelName] == true) then
+			if ((not mcoMessagesToSend[channelName]) or (not mcoMessagesToSend[channelName][1])) then
+				return;
+			end
+
+			local mcoIndexOfChannel = GetChannelName(channelName);
+
+			if (mcoIndexOfChannel ~= nil) then
+				SendChatMessage("<mco" .. mcoMessagesToSend[channelName][1].subChannelOne .. "." .. mcoMessagesToSend[channelName][1].subChannelTwo .. "." .. mcoMessagesToSend[channelName][1].subChannelThree .. ">[" .. mcoMessagesToSend[channelName][1].target .. "]{" .. mcoMessagesToSend[channelName][1].dataId .. "}:" .. mcoMessagesToSend[channelName][1].dataTypeIndex .. ":`" .. mcoMessagesToSend[channelName][1].dataLength .. "`" .. mcoMessagesToSend[channelName][1].data, "CHANNEL", GetDefaultLanguage("player"), mcoIndexOfChannel);
+			else
+				mduDisplayMessage(MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR .. channelName, MCO_NAME, .8, .8, 0, 1, 0, 0);
+				return;
+			end
+
+			table.remove(mcoMessagesToSend[channelName], 1);
+
+			mcoCleanMessagesToSend(channelName);
+
+			mcoBeginTimer(_, _, _, _, _, _, _, _, channelName);
+		end
+	end
+end
+
+function mcoCleanMessagesToSend(channelName)
+	for i, indexName in ipairs(mcoMessagesToSend) do
+		if (indexName == channelName and table.getn(mcoMessagesToSend[channelName]) == 0) then
+			table.remove(mcoMessagesToSend, i);
+		end
+	end
+end
+
+function testers()
+	--[[SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);]]
+
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+	mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+	--SendChatMessage("t", "WHISPER", GetDefaultLanguage("player"), "Banzai");
+	--SendChatMessage("((t))", "GUILD", GetDefaultLanguage("player"));
+end
+
+function testers2()
+	SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);
+end
+
+-- /script SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 1);SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 5);SendChatMessage("t", "CHANNEL", GetDefaultLanguage("player"), 6);
+function mcoRecieveMessage(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	local masterChannel = arg9;
+
+	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
+		if (channelLevelZero == masterChannel) then
+			local _, _, subChannelOne, subChannelTwo, subChannelThree, target, dataId, dataType, dataLength, data = string.find(arg1, "<mco(%w+)%.(%w+)%.(%w+)>%[(%w+)%]{(%d+)}:(%d+):`(%d+)`(.+)");		
+			
+			if (subChannelOne == nil) then
+				return;
+			end
+
+			dataId = tonumber(dataId);
+
+			data = mcoConvertData(data, tonumber(dataType));			
+
+			if (subChannelOne ~= "0") then
+				for j, channelLevelOne in ipairs(mcoJoinedChannelList[channelLevelZero]) do
+					if (subChannelOne == channelLevelOne) then
+						if (subChannelTwo ~= "0") then
+							for j, channelLevelTwo in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne]) do
+								if (subChannelTwo == channelLevelTwo) then
+									if (subChannelThree ~= "0") then
+										for j, channelLevelThree in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo]) do
+											if (subChannelThree == channelLevelThree) then
+												for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId) do
+													if (dataId == tableDataId) then
+														mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo][channelLevelThree].DataId[dataId].dataIdFunction(data, target);
+													end
+												end
+
+												return;
+											end
+										end
+									end
+
+									for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId) do
+										if (dataId == tableDataId) then
+											mcoJoinedChannelList[channelLevelZero][channelLevelOne][channelLevelTwo].DataId[dataId].dataIdFunction(data, target);
+										end
+									end
+
+									return;
+								end
+							end							
+						end
+
+						for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId) do
+							if (dataId == tableDataId) then
+								mcoJoinedChannelList[channelLevelZero][channelLevelOne].DataId[dataId].dataIdFunction(data, target);
+							end
+						end
+
+						return;
+					end
+				end
+			end
+
+			for i, tableDataId in ipairs(mcoJoinedChannelList[channelLevelZero].DataId) do
+				if (dataId == tableDataId) then
+					mcoJoinedChannelList[channelLevelZero].DataId[dataId].dataIdFunction(data, target);
+				end
+			end
+
+			return;
+		end
+	end
+end
+
+function mcoConvertData(data, dataType)
+	if (dataType == MCO_DATA_TYPE_NIL) then
+		return (nil);
+	end
+
+	if (dataType == MCO_DATA_TYPE_STRING) then
+		return (tostring(data));
+	end
+
+	if (dataType == MCO_DATA_TYPE_NUMBER) then
+		return (tonumber(data));
+	end
+
+	if (dataType == MCO_DATA_TYPE_TABLE) then
+		return (data);
+	end
+
+	if (dataType == MCO_DATA_TYPE_FUNCTION) then
+		return (data);
+	end
+
+	if (dataType == MCO_DATA_TYPE_BOOLEAN) then
+		if (data == "0" or data == "false") then
+			return (false);
+		end
+		
+		if (data >= "1" or data == "true") then
+			return (true);
+		end
+	end
+end
+
+function mcoConstructMessage()
+	
+end
+
+function mcoDeconstructMessage()
+	
+end
+
+function mcoEncodeMessage()
+	
+end
+
+function mcoDecodeMessage()
+	
+end
+
+function mcoChannelTimerEnable(_, _, _, _, _, _, _, _, arg9)
+--mduDisplayMessage(1);
+	--[[if (mtiGetTimerTime(mcoChannelTimerId[arg9]) == 0) then
+		mcoAbleToSendData[arg9] = true;
+	end]]
+	
+	for i, timerChannel in ipairs(mcoChannelTimerId) do
+		if ((mtiGetTimerTime(mcoChannelTimerId[timerChannel]) >= mtiGetTimerEndTime(mcoChannelTimerId[timerChannel])) or mtiGetTimerTime(mcoChannelTimerId[timerChannel]) == 0) then
+			if (not mcoAbleToSendData[timerChannel]) then
+				table.insert(mcoAbleToSendData, timerChannel);
+			end
+
+			mcoAbleToSendData[timerChannel] = true;
+		end
+	end
+end
+
+function mcoBeginTimer(_, _, _, _, _, _, _, _, channelName)
+	if (not mcoChannelTimerId[channelName]) then
+		table.insert(mcoChannelTimerId, channelName);
+		mcoChannelTimerId[channelName] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+	else
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+
+		mtiResetTimer(mcoChannelTimerId[channelName]);
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+	end	
+
+--mduDisplayMessage(channelName);
+--mduDisplayMessage(mcoChannelTimerId[channelName]);
+	
+end
+
+----------------------------------------------------------
+--			UTILITY FUNCTIONS               --
+----------------------------------------------------------
+--/script mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessageTest);mcoRegisterDataId(tostring(7), mcoTest, "mytest", nil, nil, nil);mcoSendMessage("TEST!","mytest",nil,nil,nil,tostring(7),"TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/7 tester
+
+function mcoTest(arg1, arg2)
+	mduDisplayMessage(arg1 .. "|" .. arg2, "TEST", .8, .8, 0, 1, 0, 0);
+end
+		end
+		
+		if (data >= "1" or data == "true") then
+			return (true);
+		end
+	end
+end
+
+function mcoConstructMessage()
+	
+end
+
+function mcoDeconstructMessage()
+	
+end
+
+function mcoEncodeMessage()
+	
+end
+
+function mcoDecodeMessage()
+	
+end
+
+function mcoChannelTimerEnable(_, _, _, _, _, _, _, _, arg9)
+--mduDisplayMessage(1);
+	--[[if (mtiGetTimerTime(mcoChannelTimerId[arg9]) == 0) then
+		mcoAbleToSendData[arg9] = true;
+	end]]
+	
+	for i, timerChannel in ipairs(mcoChannelTimerId) do
+		if ((mtiGetTimerTime(mcoChannelTimerId[timerChannel]) >= mtiGetTimerEndTime(mcoChannelTimerId[timerChannel])) or mtiGetTimerTime(mcoChannelTimerId[timerChannel]) == 0) then
+			if (not mcoAbleToSendData[timerChannel]) then
+				table.insert(mcoAbleToSendData, timerChannel);
+			end
+
+			mcoAbleToSendData[timerChannel] = true;
+		end
+	end
+end
+
+function mcoBeginTimer(_, _, _, _, _, _, _, _, channelName)
+	if (not mcoChannelTimerId[channelName]) then
+		table.insert(mcoChannelTimerId, channelName);
+		mcoChannelTimerId[channelName] = mtiCreateNewTimer(1, .5, mcoChannelTimerEnable, 0, .5);
+
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+	else
+		if (not mcoAbleToSendData[channelName]) then
+			table.insert(mcoAbleToSendData, channelName);
+		end
+
+		mcoAbleToSendData[channelName] = false;
+
+		mtiResetTimer(mcoChannelTimerId[channelName]);
+		mtiStartTimer(mcoChannelTimerId[channelName]);
+	end	
+
+--mduDisplayMessage(channelName);
+--mduDisplayMessage(mcoChannelTimerId[channelName]);
+	
+end
+
+----------------------------------------------------------
+--			UTILITY FUNCTIONS               --
+----------------------------------------------------------
+--/script mcoRegisterChannel("mytest", "sub1", "sub2", "sub3");mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessageTest);mcoRegisterDataId(tostring(7), mcoTest, "mytest", nil, nil, nil);mcoSendMessage("TEST!","mytest",nil,nil,nil,tostring(7),"TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterEvent("CHAT_MSG_CHANNEL", mcoRecieveMessage);
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoRegisterDataId(7, mcoTest, "mytest", "sub1", "sub2");
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/script mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");mcoSendMessage("TEST!", "mytest", "sub1", "sub2", nil, 7, "TARGET");
+
+--/7 tester
+
+function mcoTest(arg1, arg2)
+	mduDisplayMessage(arg1 .. "|" .. arg2, "TEST", .8, .8, 0, 1, 0, 0);
+end

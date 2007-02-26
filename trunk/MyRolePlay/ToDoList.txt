@@ -1,0 +1,15 @@
+--Prompting for allowing or denying information to be given
+	-Need a function to call for when character sheet is requested such as..
+		mrpRequestInformation("target");
+	The process will then send requests for all of the information on the currently selected target
+
+--Fixing that MRP breaks whenever the user has special characters in their name.
+--Tooltip scaling and tooltip moving to cursor.
+--Fix the FlagRSP2.0 mistake.
+--Add GUI for MRPL and MRPI.
+
+
+-- Perhaps --
+	--A search for people with info.
+
+

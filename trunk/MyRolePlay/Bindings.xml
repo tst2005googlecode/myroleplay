@@ -1,0 +1,9 @@
+<Bindings>
+	<!--<Binding name="RPSWITCH" description="RP Switch" header="MYROLEPLAY">
+		mrpiToggle();
+	</Binding>-->
+
+	<Binding name="CHARACTER_SHEET" description="View Target Player's Character Sheet" header="MYROLEPLAY">
+		mrpViewTargetCharacterSheet();
+	</Binding>
+</Bindings>
