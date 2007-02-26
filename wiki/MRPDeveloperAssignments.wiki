@@ -8,6 +8,8 @@ Here is the current list of tasks assigned to developers of the MyRolePlay Proje
 
 = Current List of Developers =
 
-* Moncader
-* Quez
+  * Moncader
+  * Ezhru
 
+
+= Current Assignments =
