@@ -1,5 +1,5 @@
 --[[
-Library file for bars.
+Library file for bars. weee!
 ]]
 
 MyBarsBarList = {};
