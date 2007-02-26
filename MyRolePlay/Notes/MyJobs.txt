@@ -1,0 +1,54 @@
+MyJob AddOn
+
+-Chef
+-Bartender
+-Waiter
+-Owner
+
+
+Chef Flag
+	-Divies out food/drink to Waiters and remembers how much was given
+	-Remembers food handed out and prices and compares to food given back as well as how much money was given back and reports if there was a confliction in price versus amount given back.
+	-Reports all successful sales, and pops up a confirmation box before trading.
+	-Records how much money was gained during their shift (all increases in money add to this, unless they go off duty) and shows it in a seperate money window that does not affect the money in their bag.
+
+
+Waiter Flag
+	-When another player with the addon clicks the MyJ icon on their target portrait, will transmit information on what items are for sale and for what prices, as well as how many of that item are available.  Only one person can view their menu at a time.
+	-Reports all successful sales, and pops up a confirmation box before trading.
+	-Can return to Chef or Bartender and choose to turn in money and unsold items by clicking the MyJ icon on target portrait, keeping all tips.  If there is a confliction in the amount of food left and the money supposed to be given, then it will take the missing money from the waiters personal cash.
+	-Records how much money was gained during their shift (all increases in money add to this, unless they go off duty) and shows it in a seperate money window that does not affect the money in their bag.
+
+
+Bartender Flag
+	-Does what Chef does
+	-Does what Waiter does, minus returning to Chef or Bartender bit.
+	
+	
+Owner Flag	
+	-Does what Bartender does.
+	-Can take the money and unused items from the Chef as well as the chefs report on who sold what and how much they turned in.
+	
+*** Ideas ***
+
+Waiters/Chefs/Bartenders
+
+Clicking the MyJob minimap Icon will open a window with a drop down list in the top corner of your current jobs while the rest will display the location, your schedule, and who your boss is.  Tabs will display your previous sales, your ranking at that job with others sellers, how much money you have earned in total and during each pay period while working there which is all grabbed from the owner, and the last tab is Shifts which will allow them to start and stop their shift, which starts and stops the money and item count.
+
+Owner
+
+Clicking the MyJob minimap icon opens the same window as before with the extra tabs.
+
+Tab: Employees
+	-List all employees, and when clicked, opens a new window with tabs showing that employees rank, sales, schedule, when they worked over the past week, how much they have been payed (which you fill out), and another section for you to fill out to get how much they will make this pay period.  It will ask for how much money they got from all sales in pay period, what the commission percentage is, and how much they make hourly, then spit out a monetary value.
+
+Tab: Schedule
+	-Lists employees that you can click to edit their schedules
+	
+Tab: Prices
+	-Lists all food/drink that you drag and drop into the window and allows you to set a price for the food/drink.
+	
+	
+
+--Uses Sky and the version information for each employees information is the server date and time, so it never messes up versions.
+--All employees at one job will hold the information for all other employees, when another employee signs on, the versions are checked against each other and updated accordingly.  If the owner signs on, same thing happens.

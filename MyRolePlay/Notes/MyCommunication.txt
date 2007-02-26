@@ -1,0 +1,19 @@
+- register comm id's
+- register channels
+- system based.
+- time based messaging.
+- decontruct messages in to 255 byte messages and reconstuct them as well.
+- subchannels
+- join channels without overridding low channel numbers
+- send messages to players or channels or specify who in a channel.
+- process communication
+- send tables, single message
+
+
+
+
+<mcoMyWarcraftyy.MyWarcraftyy.MyWarcraftyy>[targetpppppp]{daid}:t:`lenda`*sNo*data
+
+78 bytes used. 178 bytes left.
+
+mcoHugeString = "akjfasuklf hasifse fhaw4ufhasj kfaw4ifjawej kf489fha4; o89pjhrtaw4io;tuaw489ut89 a4wutaiwe aw489 uaw4f aw48fu awiufj asefkha89pf haw37fy awfyha w98fu aw8o3f awofh asf aw4h 48c haw4fawo;fh aw489fgaw4ufh aw3 fg";

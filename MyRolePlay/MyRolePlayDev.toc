@@ -1,0 +1,28 @@
+## Interface: 20003
+## Title: MyRolePlayDev
+## Version: Beta 2.6
+## Author: MyWarcraft Suite Dev Team
+## Email: moncader@gmail.com
+## Notes: Role Playing System for the ultimate role play experience.
+## SavedVariablesPerCharacter: mdbSaved
+## SavedVariables: mdbGlobalSaved
+localization.lua
+MyUpdate.lua
+MyDevUtilities.lua
+MyDevUtilities.xml
+bindings.xml
+MyTime.xml
+MyCommunication.xml
+MyDatabase.lua
+MyDatabase.xml
+MyRolePlayDatabase.lua
+MyRolePlay.lua
+MyRolePlayWindow.lua
+MyRolePlayOptions.lua
+MyRolePlay.xml
+MyRolePlayOptions.xml
+MyRolePlayComm.lua
+MyRolePlayComm.xml
+MyRolePlayTooltip.lua
+MyRolePlayCharSheet1.lua
+MyRolePlayCharSheet1.xml

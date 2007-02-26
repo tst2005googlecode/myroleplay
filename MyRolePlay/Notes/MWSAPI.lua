@@ -1,0 +1,641 @@
+--[[
+MyWarcraft Suite API Documentation
+]]
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- MyTime   -    Time and timer management system for WoW.
+
+	-- Time Events
+
+	mtiRegisterEvent(updateInterval, eventFunction [ , queable, wowEvent ])
+		-- Description:
+			--[[
+			Registers a function you specify to be called every time period and/or event fired specified by you.
+			]]
+
+		-- Arguments:
+			local updateInterval (number) -- How often the function supplied in arg 2 (eventFunction) is called.
+
+			local eventFunction (function) -- The function called every time the updateInterval has been reached.
+
+			local queable (boolean) --[[ If a time event is queable, and if an event is supplied for the time fucntion to execute
+					   on (supplied by arg 4 (wowEvent)), and if the event is fired before the specified time update
+					   interval has been reached. The event will que itself. Meaning the next time the update interval has been reached, the function will execute.
+					   An infinite number of ques is possible. ]]
+
+			local wowEvent (string - a valid WoW event) -- If the event specified here is fired in WoW, if the updateInterval has passed, the function will be called.
+
+		-- Returns:
+			eventTimeID (number) -- The ID of the time event. Save in a variable, it is used to accses information about this time event.
+		
+
+
+	mtiUnregisterEvent(id)
+		-- Description:
+			--[[
+			Unregisters a time event previously created so that the function will not be called from that time event.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID number to unregister the time event.
+
+		-- Returns:
+			nil
+
+
+
+	-- Timer Functions
+
+	mtiCreateNewTimer(timeStretch, timeUpdate, timerFunction [, startTime, endTime])
+		-- Description:
+			--[[
+			Creates a new timer that you can control. Has all the expected features that a real timer would have.
+			]]
+
+		-- Arguments:
+			local timeStretch (number) -- How the 'seconds' of the timer are 'stretched'. If you want every two seconds to register as one second on this timer, you set this to 2.
+
+			local timeUpdate (number) -- The interval in which you want the function supplied by you to be called. Directly related to timeStretch.
+
+			local timerFunction (function) -- The function to be called every timeUpdate.
+
+			local startTime (number) -- What time you want the timer to start at.
+
+			local endTime (number) -- The timer will stop once it reaches the endTime.
+
+		-- Returns:
+			timerID (number) -- The ID of the timer. Save in a variable, it is used to accses information about this timer.
+
+	
+	mtiStartTimer(id)
+		-- Description:
+			--[[
+			Starts a timer previously created given by the timer ID.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+		-- Returns:
+			nil
+
+	mtiPauseTimer(id)
+		-- Description:
+			--[[
+			Pauses a timer previously created given by the timer ID.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+		-- Returns:
+			nil
+
+	
+	mtiResetTimer(id)
+		-- Description:
+			--[[
+			Resets a timer previously created given by the timer ID to it's starting time.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+		-- Returns:
+			nil
+
+
+	mtiRemoveTimer(id)
+		-- Description:
+			--[[
+			Removes a timer previously created given by the timer ID.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+		-- Returns:
+			nil
+
+
+	mtiGetTimerTime(id)
+		-- Description:
+			--[[
+			Get's the current time (the timer time, not system time, meaning it is stretched as specified) of the specified timer.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+		-- Returns:
+			timerTime (number) -- The current time of the timer.
+
+
+	mtiSetTimerTime(id, newTime)
+		-- Description:
+			--[[
+			Sets the current time of the specified timer to a new time.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+			local newTime (number) -- The new time of the timer to be set.
+
+		-- Returns:
+			nil
+
+
+	mtiGetTimerState(id)
+		-- Description:
+			--[[
+			Gets the current state of the timer. Possible values are:
+				- MTI_TIMER_STATE_RUNNING (For when the timer is running),
+				- MTI_TIMER_STATE_PENDING (When the timer is sitting paused at it's start time)
+				- MTI_TIMER_STATE_PAUSED (When the timer is paused)
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+		-- Returns:
+			timerState (number) -- The current State of the timer.
+
+
+	mtiGetTimerEndTime(id)
+		-- Description:
+			--[[
+			Gets the timer's end time.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+		-- Returns:
+			timerEndTime (number) -- The end time of the timer.
+
+
+
+	mtiGetTimerStartTime(id)
+		-- Description:
+			--[[
+			Gets the timer's start time.
+			]]
+
+		-- Arguments:
+			local id (number) -- The ID of the timer that was returned by mtiCreateNewTimer()
+
+		-- Returns:
+			timerStartTime (number) -- The start time of the timer.
+
+	
+	mtiGetServerHour()
+		-- Description:
+			--[[
+			Gets the server's time in hours.
+			]]
+
+		-- Arguments:
+			nil
+
+		-- Returns:
+			serverTimeHour (number) -- The current server time in hours.
+
+
+	mtiGetServerMinute()
+		-- Description:
+			--[[
+			Gets the server's time in mintues.
+			]]
+
+		-- Arguments:
+			nil
+
+		-- Returns:
+			serverTimeMinute (number) -- The current server time in minutes.
+
+
+	mtiGetTime()
+		-- Description:
+			--[[
+			Get's the amount of time your computer has been online for.
+			]]
+
+		-- Arguments:
+			nil
+
+		-- Returns:
+			computerUpTime (number) -- The current amount of time your computer has been online for.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+-- MyCommunication   -    Communication management and handling system for WoW.
+
+	mcoRegisterEvent(event, eventFunction)
+		-- Description:
+			--[[
+			Registers a WoW event and when it is fired, calls the eventFunction specified.
+			]]
+
+		-- Arguments:
+			local event (string - Valid wow event) -- The event to watch.
+
+			local eventFunction (function) -- The function to call when the event is fired.
+
+		-- Returns:
+			nil
+
+
+	mcoUnregisterEvent(event, eventFunction)
+		-- Description:
+			--[[
+			Unregisters a WoW event and it's function.
+			]]
+
+		-- Arguments:
+			local event (string - Valid wow event) -- The event to unregister.
+
+			local eventFunction (function) -- The function of the event to unregister.
+
+		-- Returns:
+			nil
+
+
+	mcoRegisterChannel(masterChannel [, subChannelOne[, subChannelTwo[, subChannelThree]]])
+		-- Description:
+			--[[
+			Registers a channel and it's subchannels for use in communication between addons or players.
+
+			This works so that you join masterChannel, and then subChannelOne is a channel 'inside' masterChannel.
+			This is unknown to the user as it seems as though subChannelOne is a channel. Therefore, you can increase the
+			number of channels you can join in WoW considerbly.
+
+			If it succeeds in joining the channels, the event MCO_CHANNEL_JOINED is fired.
+			]]
+
+		-- Arguments:
+			local masterChannel (string) -- The master channel, the actual channel that WoW joins. Considered the first channel.
+
+			local subChannelOne (string) -- The second channel, a 'sub' channel of masterChannel so to say.
+
+			local subChannelTwo (string) -- The third channel, a 'sub' channel of subChannelOne so to say.
+
+			local subChannelThree (string) -- The fourth channel, a 'sub' channel of subChannelTwo so to say.
+
+		-- Returns:
+			nil
+
+
+	mcoUnregisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree) -- WARNING!!!! NOT DONE!!!!!!!!!!!!!!!!!!
+		-- Description:
+			--[[
+			Registers a channel and it's subchannels for use in communication between addons or players.
+
+			This works so that you join masterChannel, and then subChannelOne is a channel 'inside' masterChannel.
+			This is unknown to the user as it seems as though subChannelOne is a channel. Therefore, you can increase the
+			number of channels you can join in WoW considerbly.
+
+			If it succeeds in joining the channels, the event MCO_CHANNEL_JOINED is fired.
+			]]
+
+		-- Arguments:
+			local masterChannel (string) -- The master channel, the actual channel that WoW joins. Considered the first channel.
+
+			local subChannelOne (string) -- The second channel, a 'sub' channel of masterChannel so to say.
+
+			local subChannelTwo (string) -- The third channel, a 'sub' channel of subChannelOne so to say.
+
+			local subChannelThree (string) -- The fourth channel, a 'sub' channel of subChannelTwo so to say.
+
+		-- Returns:
+			nil
+
+
+
+	mcoRegisterDataId(dataId, dataIdFunction, masterChannel [, subChannelOne[, subChannelTwo[, subChannelThree]]])
+		-- Description:
+			--[[
+			Registers a data ID to a channel and registers so that if you recieve a message on the specified channel (and it's subchannels)
+			it will call the function specified.
+			]]
+
+		-- Arguments:
+			local dataId (number) -- The ID you wish to register. When MyCommunication sees this number on the specified channel,
+						-- it will call the given function
+
+			local dataIdFunction (function) -- The function called when the dataID specified is found in a message.
+
+			local masterChannel (string) -- The master channel, the actual channel that WoW joins. Considered the first channel.
+
+			local subChannelOne (string) -- The second channel, a 'sub' channel of masterChannel so to say.
+
+			local subChannelTwo (string) -- The third channel, a 'sub' channel of subChannelOne so to say.
+
+			local subChannelThree (string) -- The fourth channel, a 'sub' channel of subChannelTwo so to say.
+
+		-- Returns:
+			nil
+
+
+
+	mcoUnregisterDataId(dataId, dataIdFunction, masterChannel, subChannelOne, subChannelTwo, subChannelThree) -- NOT COMPLETE
+
+
+
+	mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subChannelThree, dataId [, target])
+		-- Description:
+			--[[
+			Sends a message you provide threw the specified channel.
+			]]
+
+		-- Arguments:
+			local data (any type) -- The data you wish to send across the channel. Can be of any type.
+
+			local masterChannel (string) -- The master channel, the actual channel that WoW joins. Considered the first channel.
+
+			local subChannelOne (string) -- The second channel, a 'sub' channel of masterChannel so to say.
+
+			local subChannelTwo (string) -- The third channel, a 'sub' channel of subChannelOne so to say.
+
+			local subChannelThree (string) -- The fourth channel, a 'sub' channel of subChannelTwo so to say.
+
+			local dataId (number) -- The dataID of this message. Used for an addon knowing what to do with the message when it sees it.
+
+			local target (string) -- Leave blank if there is no target. The target (or the person) you want to send this information to.
+
+		-- Returns:
+			nil
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+-- MyDevUtilites   -    Useful functions used in development.
+
+	mduGenerateNewId([highLimit, lowLimit])
+		-- Description:
+			--[[
+			Generates an ID to use for something.
+			]]
+
+		-- Arguments:
+			local highLimit (number) -- The high limit of the generated ID.
+
+			local lowLimit (number) -- The low limit of the generated ID.
+
+		-- Returns:
+			id (number) -- The ID generated.
+
+
+	mduGetIndexOfId(table, id)
+		-- Description:
+			--[[
+			Gets the index in a table of the ID specified.
+			]]
+
+		-- Arguments:
+			local table (table) -- The table to search
+
+			local id (number) -- The ID to search for
+
+		-- Returns:
+			index (number) -- The index in the table.
+
+
+	mduDisplayMessage(message[, owner, [ownerR, ownerG, ownerB, [messageR, messageG, messageB]]])
+		-- Description:
+			--[[
+			Displays a message to the DEFAULT_CHAT_FRAME. Properly headered and coloured to your liking.
+			]]
+
+		-- Arguments:
+			local message (string or number) -- The message to display.
+
+			local owner (string) -- The owner, or header of the message. (Usually the addon name)
+
+			local ownerR (number) -- The red value of the header colour. (from 0 to 1)
+
+			local ownerG (number) -- The green value of the header colour. (from 0 to 1)
+
+			local ownerB (number) -- The blue value of the header colour. (from 0 to 1)
+
+			local messageR (number) -- The red value of the message colour. (from 0 to 1)
+
+			local messageG (number) -- The green value of the message colour. (from 0 to 1)
+
+			local messageB (number) -- The blue value of the message colour. (from 0 to 1)
+
+		-- Returns:
+			nil
+
+
+	mduColourToHex(red, green, blue)
+		-- Description:
+			--[[
+			Converts the rgb values of a colour (values from 0 to 1) to the equivalent hex colour code.
+			]]
+
+		-- Arguments:
+			local red (number) -- The red value the colour to be converted. (from 0 to 1)
+
+			local green (number) -- The green value the colour to be converted. (from 0 to 1)
+
+			local blue (number) -- The blue value the colour to be converted. (from 0 to 1)
+
+		-- Returns:
+			hexColourCode (string) -- The hex code of the colour converted.
+
+
+	string.split(text, separator[, limit])
+		-- Description:
+			--[[
+			Separates and splits up a string up to limit number of times. It will split the string whenever it
+			sees separator. Stores the values in a table indexed from 0 to limit
+			]]
+
+		-- Arguments:
+			local text (string) -- The string you wish to split
+
+			local separator (string) -- The separator that tells when to split the string.
+
+			local limit (number) -- The maximum number of splits allowed.
+
+		-- Returns:
+			splitStringTable (table) -- The results of the splitted string in a table.
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+-- MyDatabase   -    A complete database system for WoW. -- Not done yet!
+
+
+	mdbCreateDatabase(databaseName, isSaved, isGlobal)
+		-- Description:
+			--[[
+			Creates a new database inside the list of databases that MyDatabase handles.
+			]]
+
+		-- Arguments:
+			local databaseName (string) -- The unique name and identifier for the database you want to create.
+
+			local isSaved (boolean) -- Set to true if you want this database to be saved per character.
+
+			local isGlobal (boolean) -- Set this to true if you want this database to be saved globally. isSaved must also be true.
+
+		-- Returns:
+			nil
+
+	
+	mdbCreateTable(databaseName, tableName)
+		-- Description:
+			--[[
+			Adds a table to an already created database.
+			]]
+
+		-- Arguments:
+			local databaseName (string) -- The name of the database you wish to add the table to.
+
+			local tableName (string) -- The unique name of the table that you wish to add to the database.
+
+		-- Returns:
+			nil
+
+	
+	mdbAddColumn(databaseName, tableName, columnName)
+		-- Description:
+			--[[
+			Adds a new column in to an already created table.
+			]]
+
+		-- Arguments:
+			local databaseName (string) -- The name of the database you wish to add the column to.
+
+			local tableName (string) -- The name of the table you wish to add the column to.
+
+			local columnName (string) -- The unique name of the column that you wish to add to the table.
+
+		-- Returns:
+			nil
+
+
+	
+	mdbInsertData(databaseName, tableName, ...)
+		-- Description:
+			--[[
+			Adds the data you provide to a table in a database. After the tableName argument, you may add as many arguments as there are columns in that table.
+			The order that the arguments are provided is inputted in the same order that you added the columns in.
+			For example: If you used 
+				mdbAddColumn(databaseName, tableName, columnName);
+				mdbAddColumn(databaseName, tableName, columnName1);
+				mdbAddColumn(databaseName, tableName, columnName2);
+				
+			you would use mdbInsertData like:
+				mdbInsertData(databaseName, tableName, dataForColumnName, dataForColumnName1, dataForColumnName2);
+			]]
+
+		-- Arguments:
+			local databaseName (string) -- The name of the database you wish to insert the data in to.
+
+			local tableName (string) -- The name of the table you wish to insert the data in to.
+
+			local ... (anything) -- The data of any type that you want to add to the database in the given table.
+
+		-- Returns:
+			nil
+
+	
+
+	mdbDatabaseExists(databaseName)
+		-- Description:
+			--[[
+			Checks to see if the given database exists.
+			]]
+
+		-- Arguments:
+			local databaseName (string) -- The name of the database you wish to check.
+
+		-- Returns:
+			databaseExists (boolean) -- true if the database exists, false if it doesn't.
+
+
+	mdbTableExists(databaseName, tableName)
+		-- Description:
+			--[[
+			Checks to see if the given database exists.
+			]]
+
+		-- Arguments:
+			local databaseName (string) -- The name of the database you wish to check.
+
+			local tableName (string) -- The name of the table you wish to check.
+
+		-- Returns:
+			tableExists (boolean) -- true if the table exists, false if it doesn't.
+
+	
+	mdbColumnExists(databaseName, tableName, columnName)
+		-- Description:
+			--[[
+			Checks to see if the given database exists.
+			]]
+
+		-- Arguments:
+			local databaseName (string) -- The name of the database you wish to check.
+
+			local tableName (string) -- The name of the table you wish to check.
+
+			local columnName (string) -- The name of the column you wish to check.
+
+		-- Returns:
+			columnExists (boolean) -- true if the column exists, false if it doesn't.
+
+
+
+	mdbIsSaved(databaseName)
+		-- Description:
+			--[[
+			Returns if the given database is saved globally, per character, or at all.
+			]]
+
+		-- Arguments:
+			local databaseName (string) -- The name of the database you wish to check.
+
+		-- Returns:
+			isSaved (boolean) -- true if the database is saved in some way.
+
+			isSavedGlobally (boolean) -- true if the database is globally, false if saved per character.
+
+	
+
+	mdbSearchData(searchPattern, isExactMatch, databaseName, tableName, columnNames)
+	--[[
+
+
+
+	UNDER CONSTRUCTION. (Yes I know this is kinda the important part that lets you actually ACCESS the data, but it's a DAMN HARD function to write :) I'm working on it :)
+
+	]]

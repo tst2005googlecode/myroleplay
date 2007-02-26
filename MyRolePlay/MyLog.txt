@@ -1,0 +1,9 @@
+-- (1208-07-12-06 - GMT) First entry, to be an example, new entries at the top. --
+
+-- (1207-07-12-06 - GMT) MyLog Created, created to tell the other developers of any progress made. (HHMM-DD-MM-YY - GMT) format used --
+
+
+
+-- (1505-15-12-06 - PST) Edited MyCommunication.lua - added encoding and decoding of messages for the drunk effect. --
+-- (1533-15-12-06 - PST) Edited MyDatabase.lua - Complete rewite of the mdbExists code, now unified function, much more efficient. --
+-- (1930-15-12-06 - PST) HUGE overhall of MyDatabase.lua - added mdbHardSearchData() and mdbHardEditData() to directly access databases instead of searching them. More efficiency rewrites. --

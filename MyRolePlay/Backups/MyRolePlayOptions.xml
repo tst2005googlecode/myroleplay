@@ -1,0 +1,3011 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://www.blizzard.com/wow/ui/"> 
+
+	<!-- The lua scripts that this addon will use -->
+	<Script file="MyRolePlayOptions.lua" />
+
+	<CheckButton name="mrpOptionsButton" parent="mrpUniversalFrame" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="32" y="32" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativeTo="mrpTooltipButton" relativePoint="BOTTOMRIGHT">
+				<Offset>
+					<AbsDimension x="0" y="-15" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\SpellBook\SpellBook-SkillLineTab">
+					<Size>
+						<AbsDimension x="64" y="64"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="-3" y="11"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Options", 0.4, 0.7, 1.0, 1 );
+				GameTooltip:AddLine("Click to open the MyRolePlay option menu.", 1.0, 1.0, 1.0, 1);
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpCheckButtons();
+				mrpHideAllFrames();
+				mrpOptionsButton:Disable();
+				mrpOptionsFrame:Show();
+			</OnClick>
+
+		</Scripts>
+
+		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptions.tga" />
+		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+		<CheckedTexture file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD"/>
+	</CheckButton>
+
+<!--*************************************************************************************************************************-->
+<Frame name="mrpOptionsFrame" parent="mrpUniversalFrame" toplevel="true" movable="true" hidden="true" enableMouse="true" >
+		<Size>
+			<AbsDimension x="300" y="240" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="mrpUniversalFrame" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+		</Scripts>
+	</Frame>
+
+	<Frame name="mrpOptionsUIFrame" parent="mrpOptionsFrame"  enableMouse="FALSE" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="300" y="315" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="mrpUniversalFrame" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="-12" y="25" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+		<Layer level="ARTWORK">
+				<Texture name="mrpOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="200" y="40" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="10" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="ColourHeaderText" inherits="GameFontNormal" text="Options" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="80" y="15" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="6" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="0.2" g="0.5" b="1.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" >
+			<EdgeSize>
+				<AbsValue val="16"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="50"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
+		
+			
+	</Frame>
+
+	<Button name="mrpOptionsFrameHelpButton" parent="mrpOptionsFrame" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="26" y="26" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativeTo="mrpUniversalFrame" relativePoint="TOPRIGHT">
+				<Offset>
+					<AbsDimension x="-45" y="5" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Help", 1.0, 0.2, 0.2, 1 );
+				GameTooltip:AddLine("Enable and disable various options of MyRolePlay.\n\nClick for more help.", 1.0, 1.0, 1.0, 1);
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+
+		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonHelp.tga" />
+	</Button>
+
+<!--*************************************************************************************************************************-->
+	<Frame name="mrpOptionsPage1" parent="mrpOptionsFrame" toplevel="true" movable="true" hidden="false" enableMouse="true" enableKeyboard="true" >
+		<Size>
+			<AbsDimension x="265" y="250" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="mrpUniversalFrame" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="-12" y="25" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="mrpOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="180" y="40" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="10" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="ColourHeaderText" inherits="GameFontNormal" text="Page 1" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="80" y="15" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="6" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" >
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="50"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Scripts>
+		</Scripts>
+	</Frame>
+	<CheckButton name="mrpOptionsPage1Button" parent="mrpOptionsFrame" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="32" y="16" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsUIFrame" relativePoint="BOTTOMLEFT">
+				<Offset>
+					<AbsDimension x="80" y="33" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="1" justifyV="CENTER" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="-1" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPage.tga">
+					<Size>
+						<AbsDimension x="64" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="CENTER">
+							<Offset>
+								<AbsDimension x="2" y="-4"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Page 1", 0.4, 0.7, 1.0, 1 );
+				GameTooltip:AddLine("Click to open page 1 - General Options.", 1.0, 1.0, 1.0, 1);
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpCheckOptionPageButtons();
+				mrpHidePageFrames();
+				mrpOptionsPage1Button:Disable();
+				mrpOptionsPage1:Show();
+			</OnClick>
+
+		</Scripts>
+
+		<HighlightTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPageHilight.tga" alphaMode="ADD"/>
+		<CheckedTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPageCheck.tga" alphaMode="ADD"/>
+	</CheckButton>
+
+	<CheckButton name="mrpRelativeLevelOptionButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="20" y="20"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpUniversalFrame" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="58" y="-68" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentRelative" inherits="GameFontNormal" text="Relative level display." justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="18" y="-3" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Toggle the display of textual replacement of level in tooltips", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpOptionRelativeClick()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpColourTooltipOptionButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="20" y="20"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpUniversalFrame" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="58" y="-85" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentRelative" inherits="GameFontNormal" text="Coloured Tooltips" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="18" y="-3" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Toggle the display of custom colours in tooltips.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpOptionColouredTooltips()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpMRPColourClassOptionButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="20" y="20"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpUniversalFrame" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="58" y="-102" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentRelative" inherits="GameFontNormal" text="Custom class colours in tooltips" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="18" y="-3" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Toggle the usage of custom class colours in tooltips.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpOptionClassColours()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpFlagRSPOptionButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="20" y="20"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpUniversalFrame" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="58" y="-136" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentRelative" inherits="GameFontNormal" text="FlagRSP Compatability" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="18" y="-3" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Toggle the compatability of MyRolePlay and FlagRSP.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpOptionFlagRSP()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpMRPTooltipOptionButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="20" y="20"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpUniversalFrame" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="58" y="-119" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentRelative" inherits="GameFontNormal" text="MyRolePlay style tooltips" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="18" y="-3" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Toggle the usage of MyRolePlay tooltips.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpOptionMRPTooltips()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	
+
+<!--*************************************************************************************************************************-->
+	<Frame name="mrpOptionsPage2" parent="mrpOptionsFrame" toplevel="true" movable="true" hidden="true" enableMouse="true" enableKeyboard="true" >
+		<Size>
+			<AbsDimension x="265" y="250" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="mrpUniversalFrame" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="-12" y="25" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>			
+			<Layer level="ARTWORK">
+				<Texture name="mrpOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="180" y="40" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="10" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="ColourHeaderText" inherits="GameFontNormal" text="Page 2" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="80" y="15" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="6" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" >
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="50"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Scripts>
+		</Scripts>
+	</Frame>
+	
+	<Button name="mrpOptionsShareA" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="18" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-17" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="A" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="18" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Always share this information.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<Button name="mrpOptionsShareP" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="18" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-17" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="P" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="18" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Prompt before sharing this information.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<Button name="mrpOptionsShareN" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="18" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-17" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="N" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="18" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Never share this information.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	
+	<CheckButton name="mrpOptionsPage2Button" parent="mrpOptionsFrame" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="32" y="16" />
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="mrpOptionsPage1Button" relativePoint="RIGHT">
+				<Offset>
+					<AbsDimension x="19" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="2" justifyV="CENTER" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="-1" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPage.tga">
+					<Size>
+						<AbsDimension x="64" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="CENTER">
+							<Offset>
+								<AbsDimension x="2" y="-4"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Page 2", 0.4, 0.7, 1.0, 1 );
+				GameTooltip:AddLine("Click to open page 2 - Information Sharing Options.", 1.0, 1.0, 1.0, 1);
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpCheckOptionPageButtons();
+				mrpHidePageFrames();
+				mrpOptionsPage2Button:Disable();
+				mrpOptionsPage2:Show();
+			</OnClick>
+
+		</Scripts>
+
+		<HighlightTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPageHilight.tga" alphaMode="ADD"/>
+		<CheckedTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPageCheck.tga" alphaMode="ADD"/>
+	</CheckButton>
+
+	<CheckButton name="mrpShareToggleOptionButton" parent="mrpOptionsPage2" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="20" y="20"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpUniversalFrame" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="58" y="-35" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentRelative" inherits="GameFontNormal" text="Share" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="18" y="-3" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Toggle the sharing MyRolePlay information.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpOptionShareToggle()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionSharePrefixAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-29" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share prefix.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysPrefix()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionSharePrefixPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-29" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing prefix.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptPrefix()
+				SetOptionsCheckButtons()
+
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionSharePrefixNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-29" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share prefix.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverPrefix()
+				SetOptionsCheckButtons()
+
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsSharePrefix" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="18" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-29" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Prefix" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="50" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's prefix.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="mrpOptionShareFirstNameAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-41" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share first name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysFirstName()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareFirstNamePrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-41" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing first name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptFirstName()
+				SetOptionsCheckButtons()
+
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareFirstNameNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-41" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share first name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverFirstName()
+				SetOptionsCheckButtons()
+
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareFirstName" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-41" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="First name" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's first name.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="mrpOptionShareMiddleNameAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-53" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share middle name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysMiddleName()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareMiddleNamePrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-53" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing middle name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptMiddleName()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareMiddleNameNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-53" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share middle name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverMiddleName()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareMiddleName" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-53" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Middle name" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's middle name.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="mrpOptionShareSurnameAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-65" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share surname.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysSurname()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareSurnamePrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-65" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing surname.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptSurname()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareSurnameNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-65" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share surname.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverSurname()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareSurname" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-65" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Surname" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's surname.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+
+	<CheckButton name="mrpOptionShareTitleAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-77" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share title.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysTitle()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareTitlePrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-77" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing title.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptTitle()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareTitleNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-77" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share title.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverTitle()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareTitle" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-77" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Title" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's title.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="mrpOptionShareNicknameAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-89" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share nickname.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysNickname()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareNicknamePrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-89" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing nickname.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptNickname()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareNicknameNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-89" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share nickname.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverNickname()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareNickname" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-89" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Nickname" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's nickname.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<CheckButton name="mrpOptionShareHouseNameAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-101" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share house name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysHouseName()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareHouseNamePrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-101" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing house name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptHouseName()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareHouseNameNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-101" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share house name.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverHouseName()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareHouseName" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-101" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="House name" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's house name.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<CheckButton name="mrpOptionShareEyeColourAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-113" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share eye colour.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysEyeColour()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareEyeColourPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-113" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing eye colour.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptEyeColour()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareEyeColourNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-113" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share eye colour.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverEyeColour()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareEyeColour" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-113" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Eye Colour" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's eye colour.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<CheckButton name="mrpOptionShareHeightAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-125" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share height.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysHeight()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareHeightPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-125" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing height.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptHeight()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareHeightNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-125" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share height.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverHeight()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareHeight" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-125" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Height" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's height.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<CheckButton name="mrpOptionShareWeightAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-137" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share weight.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysWeight()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareWeightPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-137" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing weight.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptWeight()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareWeightNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-137" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share weight.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverWeight()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareWeight" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-137" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Weight" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's weight.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="mrpOptionShareEmotionAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-149" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share emotion.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysEmotion()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareEmotionPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-149" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing emotion.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptEmotion()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareEmotionNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-149" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share emotion.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverEmotion()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareEmotion" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-149" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Emotion" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's emotion.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<CheckButton name="mrpOptionShareHomeCityAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-161" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share home city.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysHomeCity()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareHomeCityPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-161" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing home city.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptHomeCity()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareHomeCityNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-161" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share home city.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverHomeCity()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareHomeCity" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-161" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Home City" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's home city.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="mrpOptionShareBirthCityAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-173" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share birth city.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysBirthCity()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareBirthCityPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-173" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing birth city.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptBirthCity()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareBirthCityNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-173" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share birth city.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverBirthCity()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareBirthCity" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-173" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Birth City" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's birth city.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<CheckButton name="mrpOptionShareMottoAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-185" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share motto.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysMotto()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareMottoPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-185" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing motto.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptMotto()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareMottoNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-185" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share motto.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverMotto()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareMotto" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-185" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Motto" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's motto.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+	<CheckButton name="mrpOptionShareHistoryAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-197" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share history.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysHistory()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareHistoryPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-197" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing history.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptHistory()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareHistoryNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-197" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share history.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverHistory()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareHistory" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-197" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="History" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's history.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+	<CheckButton name="mrpOptionShareGuildAlways" parent="mrpOptionsPage2" inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="17" y="-209" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Always share guild.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareAlwaysGuild()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareGuildPrompt" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="31" y="-209" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Prompt before sharing guild.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleSharePromptGuild()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+
+	<CheckButton name="mrpOptionShareGuildNever" parent="mrpOptionsPage2"  inherits="OptionsCheckButtonTemplate" checked="true">
+		<Size>
+			<AbsDimension x="12" y="12" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="3" right="-3" top="3" bottom="3"/>
+		</HitRectInsets>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="45" y="-209" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Never share guild.", 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpToggleShareNeverGuild()
+				SetOptionsCheckButtons()
+			</OnClick>
+		</Scripts>
+	</CheckButton>
+	<Button name="mrpOptionsShareGuild" parent="mrpOptionsPage2" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="100" y="12" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeTo="mrpOptionsPage2" relativePoint="TOPLEFT">
+				<Offset>
+					<AbsDimension x="63" y="-209" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="Guild" justifyV="TOP" justifyH="LEFT">
+					<Size>
+						<AbsDimension x="100" y="12" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
+				GameTooltip:SetText("Share your character's guild.", 1.0, 1.0, 1.0, 1 );
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+		</Scripts>
+	</Button>
+
+
+<!--*************************************************************************************************************************-->
+	<Frame name="mrpOptionsPage3" parent="mrpOptionsFrame" toplevel="true" movable="true" hidden="true" enableMouse="true" enableKeyboard="true" >
+		<Size>
+			<AbsDimension x="265" y="250" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="mrpUniversalFrame" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="-12" y="25" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="mrpOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="180" y="40" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="10" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="ColourHeaderText" inherits="GameFontNormal" text="Page 3" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="80" y="15" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="6" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="1.0" g="0.8" b="0.0" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" >
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="50"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Scripts>
+		</Scripts>
+	</Frame>
+
+	<CheckButton name="mrpOptionsPage3Button" parent="mrpOptionsFrame" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="32" y="16" />
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="mrpOptionsPage2Button" relativePoint="RIGHT">
+				<Offset>
+					<AbsDimension x="19" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentText" inherits="GameFontNormalSmall" text="3" justifyV="CENTER" justifyH="CENTER">
+					<Size>
+						<AbsDimension x="200" y="11" />
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="-1" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPage.tga">
+					<Size>
+						<AbsDimension x="64" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="CENTER">
+							<Offset>
+								<AbsDimension x="2" y="-4"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter>
+				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+				GameTooltip:SetText("Page 3", 0.4, 0.7, 1.0, 1 );
+				GameTooltip:AddLine("Click to open page 3 - Tooltip Options.", 1.0, 1.0, 1.0, 1);
+				GameTooltip:Show();
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+				mrpCheckOptionPageButtons();
+				mrpHidePageFrames();
+				mrpOptionsPage3Button:Disable();
+				mrpOptionsPage3:Show();
+			</OnClick>
+
+		</Scripts>
+
+		<HighlightTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPageHilight.tga" alphaMode="ADD"/>
+		<CheckedTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPageCheck.tga" alphaMode="ADD"/>
+	</CheckButton>
+
+
+
+
+</Ui>
