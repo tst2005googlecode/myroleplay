@@ -1,0 +1,14 @@
+## Interface: 20003
+## Title: MyCastbars
+## Author: Moncader
+## Notes: Casting Bars!
+## DefaultState: Enabled
+## SavedVariables:
+## SavedVariablesPerCharacter:
+MyDevUtilities.lua
+MyDevUtilities.xml
+MyTime.lua
+MyTime.xml
+MyBars.lua
+MyBars.xml
+MyCastbars.lua
