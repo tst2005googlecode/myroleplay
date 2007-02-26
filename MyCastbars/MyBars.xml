@@ -1,0 +1,317 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+	<Frame name="MyBarsMain">
+		<Scripts>
+			<OnUpdate>
+				mbsUpdateTimerBars();
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+
+	<Frame name="MyBarsTemplate" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true" virtual="true">
+		<Size>
+			<AbsDimension x="264" y="30"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" />
+		</Anchors>
+
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBackground">
+					<Size>
+						<AbsDimension x="255" y="22"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="4" y="-3"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="0" g="0" b="0" a="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+
+		<Frames>
+			<Frame name="$parentFlash" hidden="true">
+				<Size>
+					<AbsDimension x="255" y="30"/>
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture name="$parent_TOPLEFT" file="Interface\AddOns\MyCastbars\Textures\MG_Borders" alphaMode="ADD" hidden="false">
+							<Size>
+								<AbsDimension x="10" y="10"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset>
+										<AbsDimension x="2" y="-2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0" right="0.3125" top="0" bottom="0.3125"/>
+						</Texture>
+						<Texture name="$parent_TOPRIGHT" file="Interface\AddOns\MyCastbars\Textures\MG_Borders" alphaMode="ADD" hidden="false">
+							<Size>
+								<AbsDimension x="10" y="10"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOPRIGHT">
+									<Offset>
+										<AbsDimension x="-2" y="-2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0.625" right="0.9375" top="0" bottom="0.3125"/>
+						</Texture>
+						<Texture name="$parent_TOP" file="Interface\AddOns\MyCastbars\Textures\MG_Borders" alphaMode="ADD" hidden="false">
+							<Size>
+								<AbsDimension x="240" y="10"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOP">
+									<Offset>
+										<AbsDimension x="0" y="-2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0.3125" right="0.625" top="0" bottom="0.3125"/>
+						</Texture>
+						<Texture name="$parent_BOTTOM" file="Interface\AddOns\MyCastbars\Textures\MG_Borders" alphaMode="ADD" hidden="false">
+							<Size>
+								<AbsDimension x="240" y="10"/>
+							</Size>
+							<Anchors>
+								<Anchor point="BOTTOM">
+									<Offset>
+										<AbsDimension x="0" y="2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0.3125" right="0.625" top="0.625" bottom="0.9375"/>
+						</Texture>
+						<Texture name="$parent_BOTTOMLEFT" file="Interface\AddOns\MyCastbars\Textures\MG_Borders" alphaMode="ADD" hidden="false">
+							<Size>
+								<AbsDimension x="10" y="10"/>
+							</Size>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="2" y="2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0" right="0.3125" top="0.625" bottom="0.9375"/>
+						</Texture>
+						<Texture name="$parent_BOTTOMRIGHT" file="Interface\AddOns\MyCastbars\Textures\MG_Borders" alphaMode="ADD" hidden="false">
+							<Size>
+								<AbsDimension x="10" y="10"/>
+							</Size>
+							<Anchors>
+								<Anchor point="BOTTOMRIGHT">
+									<Offset>
+										<AbsDimension x="-2" y="2"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0.625" right="0.9375" top="0.625" bottom="0.9375"/>
+						</Texture>
+						<Texture name="$parent_RIGHT" file="Interface\AddOns\MyCastbars\Textures\MG_Borders" alphaMode="ADD" hidden="false">
+							<Size>
+								<AbsDimension x="10" y="6"/>
+							</Size>
+							<Anchors>
+								<Anchor point="RIGHT">
+									<Offset>
+										<AbsDimension x="-2" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0.625" right="0.9375" top="0.3125" bottom="0.625"/>
+						</Texture>
+						<Texture name="$parent_LEFT" file="Interface\AddOns\MyCastbars\Textures\MG_Borders" alphaMode="ADD" hidden="false">
+							<Size>
+								<AbsDimension x="10" y="6"/>
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset>
+										<AbsDimension x="2" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<TexCoords left="0" right="0.3125" top="0.3125" bottom="0.625"/>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+			<StatusBar name="$parentStatusBar">
+				<Size>
+					<AbsDimension x="255" y="20"/>
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture name="$parentSpark" file="Interface\CastingBar\UI-CastingBar-Spark" alphaMode="ADD">
+							<Size>
+								<AbsDimension x="16" y="43"/>
+							</Size>
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</Texture>
+
+						<FontString name="$parentLEFTText" inherits="MyBarsFont" justifyV="CENTER" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="$parent" relativePoint="LEFT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+
+						<FontString	name="$parentCENTERText" inherits="MyBarsFont" justifyV="CENTER" justifyH="CENTER">
+							<Anchors>
+								<Anchor point="CENTER" relativeTo="$parent" relativePoint="CENTER">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+
+						<FontString	name="$parentRIGHTText" inherits="MyBarsFont" justifyV="CENTER" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="RIGHT" relativeTo="$parent" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+
+						<FontString	name="$parentTOPLEFTText" inherits="MyBarsFontSmall" justifyV="CENTER" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativeTo="$parentLEFTText" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+
+						<FontString	name="$parentTOPRIGHTText" inherits="MyBarsFontSmall" justifyV="CENTER" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="BOTTOMRIGHT" relativeTo="$parentRIGHTText" relativePoint="TOPRIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+
+						<FontString	name="$parentBOTTOMLEFTText" inherits="MyBarsFontSmall" justifyV="CENTER" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parentLEFTText" relativePoint="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+
+						<FontString	name="$parentBOTTOMRIGHTText" inherits="MyBarsFontSmall" justifyV="CENTER" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOPRIGHT" relativeTo="$parentRIGHTText" relativePoint="BOTTOMRIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+
+						<FontString	name="$parentTOPText" inherits="MyBarsFontSmall" justifyV="CENTER" justifyH="CENTER">
+							<Anchors>
+								<Anchor point="BOTTOM" relativeTo="$parentCENTERText" relativePoint="TOP">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+
+						<FontString	name="$parentBOTTOMText" inherits="MyBarsFontSmall" justifyV="CENTER" justifyH="CENTER">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="$parentCENTERText" relativePoint="BOTTOM">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						this:SetFrameLevel(this:GetFrameLevel() - 1)
+					</OnLoad>
+				</Scripts>
+				<BarTexture name="$parentTexture" file="Interface\TargetingFrame\UI-StatusBar"/>
+				<BarColor r="1.0" g="0.7" b="0.0"/>
+			</StatusBar>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+				this:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+
+				this:RegisterForDrag("LeftButton");
+			</OnLoad>
+			<OnDragStart>
+				this:StartMoving();
+			</OnDragStart>
+			<OnDragStop>
+				this:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
+
+	<FontString name="MyBarsFont" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+		<FontHeight>
+			<AbsValue val="12" />
+		</FontHeight>
+		<Color r="1.0" g="1.0" b="1.0" />
+	</FontString>
+
+	<FontString name="MyBarsFontSmall" font="Fonts\FRIZQT__.TTF" virtual="true">
+		<Shadow>
+			<Offset>
+				<AbsDimension x="1" y="-1" />
+			</Offset>
+			<Color r="0" g="0" b="0" />
+		</Shadow>
+		<FontHeight>
+			<AbsValue val="8" />
+		</FontHeight>
+		<Color r="1.0" g="1.0" b="1.0" />
+	</FontString>
+</Ui>
