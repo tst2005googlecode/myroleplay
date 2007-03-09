@@ -1,0 +1,20 @@
+## Interface: 20003
+## Title: MyWarcraftSuite
+## Version: Beta 2.6.5
+## Author: MyWarcraft Suite Dev Team
+## Email: moncader@mywarcraft.net
+## Notes: Role Playing System for the ultimate role play experience.
+## SavedVariablesPerCharacter: mdbSaved
+## SavedVariables: mdbGlobalSaved
+MyDevUtilities.lua
+MyDevUtilities.xml
+MyUpdate.lua
+MyTime.xml
+MyCommunication.xml
+MyDatabase.lua
+MyDatabase.xml
+MyTooltip.lua
+MyBars.lua
+MyBars.xml
+MyWarcraftSuite.lua
+
