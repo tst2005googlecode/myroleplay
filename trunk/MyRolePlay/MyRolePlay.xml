@@ -6,7 +6,7 @@
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER">
-				
+
 			</Anchor>
 		</Anchors>
 		<Scripts>
@@ -44,7 +44,7 @@
 				mrpToggleButtonOnClick();
 			</OnClick>
 		</Scripts>
-		
+
 		<NormalTexture file="Interface\Buttons\UI-DialogBox-Button-Up">
 			<TexCoords left="0.0" right="1.0" top="0.0" bottom="0.625" />
 		</NormalTexture>
@@ -83,7 +83,7 @@
 								<AbsDimension x="0" y="10" />
 							</Offset>
 						</Anchor>
-					</Anchors>	
+					</Anchors>
 				</Texture>
 				<Texture file="Interface\AddOns\MyRolePlayDev\Textures\PersonalFrameTopRight.tga">
 					<Size>
@@ -95,7 +95,7 @@
 								<AbsDimension x="0" y="10" />
 							</Offset>
 						</Anchor>
-					</Anchors>	
+					</Anchors>
 				</Texture>
 				<Texture file="Interface\AddOns\MyRolePlayDev\Textures\PersonalFrameBottomLeft.tga">
 					<Size>
@@ -107,7 +107,7 @@
 								<AbsDimension x="0" y="-20" />
 							</Offset>
 						</Anchor>
-					</Anchors>	
+					</Anchors>
 				</Texture>
 				<Texture file="Interface\AddOns\MyRolePlayDev\Textures\PersonalFrameBottomRight.tga">
 					<Size>
@@ -119,7 +119,7 @@
 								<AbsDimension x="0" y="-20" />
 							</Offset>
 						</Anchor>
-					</Anchors>	
+					</Anchors>
 				</Texture>
 			</Layer>
 		</Layers>
@@ -220,7 +220,7 @@
 					<AbsDimension x="25" y="-5" />
 				</Offset>
 			</Anchor>
-		</Anchors>				
+		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture name="mrpIdentityBackgroundTop" file="Interface\PaperDollInfoFrame\UI-Character-StatBackground">
@@ -303,7 +303,7 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		
+
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture name="mrpAppearanceBackgroundTop" file="Interface\PaperDollInfoFrame\UI-Character-StatBackground">
@@ -385,7 +385,7 @@
 					<AbsDimension x="25" y="-5" />
 				</Offset>
 			</Anchor>
-		</Anchors>				
+		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture name="mrpLoreBackgroundTop" file="Interface\PaperDollInfoFrame\UI-Character-StatBackground">
@@ -501,7 +501,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -560,8 +560,8 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
-			</OnLoad>		
+
+			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 				GameTooltip:SetText(MRP_LOCALE_MRPXML_MIDDLENAME_TT, 1.0, 0.8, 0.0, 1 );
@@ -618,7 +618,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -677,7 +677,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -736,7 +736,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -795,7 +795,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -854,7 +854,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -916,8 +916,8 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
-			</OnLoad>		
+
+			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 				GameTooltip:SetText(MRP_LOCALE_MRPXML_EYECOLOUR_TT_HEADER, 1.0, 0.8, 0.0, 1 );
@@ -974,8 +974,8 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
-			</OnLoad>		
+
+			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 				GameTooltip:SetText(MRP_LOCALE_MRPXML_HEIGHT_TT_HEADER, 1.0, 0.8, 0.0, 1 );
@@ -1032,8 +1032,8 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
-			</OnLoad>		
+
+			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 				GameTooltip:SetText(MRP_LOCALE_MRPXML_WEIGHT_TT_HEADER, 1.0, 0.8, 0.0, 1 );
@@ -1091,8 +1091,8 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
-			</OnLoad>		
+
+			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 				GameTooltip:SetText(MRP_LOCALE_MRPXML_EMOTION_TT_HEADER, 1.0, 0.8, 0.0, 1 );
@@ -1151,8 +1151,8 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
-			</OnLoad>		
+
+			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 				GameTooltip:SetText(MPR_LOCALE_MRPXML_DESCRIPTION_TT_HEADER, 1.0, 0.8, 0.0, 1 );
@@ -1197,7 +1197,7 @@
 		<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up" />
 		<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down" />
 		<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled" />
-		<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD" />		
+		<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD" />
 	</Button>
 <!--*************************************************************************************************************************-->
 	<Button name="mrpCharacterFramePrevPage" parent="mrpCharacterFrame" hidden="false">
@@ -1228,7 +1228,7 @@
 		<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up" />
 		<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down" />
 		<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled" />
-		<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD" />		
+		<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD" />
 	</Button>
 <!--*************************************************************************************************************************-->
 	<Button name="mrpProfileSaveButton" parent="mrpCharacterFrame" text="">
@@ -1268,7 +1268,7 @@
 		<HighlightTexture file="Interface\Buttons\UI-DialogBox-Button-Highlight" alphaMode="ADD">
 			<TexCoords left="0.0" right="1.0" top="0.0" bottom="0.625"/>
 		</HighlightTexture>
-		<ButtonText inherits="GameFontNormalSmall" text="MRP_LOCALE_MRPXML_PROFILE_SAVE_TEXT"/>		
+		<ButtonText inherits="GameFontNormalSmall" text="MRP_LOCALE_MRPXML_PROFILE_SAVE_TEXT"/>
 		<NormalFont inherits="GameFontNormalSmall" />
 		<HighlightFont inherits="GameFontHighlightSmall"/>
 	</Button>
@@ -1429,7 +1429,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -1488,7 +1488,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -1546,7 +1546,7 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
+
 			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -1605,8 +1605,8 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				
-			</OnLoad>		
+
+			</OnLoad>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
 				GameTooltip:SetText(MRP_LOCALE_MRPXML_HISTORY_TT_HEADER, 1.0, 0.8, 0.0, 1 );
@@ -1788,7 +1788,7 @@
 						<Scripts>
 							<OnMouseUp>
 								mrpEnterInformationEditBox:SetFocus();
-							</OnMouseUp> 
+							</OnMouseUp>
 						</Scripts>
 					</Frame>
 				</ScrollChild>
@@ -1843,7 +1843,7 @@
 						if (mrpEnterInformationLocation == "Appearance" and mrpEnterInformationField == "description") then
 							mrpRSPDescriptionVersion = mrpRSPDescriptionVersion + 1;
 						end
-						mrpSaveVariable(mrpEnterInformationLocation, mrpEnterInformationField, mrpEnterInformationEditBox:GetText());						
+						mrpSaveVariable(mrpEnterInformationLocation, mrpEnterInformationField, mrpEnterInformationEditBox:GetText());
 						mrpEnterInformationEditBox:SetText("");
 						mrpEnterInformation:Hide();
 					</OnClick>
@@ -1904,7 +1904,7 @@
 			</OnShow>
 		</Scripts>
 	</Frame>
-	
+
 
 	<Button name="mrpCharacterFrameHelpButton" parent="mrpCharacterFrame" toplevel="true" hidden="false">
 		<Size>
@@ -1932,14 +1932,14 @@
 		<NormalTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonHelp.tga" />
 	</Button>
 
-	<Button name="mrpButtonIconFrame" frameStrata="LOW" parent="TargetFrame" enableMouse="true" movable="true" hidden="true">
+	<Button name="mrpButtonIconFrame" frameStrata="LOW" parent="UIParent" enableMouse="true" movable="true" hidden="true">
 		<Size>
 			<AbsDimension x="28" y="28"/>
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER" relativePoint="CENTER" relativeTo="TargetFrame">
+			<Anchor point="CENTER" relativePoint="CENTER" relativeTo="UIParent">
 				<Offset>
-					<AbsDimension x="2" y="0" />
+					<AbsDimension x="0" y="0" />
 				</Offset>
 			</Anchor>
 		</Anchors>
@@ -1947,12 +1947,18 @@
 		<PushedTexture file="Interface\AddOns\MyRolePlayDev\Buttons\MRPInfoBoxButton_Down.tga" />
 		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight" />
 		<Scripts>
+			<OnLoad>
+				this:RegisterForDrag("LeftButton");
+				this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
 			<OnDragStart>
+				if (mrpLocked == 0) then
 				this:LockHighlight();
-				mrpButtonIconDraggingFrame:Show();
+				this:StartMoving();
+				end
 			</OnDragStart>
 			<OnDragStop>
-				mrpButtonIconDraggingFrame:Hide();
+				this:StopMovingOrSizing();
 				this:UnlockHighlight();
 			</OnDragStop>
 			<OnClick>
@@ -1960,14 +1966,6 @@
 			</OnClick>
 		</Scripts>
 	</Button>
-  
-	<Frame name="mrpButtonIconDraggingFrame" parent="UIParent" hidden="true">
-		<Scripts>
-			<OnUpdate>
-				mrpButtonIconDraggingFrameOnUpdate(arg1);
-			</OnUpdate>
-		</Scripts>
-	</Frame>
 <!--**********************************************************************************************************************************-->
-	
+
 </Ui>

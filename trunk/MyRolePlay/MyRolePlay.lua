@@ -145,13 +145,13 @@ function mrpInitialize()
 	end]]
 
 	mrpUniversalFrameState = 0;
-	
+
 	mrpAddNewField("MyRolePlay Tooltip Relocate");
 
 	if (mrpCheckSettings("MyRolePlay Tooltip Relocate", "enable") == nil) then
 	    mrpAddSetting("MyRolePlay Tooltip Relocate", "enable", "off");
 	end
-	
+
 	local tooltipplacing = mrpCheckSettings("MyRolePlay", "tooltipplacing");
 
  	if (tooltipplacing == "mouse") then
@@ -170,10 +170,10 @@ function mrpChangeTooltipPlacing()
 
 	if (tooltipplacing == "on") then
 		mrpChangeSettings("MyRolePlay Tooltip Relocate", "enable", "on");
-		
+
 	else
 	    mrpChangeSettings("MyRolePlay Tooltip Relocate", "enable", "off");
-	    
+
 	end
 
 end
@@ -1191,20 +1191,22 @@ function mrpButtonIconDraggingFrameOnUpdate(arg1)
 	mrpIconPos = math.deg(math.atan2(ypos, xpos));
 	mrpMoveIcon();
 end
-
+mrpLocked = 0;
 function mrpButtonIconFrameOnClick(arg1)
-	if arg1 == "LeftButton" and mrplocked == 0 then
-		mrpLocked = 1;
+	if arg1 == "LeftButton" then
 		mrpViewTargetCharacterSheet();
-	elseif arg1 == "LeftButton" then
-		mrpLocked = 0;
-		mrpViewTargetCharacterSheet();
+	elseif arg1 == "RightButton" then
+		if (mrpLocked == 0) then
+			mrpLocked = 1;
+		else
+			mrpLocked = 0;
+		end
 	end
 end
 
 -- moves the minimap icon to last position in settings or default angle of 45
 function mrpMoveIcon()
-	mrpButtonIconFrame:SetPoint("CENTER", "TargetFrame", "CENTER", 65, 30);
+	mrpButtonIconFrame:SetPoint("CENTER", "UIParent", "CENTER", 65, 30);
 end
 --/script mrpDisplayMessage(tostring(mrpIsPlayerInList("Artemetria")));
 function mrpIsPlayerInList(name)
