@@ -60,6 +60,14 @@ function mduGetIndexOfId(t, id)
 	end
 end
 
+function mduGetIndexOfTable(t, value)
+	for i, v in ipairs(t) do
+		if (v == value) then
+			return (i);
+		end
+	end
+end
+
 function mduHandleSlashCommand(arg1)
 	if (arg1 == "d") then
 		mduDisplayMessage();
