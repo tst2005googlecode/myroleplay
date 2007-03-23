@@ -133,9 +133,9 @@ function mrpInitialize()
 
 	mrpMoveIcon();
 
-	mrpCharacterButton:SetChecked(1);
+	mrpCharacterButton:SetChecked(true);
 	mrpCharacterButton:Disable();
-	mrpOptionsPage1Button:SetChecked(1);
+	mrpOptionsPage1Button:SetChecked(true);
 	mrpOptionsPage1Button:Disable();
 
 
@@ -145,37 +145,6 @@ function mrpInitialize()
 	end]]
 
 	mrpUniversalFrameState = 0;
-
-	mrpAddNewField("MyRolePlay Tooltip Relocate");
-
-	if (mrpCheckSettings("MyRolePlay Tooltip Relocate", "enable") == nil) then
-	    mrpAddSetting("MyRolePlay Tooltip Relocate", "enable", "off");
-	end
-
-	local tooltipplacing = mrpCheckSettings("MyRolePlay", "tooltipplacing");
-
- 	if (tooltipplacing == "mouse") then
-  		MRPTooltipPlacing = "ANCHOR_CURSOR";
-
-	else
-
-	    MRPTooltipPlacing = "ANCHOR_RIGHT";
-	end
-
-end
-
-function mrpChangeTooltipPlacing()
-
-    local tooltipplacing = mrpCheckSetting("MyRolePlay", "tooltipplacing");
-
-	if (tooltipplacing == "on") then
-		mrpChangeSettings("MyRolePlay Tooltip Relocate", "enable", "on");
-
-	else
-	    mrpChangeSettings("MyRolePlay Tooltip Relocate", "enable", "off");
-
-	end
-
 end
 
 function mrpDisplayMessage(msg)
@@ -196,13 +165,6 @@ end
 function mrpListMRPChannel()
 	mtiUnregisterEvent(mtiGetCurEventId());
 	ListChannelByName("MyWarcraftCo");
-end
-
-function mrpInitRSP(channelName)
-	if (channelName == "xtensionxtooltip2") then
-		mcoUnregisterEvent("MCO_CHANNEL_JOINED", mrpInitRSP);
-		mrpRSPEventTimer = mtiRegisterEvent(3, mrpGetRSPChannelList);
-	end
 end
 
 function mrpUpdatePlayerListDescription(playerName, descriptionPiece, descriptionVersion)
@@ -514,13 +476,28 @@ function mrpFinalizeInit()
 	mtiUnregisterEvent(mtiGetCurEventId());
 	mrpDisplayMessage(MRP_LOCALE_SUCCESS_INIT);
 	mrpIsInitialized = true;
-	mrpEnableRSPCompat();
-	--mrpDisplayMessage(MRP_LOCALE_SITE_REMINDER);
+
+	if (mrpIsAddonCompatabilityEnabled("FlagRSP2/ImmersionRP") == true) then
+		mrpEnableRSPCompat();
+	end
 end
 
 function mrpEnableRSPCompat()
 	mcoRegisterEvent("MCO_CHANNEL_JOINED", mrpInitRSP);
 	mcoRegisterChannel("xtensionxtooltip2");
+end
+
+function mrpDisableRSPCompat()
+	mtiRemoveTimer(mrpRSPDescriptionTimer);
+	mtiRemoveTimer(mrpRSPBroadcastTimer);
+	mcoUnregisterChannel("xtensionxtooltip2");
+end
+
+function mrpInitRSP(channelName)
+	if (channelName == "xtensionxtooltip2") then
+		mcoUnregisterEvent("MCO_CHANNEL_JOINED", mrpInitRSP);
+		mrpRSPEventTimer = mtiRegisterEvent(3, mrpGetRSPChannelList);
+	end
 end
 
 function mrpSetCurProfile(profile)
@@ -544,13 +521,28 @@ function mrpAddSettingField(settingField)
 end
 
 function mrpAddSetting(settingField, setting, defaultValue)
-	mdbAddColumn("MyRolePlaySettings", settingField, setting);
+
+	if (mdbColumnExists("MyRolePlaySettings", settingField, setting) == false) then
+		mdbAddColumn("MyRolePlaySettings", settingField, setting);
+	end
+
+	if (not defaultValue or defaultValue == nil) then
+		defaultValue = MDB_NIL;
+	end
 
 	if (mdbGetNumValues("MyRolePlaySettings", settingField) == 0) then
 		mdbInsertData("MyRolePlaySettings", settingField, defaultValue);
 	else
 		mdbHardEditData("MyRolePlaySettings", settingField, setting, defaultValue);
 	end
+end
+
+function mrpAddAddonCompatability(addonName)
+	mrpAddSetting("Addon Compatability", addonName, true);
+end
+
+function mrpIsAddonCompatabilityEnabled(addonName)
+	return mrpCheckSettings("Addon Compatability", addonName);
 end
 
 function mrpAddNewField(fieldName)

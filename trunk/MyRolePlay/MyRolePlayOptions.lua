@@ -1,7 +1,7 @@
 function mrpSetOptionsCheckButtons()
 	mrpDisplayMessage(mrpCheckSettings("Tooltip", "relativeLevel"));
 	mrpDisplayMessage(mrpCheckSettings("Tooltip", "enabled"));
-	mprDisplayMessage(mrpCheckSettings("Tooltip", "mouse"));
+	mrpDisplayMessage(mrpCheckSettings("Addon Compatability", "FlagRSP2/ImmersionRP"));
 
 	if (mrpCheckSettings("Tooltip", "relativeLevel") == false) then
 		mrpRelativeLevelOptionButton:SetChecked(false);
@@ -10,15 +10,15 @@ function mrpSetOptionsCheckButtons()
 	end
 
 	if (mrpCheckSettings("Tooltip", "enabled") == false) then
-		mrpMRPTooltipOptionButton:SetChecked(nil);
+		mrpMRPTooltipOptionButton:SetChecked(false);
 	else
-		mrpMRPTooltipOptionButton:SetChecked(1);
+		mrpMRPTooltipOptionButton:SetChecked(true);
 	end
-	
-	if (mrpCheckSettings("Tooltip", "mouse") == true) then
-  		mrpMRPTooltipRelocateButton:SetChecked(true);
+
+	if (mrpCheckSettings("Addon Compatability", "FlagRSP2/ImmersionRP") == false) then
+		mrpRSPCompatOptionButton:SetChecked(false);
 	else
-	    mrpMRPTooltipRelocateButton:SetChecked(false)
+		mrpRSPCompatOptionButton:SetChecked(true);
 	end
 end
 
@@ -42,15 +42,12 @@ function mrpOptionMRPTooltips()
 	end
 end
 
-function mrpOptionMouseTooltip()
-	if (mrpCheckSettings("Tooltip", "mouse") == false) then
-		mrpChangeSettings("Tooltip", "mouse", true);
-		MRPTooltipPlacing = "MOUSE";
-		mrpDisplayMessage(MRP_LOCALE_MouseTooltip_Enabled);
-		
+function mrpOptionRSPCompat()
+	if (mrpCheckSettings("Addon Compatability", "FlagRSP2/ImmersionRP") == false) then
+		mrpChangeSettings("Addon Compatability", "FlagRSP2/ImmersionRP", true);
+		mrpEnableRSPCompat();
 	else
-		mrpChangeSettings("Tooltip", "mouse", false);
-		MRPTooltipPlacing = "RIGHT"
-		mrpDisplayMessage(MRP_LOCALE_MouseTooltip_Disabled);
+		mrpChangeSettings("Addon Compatability", "FlagRSP2/ImmersionRP", false);
+		mrpDisableRSPCompat();
 	end
 end

@@ -1,5 +1,5 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://www.blizzard.com/wow/ui/"> 
-	
+<Ui xmlns="http://www.blizzard.com/wow/ui/"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
 	<CheckButton name="mrpOptionsButton" parent="mrpUniversalFrame" toplevel="true" hidden="false">
 		<Size>
 			<AbsDimension x="32" y="32" />
@@ -116,8 +116,8 @@
 				<AbsInset left="5" right="5" top="5" bottom="5"/>
 			</BackgroundInsets>
 		</Backdrop>
-		
-			
+
+
 	</Frame>
 
 	<Button name="mrpOptionsFrameHelpButton" parent="mrpOptionsFrame" toplevel="true" hidden="false">
@@ -317,9 +317,9 @@
 			<AbsDimension x="20" y="20"/>
 		</Size>
 		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="mrpUniversalFrame" relativePoint="TOPLEFT">
+			<Anchor point="TOPLEFT" relativeTo="mrpRelativeLevelOptionButton" relativePoint="TOPLEFT">
 				<Offset>
-					<AbsDimension x="58" y="-119" />
+					<AbsDimension x="0" y="-40" />
 				</Offset>
 			</Anchor>
 		</Anchors>
@@ -356,27 +356,27 @@
 		</Scripts>
 	</CheckButton>
 
-	<CheckButton name="mrpMRPTooltipRelocateButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="false">
+	<CheckButton name="mrpRSPCompatOptionButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">
 		<Size>
 			<AbsDimension x="20" y="20"/>
 		</Size>
 		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="mrpUniversalFrame" relativePoint="TOPLEFT">
+			<Anchor point="TOPLEFT" relativeTo="mrpMRPTooltipOptionButton" relativePoint="TOPLEFT">
 				<Offset>
-					<AbsDimension x="58" y="-170" />
+					<AbsDimension x="0" y="-40" />
 				</Offset>
 			</Anchor>
 		</Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
-				<FontString name="$parentRelative" inherits="GameFontNormal" text="MRP_LOCALE_OPTIONSXML_MRP_TOOLTIP_RELOCATE" justifyV="TOP" justifyH="LEFT">
+				<FontString name="$parentRelative" inherits="GameFontNormal" text="MRP_LOCALE_OPTIONSXML_RSPCOMPAT" justifyV="TOP" justifyH="LEFT">
 					<Size>
 						<AbsDimension x="200" y="11" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
 							<Offset>
-								<AbsDimension x="18" y="-2" />
+								<AbsDimension x="18" y="-3" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -387,259 +387,16 @@
 		<Scripts>
 			<OnEnter>
 				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-				GameTooltip:SetText(MRP_LOCALE_OPTIONSXML_MRP_TOOLTIPS_MOUSE, 1.0, 1.0, 1.0, 0.5 );
+				GameTooltip:SetText(MRP_LOCALE_OPTIONSXML_RSPCOMPAT_TT, 1.0, 1.0, 1.0, 0.5);
 				GameTooltip:Show();
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide();
 			</OnLeave>
 			<OnClick>
-				mrpOptionMouseTooltip();
+				mrpOptionRSPCompat();
 				mrpSetOptionsCheckButtons();
 			</OnClick>
 		</Scripts>
-	</CheckButton>
-	
-
-<!--*************************************************************************************************************************-->
-	<Frame name="mrpOptionsPage2" parent="mrpOptionsFrame" toplevel="true" movable="true" hidden="true" enableMouse="true" enableKeyboard="true" >
-		<Size>
-			<AbsDimension x="265" y="250" />
-		</Size>
-		<Anchors>
-			<Anchor point="CENTER" relativeTo="mrpUniversalFrame" relativePoint="CENTER">
-				<Offset>
-					<AbsDimension x="-12" y="25" />
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Layers>			
-			<Layer level="ARTWORK">
-				<Texture name="mrpOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
-					<Size>
-						<AbsDimension x="180" y="40" />
-					</Size>
-					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="10" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<FontString name="Page2HeaderText" inherits="GameFontNormal" text="MRP_LOCALE_Page_2" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="80" y="15" />
-					</Size>
-					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="6" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<Color r="1.0" g="0.8" b="0.0" />
-				</FontString>
-			</Layer>
-		</Layers>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" >
-			<EdgeSize>
-				<AbsValue val="32"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="50"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="5" right="5" top="5" bottom="5"/>
-			</BackgroundInsets>
-		</Backdrop>
-		<Scripts>
-		</Scripts>
-	</Frame>
-	
-	<CheckButton name="mrpOptionsPage2Button" parent="mrpOptionsFrame" toplevel="true" hidden="false">
-		<Size>
-			<AbsDimension x="32" y="16" />
-		</Size>
-		<Anchors>
-			<Anchor point="LEFT" relativeTo="mrpOptionsPage1Button" relativePoint="RIGHT">
-				<Offset>
-					<AbsDimension x="19" y="0" />
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Layers>
-			<Layer level="ARTWORK">
-				<FontString name="$parentText" inherits="GameFontNormalSmall" text="2" justifyV="CENTER" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="200" y="11" />
-					</Size>
-					<Anchors>
-						<Anchor point="CENTER">
-							<Offset>
-								<AbsDimension x="-1" y="0" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-			<Layer level="BACKGROUND">
-				<Texture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPage.tga">
-					<Size>
-						<AbsDimension x="64" y="32"/>
-					</Size>
-					<Anchors>
-						<Anchor point="CENTER" relativePoint="CENTER">
-							<Offset>
-								<AbsDimension x="2" y="-4"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-			</Layer>
-		</Layers>
-		<Scripts>
-			<OnEnter>
-				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-				GameTooltip:SetText(MRP_LOCALE_Page_2, 0.4, 0.7, 1.0, 1 );
-				GameTooltip:AddLine(MRP_LOCALE_OPTIONSXML_PAGE_2_TT, 1.0, 1.0, 1.0, 1);
-				GameTooltip:Show();
-			</OnEnter>
-			<OnLeave>
-				GameTooltip:Hide();
-			</OnLeave>
-			<OnClick>
-				mrpCheckOptionPageButtons();
-				mrpHidePageFrames();
-				mrpOptionsPage2Button:Disable();
-				mrpOptionsPage2:Show();
-			</OnClick>
-
-		</Scripts>
-
-		<HighlightTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPageHilight.tga" alphaMode="ADD"/>
-		<CheckedTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPageCheck.tga" alphaMode="ADD"/>
-	</CheckButton>
-
-
-
-<!--*************************************************************************************************************************-->
-	<Frame name="mrpOptionsPage3" parent="mrpOptionsFrame" toplevel="true" movable="true" hidden="true" enableMouse="true" enableKeyboard="true" >
-		<Size>
-			<AbsDimension x="265" y="250" />
-		</Size>
-		<Anchors>
-			<Anchor point="CENTER" relativeTo="mrpUniversalFrame" relativePoint="CENTER">
-				<Offset>
-					<AbsDimension x="-12" y="25" />
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Layers>
-			<Layer level="ARTWORK">
-				<Texture name="mrpOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
-					<Size>
-						<AbsDimension x="180" y="40" />
-					</Size>
-					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="10" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<FontString name="ColourHeaderText" inherits="GameFontNormal" text="MRP_LOCALE_Page_3" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="80" y="15" />
-					</Size>
-					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="6" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<Color r="1.0" g="0.8" b="0.0" />
-				</FontString>
-			</Layer>
-		</Layers>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" >
-			<EdgeSize>
-				<AbsValue val="32"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="50"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="5" right="5" top="5" bottom="5"/>
-			</BackgroundInsets>
-		</Backdrop>
-		<Scripts>
-		</Scripts>
-	</Frame>
-
-	<CheckButton name="mrpOptionsPage3Button" parent="mrpOptionsFrame" toplevel="true" hidden="false">
-		<Size>
-			<AbsDimension x="32" y="16" />
-		</Size>
-		<Anchors>
-			<Anchor point="LEFT" relativeTo="mrpOptionsPage2Button" relativePoint="RIGHT">
-				<Offset>
-					<AbsDimension x="19" y="0" />
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Layers>
-			<Layer level="ARTWORK">
-				<FontString name="$parentText" inherits="GameFontNormalSmall" text="3" justifyV="CENTER" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="200" y="11" />
-					</Size>
-					<Anchors>
-						<Anchor point="CENTER">
-							<Offset>
-								<AbsDimension x="-1" y="0" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-			<Layer level="BACKGROUND">
-				<Texture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPage.tga">
-					<Size>
-						<AbsDimension x="64" y="32"/>
-					</Size>
-					<Anchors>
-						<Anchor point="CENTER" relativePoint="CENTER">
-							<Offset>
-								<AbsDimension x="2" y="-4"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-			</Layer>
-		</Layers>
-		<Scripts>
-			<OnEnter>
-				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-				GameTooltip:SetText(MRP_LOCALE_Page_3, 0.4, 0.7, 1.0, 1 );
-				GameTooltip:AddLine(MRP_LOCALE_OPTIONSXML_PAGE_3_TT, 1.0, 1.0, 1.0, 1);
-				GameTooltip:Show();
-			</OnEnter>
-			<OnLeave>
-				GameTooltip:Hide();
-			</OnLeave>
-			<OnClick>
-				mrpCheckOptionPageButtons();
-				mrpHidePageFrames();
-				mrpOptionsPage3Button:Disable();
-				mrpOptionsPage3:Show();
-			</OnClick>
-
-		</Scripts>
-
-		<HighlightTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPageHilight.tga" alphaMode="ADD"/>
-		<CheckedTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPageCheck.tga" alphaMode="ADD"/>
 	</CheckButton>
 </Ui>

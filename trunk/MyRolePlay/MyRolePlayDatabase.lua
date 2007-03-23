@@ -189,19 +189,19 @@ function mrpInitializeExtras()
 	if (mdbDatabaseExists("MyRolePlaySettings") == false) then
 		mdbCreateDatabase("MyRolePlaySettings", true, false);
 
-		mdbCreateTable("MyRolePlaySettings", "Colours");
-			mdbAddColumn("MyRolePlaySettings", "Colours", "enabled");
-			mdbAddColumn("MyRolePlaySettings", "Colours", "classEnabled");
-			mdbAddColumn("MyRolePlaySettings", "Colours", "raceEnabled");
+		mrpAddSettingField("Colours");
+			mrpAddSetting("Colours", "enabled", false);
+			mrpAddSetting("Colours", "classEnabled", false);
+			mrpAddSetting("Colours", "raceEnabled", false);
 
-			mdbInsertData("MyRolePlaySettings", "Colours", false, false, false);
+		mrpAddSettingField("Tooltip");
+			mrpAddSetting("Tooltip", "enabled", true);
+			mrpAddSetting("Tooltip", "relativeLevel", false);
+			mrpAddSetting("Tooltip", "currentOrder", "default");
 
-		mdbCreateTable("MyRolePlaySettings", "Tooltip");
-			mdbAddColumn("MyRolePlaySettings", "Tooltip", "enabled");
-			mdbAddColumn("MyRolePlaySettings", "Tooltip", "relativeLevel");
-			mdbAddColumn("MyRolePlaySettings", "Tooltip", "currentOrder");
-
-			mdbInsertData("MyRolePlaySettings", "Tooltip", true, false, "default");
+		mrpAddSettingField("Addon Compatability");
+			mrpAddAddonCompatability("FlagRSP2/ImmersionRP");
+			--mrpAddAddonCompatability("Outfitter");
 	end
 
 	if (mdbDatabaseExists("MyRolePlayTooltip") == false) then
