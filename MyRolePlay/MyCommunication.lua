@@ -225,11 +225,43 @@ function mcoRegisterChannel(masterChannel, subChannelOne, subChannelTwo, subChan
 		end
 
 		mcoOnEvent("MCO_CHANNEL_JOINED", masterChannel);
+		mduSendEvent("MCO_CHANNEL_JOINED", masterChannel, subChannelOne, subChannelTwo, subChannelThree);
 	end
 end
 
 function mcoUnregisterChannel(masterChannel, subChannelOne, subChannelTwo, subChannelThree)
+	if (mcoJoinedChannelList[masterChannel] or mcoJoinedChannelList[masterChannel] ~= nil) then
+		if (subChannelOne and (mcoJoinedChannelList[masterChannel][subChannelOne] or mcoJoinedChannelList[masterChannel][subChannelOne] ~= nil)) then
+			if (subChannelTwo and (mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo] or mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo] ~= nil)) then
+				if (subChannelThree and (mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree] or mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo][subChannelThree] ~= nil)) then
+					local index = mduGetIndexOfTable(mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo], subChannelThree);
+					table.remove(mcoJoinedChannelList[masterChannel][subChannelOne][subChannelTwo], index);
+					mduSendEvent("MCO_CHANNEL_UNREGISTERED", masterChannel, subChannelOne, subChannelTwo, subChannelThree);
 
+					return;
+				end
+
+				local index = mduGetIndexOfTable(mcoJoinedChannelList[masterChannel][subChannelOne], subChannelTwo);
+				table.remove(mcoJoinedChannelList[masterChannel][subChannelOne], index);
+				mduSendEvent("MCO_CHANNEL_UNREGISTERED", masterChannel, subChannelOne, subChannelTwo);
+
+				return;
+			end
+
+			local index = mduGetIndexOfTable(mcoJoinedChannelList[masterChannel], subChannelOne);
+			table.remove(mcoJoinedChannelList[masterChannel], index);
+			mduSendEvent("MCO_CHANNEL_UNREGISTERED", masterChannel, subChannelOne);
+
+			return;
+		end
+
+		local index = mduGetIndexOfTable(mcoJoinedChannelList, masterChannel);
+		table.remove(mcoJoinedChannelList, index);
+		LeaveChannelByName(masterChannel);
+		mduSendEvent("MCO_CHANNEL_UNREGISTERED", masterChannel);
+
+		return;
+	end
 end
 
 function mcoListChannelByName(channelName, subChannelOne, subChannelTwo, subChannelThree)
@@ -420,12 +452,12 @@ function mcoSendHardMessage(data, channel, encodeFunction)
 		mcoMessagesToSend[channel] = {};
 	end
 
-	if (encodeFunction ~= nil) then
+	if (encodeFunction ~= nil and encodeFunction ~= 0) then
 		data = encodeFunction(data);
 
-    elseif (encodeFunction == 0) then
+	elseif (encodeFunction == 0) then
 		data = data;
-	else
+	elseif (encodeFunction == nil) then
 		data = mcoEncodeMessage(data);
 	end
 

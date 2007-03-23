@@ -16,9 +16,15 @@ end
 MDU_EMPTY_STRING = "";
 MDU_DEFULT_MESSAGEOWNER = "MyDevUtilites";
 
-MDU_VERSION = 0.1;
+MDU_VERSION = 0.5;
 
-mduColours = { ownerR = 1, ownerG = 0, ownerB = 0, messageR = 1, messageG = 1, messageB = 0 };
+MDU_COLOURS_OWNER_R = 1;
+MDU_COLOURS_OWNER_G = 0;
+MDU_COLOURS_OWNER_B = 0;
+
+MDU_COLOURS_MESSAGE_R = 1;
+MDU_COLOURS_MESSAGE_G = 1;
+MDU_COLOURS_MESSAGE_B = 1;
 
 mduEventList = {};
 
@@ -54,6 +60,14 @@ function mduGetIndexOfId(t, id)
 	end
 end
 
+function mduGetIndexOfTable(t, value)
+	for i, v in ipairs(t) do
+		if (v == value) then
+			return (i);
+		end
+	end
+end
+
 function mduHandleSlashCommand(arg1)
 	if (arg1 == "d") then
 		mduDisplayMessage();
@@ -74,27 +88,27 @@ function mduDisplayMessage(msg, owner, ownerR, ownerG, ownerB, messageR, message
 	end
 
 	if (ownerR == nil) then
-		ownerR = mduColours.ownerR;
+		ownerR = MDU_COLOURS_OWNER_R;
 	end
 
 	if (ownerG == nil) then
-		ownerG = mduColours.ownerG;
+		ownerG = MDU_COLOURS_OWNER_G;
 	end
 
 	if (ownerB == nil) then
-		ownerB = mduColours.ownerB;
+		ownerB = MDU_COLOURS_OWNER_B;
 	end
 
 	if (messageR == nil) then
-		messageR = mduColours.messageR;
+		messageR = MDU_COLOURS_MESSAGE_R;
 	end
 
 	if (messageG == nil) then
-		messageG = mduColours.messageG;
+		messageG = MDU_COLOURS_MESSAGE_G;
 	end
 
 	if (messageB == nil) then
-		messageB = mduColours.messageB;
+		messageB = MDU_COLOURS_MESSAGE_B;
 	end
 
 	if (DEFAULT_CHAT_FRAME) then

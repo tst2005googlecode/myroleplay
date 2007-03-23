@@ -348,6 +348,8 @@ MRP_LOCALE_OPTIONSXML_MRP_TOOLTIPS			= "Etiquetas estilo MyRolePlay.";
 MRP_LOCALE_OPTIONSXML_MRP_TOOLTIPS_TT			= "Activa/Desactiva el uso de etiquetas estilo MyRolePlay.";
 MRP_LOCALE_OPTIONSXML_PAGE_3_TT				= "Haz click para abrir la pagina 3 - Opciones de Etiquetas.";
 MRP_LOCALE_OPTIONSXML_PAGE_2_TT				= "Haz click para abrir la pagina 2 - Opciones de Informacion Compartida.";
+MRP_LOCALE_OPTIONSXML_RSPCOMPAT				= "FlagRSP2 and ImmersionRP Support.";
+MRP_LOCALE_OPTIONSXML_RSPCOMPAT_TT				= "When this is checked, MyRolePlay will get information from FlagRSP2 and ImmersionRP users. (Note, this will join the xtensionxtooltip2 channel)";
 
 
 --MyRolePlayToolTips XML
@@ -738,6 +740,8 @@ MRP_LOCALE_OPTIONSXML_MRP_TOOLTIPS         = "MyRolePlay-Stil Tooltips.";
 MRP_LOCALE_OPTIONSXML_MRP_TOOLTIPS_TT         = "Umschalten des Gebrauchs der MyRolePlay Tooltips.";
 MRP_LOCALE_OPTIONSXML_PAGE_3_TT            = "Klicke, um Seite 3 zu \195\182ffnen  Tooltip Optionen.";
 MRP_LOCALE_OPTIONSXML_PAGE_2_TT            = "Klicke, um Seite 2 zu \195\182ffnen  Datenaustausch-Optionen.";
+MRP_LOCALE_OPTIONSXML_RSPCOMPAT				= "FlagRSP2 and ImmersionRP Support.";
+MRP_LOCALE_OPTIONSXML_RSPCOMPAT_TT				= "When this is checked, MyRolePlay will get information from FlagRSP2 and ImmersionRP users. (Note, this will join the xtensionxtooltip2 channel)";
 
 
 --MyRolePlayToolTips XML
@@ -1145,6 +1149,8 @@ MRP_LOCALE_OPTIONSXML_MRP_TOOLTIP_RELOCATE		= "Relocate tooltip to mouse.";
 MRP_LOCALE_OPTIONSXML_MRP_TOOLTIPS_MOUSE		= "Check to set tooltip to mouse";
 MRP_LOCALE_OPTIONSXML_PAGE_3_TT				= "Click to open page 3 - Tooltip Options.";
 MRP_LOCALE_OPTIONSXML_PAGE_2_TT				= "Click to open page 2 - Information Sharing Options.";
+MRP_LOCALE_OPTIONSXML_RSPCOMPAT				= "FlagRSP2 and ImmersionRP Support.";
+MRP_LOCALE_OPTIONSXML_RSPCOMPAT_TT				= "When this is checked, MyRolePlay will get information from FlagRSP2 and ImmersionRP users. (Note, this will join the xtensionxtooltip2 channel)";
 MRP_LOCALE_MouseTooltip_Disabled			= "Tooltip relocating off.";
 MRP_LOCALE_MouseTooltip_Enabled				= "Tooltip relocating set to mouse.";
 
@@ -1200,5 +1206,5 @@ MRP_LOCALE_CLASS_PRIEST					= "Priest";
 
 -- MyRolePlay tooltip text --
 MRP_LOCALE_OFTHE_ALLIANCE_FACTION		= " of the Alliance";
-MRP_LOCALE_OFTHE_HORDE_FACTION			= " of the Horde"; 
+MRP_LOCALE_OFTHE_HORDE_FACTION			= " of the Horde";
 end
