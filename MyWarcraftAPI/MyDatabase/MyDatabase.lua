@@ -91,6 +91,8 @@ MDB_SYNTAX_GET = "GET";
 MDB_SYNTAX_SENDTO = "SEND TO";
 MDB_SYNTAX_READDATABASE = "READ DATABASE";
 
+MDB_NIL = string.char(2) .. "nil" .. string.char(3);
+
 ----------------------------------------------------------
 --			USER FUNCTIONS                  --
 ----------------------------------------------------------
@@ -404,23 +406,41 @@ function mdbInsertData(databaseName, tableName, ...)
 			local tempIterator = table.maxn(MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[1].values) + 1;
 
 			for i = 1, table.maxn(MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns) do
+				local value = select(i, ...);
+
+				if (value == nil) then
+					value = MDB_NIL;
+				end
+
 				table.insert(MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[i].values, tempIterator);
-				MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[i].values[tempIterator] = select(i, ...);
+				MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[i].values[tempIterator] = value;
 			end
 		end
 
 		local tempIterator = table.maxn(MyDatabase.Saved[databaseName].Tables[tableName].Columns[1].values) + 1;
 
 		for i = 1, table.maxn(MyDatabase.Saved[databaseName].Tables[tableName].Columns) do
+			local value = select(i, ...);
+
+			if (value == nil) then
+				value = MDB_NIL;
+			end
+
 			table.insert(MyDatabase.Saved[databaseName].Tables[tableName].Columns[i].values, tempIterator);
-			MyDatabase.Saved[databaseName].Tables[tableName].Columns[i].values[tempIterator] = select(i, ...);
+			MyDatabase.Saved[databaseName].Tables[tableName].Columns[i].values[tempIterator] = value;
 		end
 	elseif (isSaved == false) then
 		local tempIterator = table.maxn(MyDatabase.Databases[databaseName].Tables[tableName].Columns[1].values) + 1;
 
 		for i = 1, table.maxn(MyDatabase.Databases[databaseName].Tables[tableName].Columns) do
+			local value = select(i, ...);
+
+			if (value == nil) then
+				value = MDB_NIL;
+			end
+
 			table.insert(MyDatabase.Databases[databaseName].Tables[tableName].Columns[i].values, tempIterator);
-			MyDatabase.Databases[databaseName].Tables[tableName].Columns[i].values[tempIterator] = select(i, ...);
+			MyDatabase.Databases[databaseName].Tables[tableName].Columns[i].values[tempIterator] = value;
 		end
 	end
 end
@@ -522,6 +542,10 @@ function mdbHardEditData(databaseName, tableName, columnName, newData)
 		return;
 	end
 
+	if (newData == nil) then
+		newData = MDB_NIL;
+	end
+
 	local isSaved, isGlobal = mdbIsSaved(databaseName);
 
 	for dataIterator = 1, mdbGetNumValues(databaseName, tableName, columnName) do
@@ -556,6 +580,10 @@ function mdbEditData(databaseName, tableName, columnName, newData, ...)
 		mduDisplayMessage(MDB_LOCALE_COLUMNDOESNOTEXIST_ERROR .. columnName, MDB_NAME, .8, .8, 0, 1, 0, 0);
 
 		return;
+	end
+
+	if (newData == nil) then
+		newData = MDB_NIL;
 	end
 
 	local isSaved, isGlobal = mdbIsSaved(databaseName);
@@ -1018,7 +1046,7 @@ function mdbGetData(databaseName, tableName, columnName, dataIterator)
 			return (MyDatabase.Databases[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]);
 		end
 
-		return nil;
+		return MDB_NIL;
 	end
 
 	if (isSaved == true) then
@@ -1027,13 +1055,13 @@ function mdbGetData(databaseName, tableName, columnName, dataIterator)
 				return (MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]);
 			end
 
-			return nil;
+			return MDB_NIL;
 		end
 
 		if (MyDatabase.Saved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]) then
 			return (MyDatabase.Saved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]);
 		end
 
-		return nil;
+		return MDB_NIL;
 	end
 end
