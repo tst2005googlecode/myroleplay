@@ -384,6 +384,68 @@ function mdbAddColumn(databaseName, tableName, columnName)
 	end
 end
 
+function mdbInsertIntoData(databaseName, tableName, columnName, value)
+	local databaseExists, tableExists = mdbExists(databaseName, tableName);
+
+	if (databaseExists == false) then
+		mduDisplayMessage(MDB_LOCALE_DATABASEDOESNOTEXIST_ERROR .. databaseName, MDB_NAME, .8, .8, 0, 1, 0, 0);
+
+		return;
+	end
+
+	if (tableExists == false) then
+		mduDisplayMessage(MDB_LOCALE_TABLEDOESNOTEXIST_ERROR .. tableName, MDB_NAME, .8, .8, 0, 1, 0, 0);
+
+		return;
+	end
+
+	local isSaved, isGlobal = mdbIsSaved(databaseName);
+
+	if (value == nil) then
+		value = MDB_NIL;
+	end
+
+	if (isSaved == true) then
+		if (isGlobal == true) then
+			local tempIterator = table.maxn(MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[1].values) + 1;
+
+			for i = 1, table.maxn(MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns) do
+				table.insert(MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[i].values, tempIterator);
+
+				if (MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[i].name == columnName) then
+					MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[i].values[tempIterator] = value;
+				else
+					MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[i].values[tempIterator] = MDB_NIL;
+				end
+			end
+		end
+
+		local tempIterator = table.maxn(MyDatabase.Saved[databaseName].Tables[tableName].Columns[1].values) + 1;
+
+		for i = 1, table.maxn(MyDatabase.Saved[databaseName].Tables[tableName].Columns) do
+			table.insert(MyDatabase.Saved[databaseName].Tables[tableName].Columns[i].values, tempIterator);
+
+			if (MyDatabase.Saved[databaseName].Tables[tableName].Columns[i].name == columnName) then
+				MyDatabase.Saved[databaseName].Tables[tableName].Columns[i].values[tempIterator] = value;
+			else
+				MyDatabase.Saved[databaseName].Tables[tableName].Columns[i].values[tempIterator] = MDB_NIL;
+			end
+		end
+	elseif (isSaved == false) then
+		local tempIterator = table.maxn(MyDatabase.Databases[databaseName].Tables[tableName].Columns[1].values) + 1;
+
+		for i = 1, table.maxn(MyDatabase.Databases[databaseName].Tables[tableName].Columns) do
+			table.insert(MyDatabase.Databases[databaseName].Tables[tableName].Columns[i].values, tempIterator);
+
+			if (MyDatabase.Databases[databaseName].Tables[tableName].Columns[i].name == columnName) then
+				MyDatabase.Databases[databaseName].Tables[tableName].Columns[i].values[tempIterator] = value;
+			else
+				MyDatabase.Databases[databaseName].Tables[tableName].Columns[i].values[tempIterator] = MDB_NIL;
+			end
+		end
+	end
+end
+
 function mdbInsertData(databaseName, tableName, ...)
 	local databaseExists, tableExists = mdbExists(databaseName, tableName);
 
@@ -1042,7 +1104,7 @@ function mdbGetData(databaseName, tableName, columnName, dataIterator)
 	local isSaved, isGlobal = mdbIsSaved(databaseName);
 
 	if (isSaved == false) then
-		if (MyDatabase.Databases[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]) then
+		if (MyDatabase.Databases[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator] or MyDatabase.Databases[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator] ~= nil) then
 			return (MyDatabase.Databases[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]);
 		end
 
@@ -1051,14 +1113,14 @@ function mdbGetData(databaseName, tableName, columnName, dataIterator)
 
 	if (isSaved == true) then
 		if (isGlobal == true) then
-			if (MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]) then
+			if (MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator] or MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator] ~= nil) then
 				return (MyDatabase.GlobalSaved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]);
 			end
 
 			return MDB_NIL;
 		end
 
-		if (MyDatabase.Saved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]) then
+		if (MyDatabase.Saved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator] or MyDatabase.Saved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator] ~= nil) then
 			return (MyDatabase.Saved[databaseName].Tables[tableName].Columns[mdbGetColumnIterator(databaseName, tableName, columnName)].values[dataIterator]);
 		end
 
