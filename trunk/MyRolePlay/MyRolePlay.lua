@@ -526,15 +526,18 @@ function mrpAddSetting(settingField, setting, defaultValue)
 		mdbAddColumn("MyRolePlaySettings", settingField, setting);
 	end
 
-	if (not defaultValue or defaultValue == nil) then
+	if (defaultValue == nil) then
 		defaultValue = MDB_NIL;
 	end
 
 	if (mdbGetNumValues("MyRolePlaySettings", settingField) == 0) then
-		mdbInsertData("MyRolePlaySettings", settingField, defaultValue);
+		mdbInsertIntoData("MyRolePlaySettings", settingField, setting, defaultValue);
 	else
 		mdbHardEditData("MyRolePlaySettings", settingField, setting, defaultValue);
 	end
+
+	mduDisplayMessage("Adding Setting " .. setting .. " to " .. settingField .. " :: Default value of " .. tostring(defaultValue));
+	mduDisplayMessage(tostring(mrpCheckSettings(settingField, setting)));
 end
 
 function mrpAddAddonCompatability(addonName)
