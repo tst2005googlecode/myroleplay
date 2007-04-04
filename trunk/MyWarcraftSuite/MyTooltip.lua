@@ -1,48 +1,3 @@
---[[
-	function
-	name: mrpDisplayTooltip
-	args: Unit target, String mrpFromWhere
-	returns: nil;
-
-	Description:
-		mrpDisplayTooltip displays a tooltip describing the target chosen by the args.
-		This function creates an arithmetically created tooltip. It is not static in any way.
-		Depending on where the call came from, the target, and the information in the Order table,
-		mrpDisplayTooltip will dynamically create new tooltips.
-
-		Tooltips with this function are displayed in a table format, with rows and columns.
-		For example:
-
-		       | Col1 | Col2 | Col3 | Col4
-		-------------------------------------
-		Row1   | Mrs. |Trilia| Sair | Trinkart
-		Row2   | Leader of the Forgotten people
-		Row3   |Level |  14  | Priest
-		Row4   | More data
-		Row5   | And as much as you want up to 30 (the gametooltip limit)
-
-		Notice how you don't have to have the same number of columns in each row.
-
-		To pass information into this function, you use the foo[row][col] = x format.
-
-	-- args description --
-	Unit target:
-		The Unit you want to display the information for.
-		The following Units are handled currently in this function:
-			"player"	-- you
-			"target"	-- your target
-			"mouseover"	-- the object you are mousing over
-
-	String mrpFromWhere:
-		This is a flag to tell the function where the request for a tooltip is coming from.
-		Most calls to mrpDisplayTooltip are from a mouseover. So the appropriate name for mrpFromWhere
-		in this case is "MOUSEOVER"
-		Possible values:
-			"CHATMESSAGE"	-- whenever a chat event calls the function
-			"MOUSEOVER"	-- whenever a mouseover event calls the function
-			"PLAYER"	-- whenever you call the function on yourself
-]]
-
 
 mttTooltips = {};
 mttIdMax = 0;
@@ -72,9 +27,10 @@ MTT_ANCHOR_CENTER = 20;
 
 MTT_TYPE_POPUP = 0;
 MTT_TYPE_UNIT = 1;
-MTT_TYPE_ITEM = 2;
-MTT_TYPE_SPELL = 3;
-MTT_TYPE_CUSTOM = 4;
+MTT_TYPE_UNIT_ADVANCED = 2;
+MTT_TYPE_ITEM = 3;
+MTT_TYPE_SPELL = 4;
+MTT_TYPE_CUSTOM = 5;
 
 
 local function mttDisplayMessage(msg)
@@ -177,7 +133,7 @@ preserve? --FIXME what is this?
 default = the default game tooltip location.
 
 ]]
-function mttCreateTooltip(name, tooltipType, tooltipFunction, owner, anchor, xOff, yOff)
+function mttCreateTooltip(name, tooltipType, tooltipFunction, anchor, owner, xOff, yOff, ...)
 	local temp = mttGetNumTooltips() + 1;
 
 	table.insert(mttTooltips, temp, {});
@@ -279,11 +235,20 @@ function mttGetTooltipOffsetY(id)
 	return (mttTooltips[index].yOff);
 end
 
+function mttGetTooltipType(id)
+	local index = mduGetIndexOfId(mttTooltips, id);
+	return (mttTooltips[index].type);
+end
+
+function mttGetTooltipName(id)
+	local index = mduGetIndexOfId(mttTooltips, id);
+	return (mttTooltips[index].name);
+end
+
 function mttCallTooltipFunction(id, arg1, arg2, arg3, arg4, arg5, arg6, arg7 ,arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)
 	local index = mduGetIndexOfId(mttTooltips, id);
-	local data = mttTooltips[index].tooltipFunction(arg1, arg2, arg3, arg4, arg5, arg6, arg7 ,arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20);
 
-	return data;
+	return mttTooltips[index].tooltipFunction(arg1, arg2, arg3, arg4, arg5, arg6, arg7 ,arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20);
 end
 
 --------------------------------------------------
@@ -372,32 +337,37 @@ function mttDisplayTooltip(id)
 			GameTooltip:SetOwner(mttGetTooltipOwner(id), finalAnchor, mttGetTooltipOffsetX(id), mttGetTooltipOffsetY(id));
 		end
 	end
-arg1 = "test text";
-	local data = mttCallTooltipFunction(id, arg1, arg2, arg3, arg4, arg5, arg6, arg7 ,arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20);
 
-	GameTooltip:SetText(data);
-	GameTooltip:AddLine(data);
-	GameTooltip:AddLine(data);
+	local tooltipType = mttGetTooltipType(id);
+
+	if (tooltipType == MTT_TYPE_POPUP) then
+		mttSetupPopup(id);
+	elseif (tooltipType == MTT_TYPE_UNIT) then
+
+	elseif (tooltipType == MTT_TYPE_UNIT_ADVANCED) then
+
+	elseif (tooltipType == MTT_TYPE_ITEM) then
+
+	elseif (tooltipType == MTT_TYPE_SPELL) then
+
+	elseif (tooltipType == MTT_TYPE_CUSTOM) then
+
+	end
 
 	GameTooltip:Show();
 end
-
 
 
 --[[
 MTT DEFAULT FUNCTIONS
 ]]
 
-function mttTextFunction(text)
-	return text;
+function mttSetupPopup(id)
+	local header, text = mttCallTooltipFunction(id);
+
+	GameTooltip:SetText(header);
+
+	if (text ~= nil) then
+		GameTooltip:AddLine(text);
+	end
 end
-
-
-
-
-
-
-
-
-
-
