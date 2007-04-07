@@ -152,15 +152,15 @@ function mwsMttCreateTooltips()
 end
 
 function mwsMttPopupExampleFunction()
-	local h = "MyTooltip Popup Header!";
-	local t = "Aren't popup tooltips neat and easy?";
+	local header = "MyTooltip Popup Header!";
+	local text = "Aren't popup tooltips neat and easy?";
 
 	-- To make things more interesting (this is NOT necessary), I'm using MyDevUtilities' mduCreateString function.
 	-- It simply provides me an easy way to add colour to a string. Notice that you can use values of 0 - 1 or 0 - 255.
-	h = mduCreateString(h, .2, .5, .6);
-	t = mduCreateString(t, 255, 0, 100);
+	header = mduCreateString(header, .2, .5, .6);
+	text = mduCreateString(text, 255, 0, 100);
 
-	return h, t;
+	return header, text;
 end
 
 function mwsMttUnitExampleFunction(unitId, unitName, unitRace, unitLevel, unitGuildName, unitGuildRank, unitClassification, unitHealth, unitHealthMax, unitIsPVP, unitIsPVPFreeForAll, unitMana, unitManaMax, unitPVPName)

@@ -112,10 +112,26 @@ function mduDisplayMessage(msg, owner, ownerR, ownerG, ownerB, messageR, message
 	end
 end
 
+function mduCreateColour(r, g, b)
+	local temp = {};
+
+	temp.r = r;
+	temp.g = g;
+	temp.b = b;
+
+	return temp;
+end
+
 function mduColourToHex(r, g, b)
 	local red = nil;
 	local green = nil;
 	local blue = nil;
+
+	if (type(r) == "table") then
+		red = r.r;
+		green = r.g;
+		blue = r.b;
+	end
 
 	if (r <= 1 and g <= 1 and b <= 1) then
 		red = string.format("%.2X", (r * 255));
