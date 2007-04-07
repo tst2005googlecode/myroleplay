@@ -1,48 +1,3 @@
---[[
-	function
-	name: mrpDisplayTooltip
-	args: Unit target, String mrpFromWhere
-	returns: nil;
-
-	Description:
-		mrpDisplayTooltip displays a tooltip describing the target chosen by the args.
-		This function creates an arithmetically created tooltip. It is not static in any way.
-		Depending on where the call came from, the target, and the information in the Order table,
-		mrpDisplayTooltip will dynamically create new tooltips.
-
-		Tooltips with this function are displayed in a table format, with rows and columns.
-		For example:
-
-		       | Col1 | Col2 | Col3 | Col4
-		-------------------------------------
-		Row1   | Mrs. |Trilia| Sair | Trinkart
-		Row2   | Leader of the Forgotten people
-		Row3   |Level |  14  | Priest
-		Row4   | More data
-		Row5   | And as much as you want up to 30 (the gametooltip limit)
-
-		Notice how you don't have to have the same number of columns in each row.
-
-		To pass information into this function, you use the foo[row][col] = x format.
-
-	-- args description --
-	Unit target:
-		The Unit you want to display the information for.
-		The following Units are handled currently in this function:
-			"player"	-- you
-			"target"	-- your target
-			"mouseover"	-- the object you are mousing over
-
-	String mrpFromWhere:
-		This is a flag to tell the function where the request for a tooltip is coming from.
-		Most calls to mrpDisplayTooltip are from a mouseover. So the appropriate name for mrpFromWhere
-		in this case is "MOUSEOVER"
-		Possible values:
-			"CHATMESSAGE"	-- whenever a chat event calls the function
-			"MOUSEOVER"	-- whenever a mouseover event calls the function
-			"PLAYER"	-- whenever you call the function on yourself
-]]
-
 
 mttTooltips = {};
 mttIdMax = 0;
@@ -72,9 +27,16 @@ MTT_ANCHOR_CENTER = 20;
 
 MTT_TYPE_POPUP = 0;
 MTT_TYPE_UNIT = 1;
-MTT_TYPE_ITEM = 2;
-MTT_TYPE_SPELL = 3;
-MTT_TYPE_CUSTOM = 4;
+MTT_TYPE_UNIT_ADVANCED = 2;
+MTT_TYPE_ITEM = 3;
+MTT_TYPE_SPELL = 4;
+MTT_TYPE_CUSTOM = 5;
+
+MTT_CONDITIONAL_NEWLINE_TYPE_UP = 0;
+MTT_CONDITIONAL_NEWLINE_TYPE_DOWN = 1;
+
+MTT_NEWLINE = " ";
+MTT_NIL = string.char(2) .. "nil" .. string.char(3);;
 
 
 local function mttDisplayMessage(msg)
@@ -177,7 +139,7 @@ preserve? --FIXME what is this?
 default = the default game tooltip location.
 
 ]]
-function mttCreateTooltip(name, tooltipType, tooltipFunction, owner, anchor, xOff, yOff)
+function mttCreateTooltip(name, tooltipType, tooltipFunction, anchor, owner, xOff, yOff, ...)
 	local temp = mttGetNumTooltips() + 1;
 
 	table.insert(mttTooltips, temp, {});
@@ -219,6 +181,10 @@ function mttCreateTooltip(name, tooltipType, tooltipFunction, owner, anchor, xOf
 	mttTooltips[temp].anchor = anchor;
 	mttTooltips[temp].xOff = xOff;
 	mttTooltips[temp].yOff = yOff;
+
+	table.insert(mttTooltips[temp], 1, {});
+	table.insert(mttTooltips[temp][1], 1, {});
+	mttTooltips[temp].numOfRows = 1;
 
 	return mttTooltips[temp].id;
 end
@@ -279,77 +245,100 @@ function mttGetTooltipOffsetY(id)
 	return (mttTooltips[index].yOff);
 end
 
+function mttGetTooltipType(id)
+	local index = mduGetIndexOfId(mttTooltips, id);
+	return (mttTooltips[index].type);
+end
+
+function mttGetTooltipName(id)
+	local index = mduGetIndexOfId(mttTooltips, id);
+	return (mttTooltips[index].name);
+end
+
 function mttCallTooltipFunction(id, arg1, arg2, arg3, arg4, arg5, arg6, arg7 ,arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)
 	local index = mduGetIndexOfId(mttTooltips, id);
-	local data = mttTooltips[index].tooltipFunction(arg1, arg2, arg3, arg4, arg5, arg6, arg7 ,arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20);
 
-	return data;
+	return mttTooltips[index].tooltipFunction(arg1, arg2, arg3, arg4, arg5, arg6, arg7 ,arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20);
 end
 
 --------------------------------------------------
 
-function mttGetTooltipInfo(orderName, row, column)
-	local temp = mdbSearchData("MyRolePlayTooltip", mdbCreateTablePacket(nil, "Orders"), mdbCreateColumnPacket("table"), mdbCreateSearchPacket("name", "=", orderName));
+function mttGetTooltipGridCell(id, row, column)
+	local index = mduGetIndexOfId(mttTooltips, id);
 
-	return temp[1][1][row][column];
+	return mttTooltips[index][row][column];
 end
 
-function mttGetNumTooltipColumns(orderName, row)
-	local temp = mdbSearchData("MyRolePlayTooltip", mdbCreateTablePacket(nil, "Orders"), mdbCreateColumnPacket("table"), mdbCreateSearchPacket("name", "=", orderName));
+function mttGetTooltipGridRow(id, row)
+	local index = mduGetIndexOfId(mttTooltips, id);
 
-	if (temp[1][1][row]) then
-		return table.maxn(temp[1][1][row]);
+	return mttTooltips[index][row];
+end
+
+function mttGetTooltipGrid(id)
+	local index = mduGetIndexOfId(mttTooltips, id);
+	local temp = {};
+
+	for (i = 1, mttGetNumTooltipRows(id)) do
+		table.insert(temp, i, mttTooltips[index][i]);
+	end
+
+	return temp;
+end
+
+function mttGetNumTooltipColumns(id, row)
+	local index = mduGetIndexOfId(mttTooltips, id);
+
+	if (mttTooltips[index][row]) then
+		return table.maxn(mttTooltips[index][row]);
 	end
 
 	return 0;
 end
 
-function mttGetNumTooltipRows(orderName)
-	local temp = mdbSearchData("MyRolePlayTooltip", mdbCreateTablePacket(nil, "Orders"), mdbCreateColumnPacket("table"), mdbCreateSearchPacket("name", "=", orderName));
+function mttGetNumTooltipRows(id)
+	local index = mduGetIndexOfId(mttTooltips, id);
 
-	return table.maxn(temp[1][1]);
+	return mttTooltips[index].numOfRows);
 end
 
-function mttEditRowTooltipOrder(orderName, row, ...)
-	local tempTable = mdbSearchData("MyRolePlayTooltip", mdbCreateTablePacket(nil, "Orders"), mdbCreateColumnPacket("table"), mdbCreateSearchPacket("name", "=", orderName));
-	local temp = tempTable[1][1];
+function mttEditRowTooltipOrder(id, row, ...)
+	local index = mduGetIndexOfId(mttTooltips, id);
 
-	if (not temp[row]) then
-		table.insert(temp, row, {});
+	if (not mttTooltips[index][row]) then
+		table.insert(mttTooltips[index], row, {});
+		mttTooltips[index].numOfRows = mttTooltips[index].numOfRows + 1;
 	end
 
-	temp[row] = {};
+	mttTooltips[index][row] = {};
 
 	for i = 1, select("#", ...) do
-		temp[row][i] = select(i, ...);
+		mttTooltips[index][row][i] = select(i, ...);
 	end
-
-	mdbEditData("MyRolePlayTooltip", "Orders", "table", temp, mdbCreateSearchPacket("name", "=", orderName));
 end
 
-function mttCreateNewCONDITIONAL_NEWLINE(distance, Type, ...)
+function mttCreateConditionalNewline(distance, uoD, ...)
 	local temp = {};
 
-	temp.Values = {};
+	temp.values = {};
 
 	for i = 1, select("#", ...) do
 		local value = select(i, ...);
 
-		table.insert(temp.Values, i, value);
+		table.insert(temp.values, i, value);
 	end
 
 	temp.distance = distance;
-	temp.Type = Type;
+	temp.uoD = uoD;
 
 	return temp;
 end
 
-function mttCreateNewTooltipText(text, boA, colour)
+function mttCreateTooltipText(text, boA)
 	local temp = {};
 
 	temp.text = text;
 	temp.boA = boA;
-	temp.Colours = colour;
 
 	return temp;
 end
@@ -372,32 +361,162 @@ function mttDisplayTooltip(id)
 			GameTooltip:SetOwner(mttGetTooltipOwner(id), finalAnchor, mttGetTooltipOffsetX(id), mttGetTooltipOffsetY(id));
 		end
 	end
-arg1 = "test text";
-	local data = mttCallTooltipFunction(id, arg1, arg2, arg3, arg4, arg5, arg6, arg7 ,arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20);
 
-	GameTooltip:SetText(data);
-	GameTooltip:AddLine(data);
-	GameTooltip:AddLine(data);
+	local tooltipType = mttGetTooltipType(id);
+
+	if (tooltipType == MTT_TYPE_POPUP) then
+		mttSetupPopup(id);
+	elseif (tooltipType == MTT_TYPE_UNIT) then
+		mttSetupUnit(id)
+	elseif (tooltipType == MTT_TYPE_UNIT_ADVANCED) then
+		mttSetupUnitAdvanced(id)
+	elseif (tooltipType == MTT_TYPE_ITEM) then
+		mttSetupItem(id)
+	elseif (tooltipType == MTT_TYPE_SPELL) then
+		mttSetupSpell(id)
+	elseif (tooltipType == MTT_TYPE_CUSTOM) then
+		mttSetupCustom(id)
+	end
 
 	GameTooltip:Show();
 end
 
-
-
---[[
-MTT DEFAULT FUNCTIONS
-]]
-
-function mttTextFunction(text)
-	return text;
+function mttGetNumGridRows(grid)
+	return table.maxn(grid);
 end
 
+function mttGetNumGridColumns(grid, row)
+	if (grid[row]) then
+		return table.maxn(grid[row]);
+	end
 
+	return 0;
+end
 
+function mttAssessGrid(grid, i, j)
+	local info = grid[i][j];
 
+	-- This for loop handles the conditional newline. This means that it will only add a new line IF its condition is met.
+	-- This is explained at the top of this lua file.
+	if (type(info) == "table" and info.values and info.values ~= nil) then
+		for (curDistance = 1, info.distance) do
+			if (info.uoD == MTT_CONDITIONAL_NEWLINE_TYPE_UP) then
+				for (column = 1, mttGetNumGridColumns(grid, i - curDistance)) do
+					for curValue = 1, table.maxn(info.values) do
+						if (info.values[curValue] == grid[i - curDistance][column]) and mrpAssessTooltipInfo(orderName, i - curDistance, column, target) ~= MRP_TOOLTIP_EMPTY_STRING) then
+							return (" ");
+						end
+					end
+				end
+			else
+				for column = 1, mrpGetNumTooltipColumns(orderName, i + curDistance) do
+					for curValue = 1, table.maxn(info.Values) do
+						if (info.Values[curValue] == mrpGetTooltipInfo(orderName, i + curDistance, column) and mrpAssessTooltipInfo(orderName, i + curDistance, column, target) ~= MRP_TOOLTIP_EMPTY_STRING) then
+							return (" ");
+						end
+					end
+				end
+			end
+		end
 
+		return (MRP_TOOLTIP_EMPTY_STRING);
+	end
+	if (type(info) == "table" and info.text and info.text ~= nil) then
+		if (info.boA == MRP_TOOLTIP_TEXT_BEFORE) then
+			if (mrpGetTooltipInfo(orderName, i, j - 1) ~= nil) then
+				if (mrpAssessTooltipInfo(orderName, i, j - 1, target) ~= MRP_TOOLTIP_EMPTY_STRING) then
+					return (mrpHexStart .. mduColourToHex(info.Colours.red, info.Colours.green, info.Colours.blue) .. info.text .. mrpHexEnd);
+				end
+			end
+		elseif (info.boA == MRP_TOOLTIP_TEXT_AFTER) then
+			if (mrpGetTooltipInfo(orderName, i, j + 1) ~= nil) then
+				if (mrpAssessTooltipInfo(orderName, i, j + 1, target) ~= MRP_TOOLTIP_EMPTY_STRING) then
+					return (mrpHexStart .. mduColourToHex(info.Colours.red, info.Colours.green, info.Colours.blue) .. info.text .. mrpHexEnd);
+				end
+			end
+		elseif (info.boA == MRP_TOOLTIP_TEXT_ALWAYS) then
+			return (mrpHexStart .. mduColourToHex(info.Colours.red, info.Colours.green, info.Colours.blue) .. info.text .. mrpHexEnd);
 
+		elseif (info.boA == MRP_TOOLTIP_TEXT_BOTH) then
+			if (mrpGetTooltipInfo(orderName, i, j + 1) ~= nil and mrpGetTooltipInfo(orderName, i, j - 1) ~= nil) then
+				if (mrpAssessTooltipInfo(orderName, i, j + 1, target) ~= MRP_TOOLTIP_EMPTY_STRING and mrpAssessTooltipInfo(orderName, i, j - 1, target) ~= MRP_TOOLTIP_EMPTY_STRING) then
+					return (mrpHexStart .. mduColourToHex(info.Colours.red, info.Colours.green, info.Colours.blue) .. info.text .. mrpHexEnd);
+				end
+			end
+		end
 
+		return (MRP_TOOLTIP_EMPTY_STRING);
+	end
+end
 
+--[[
+MTT SETUP FUNCTIONS
+]]
 
+function mttSetupPopup(id)
+	local header, text = mttCallTooltipFunction(id);
+
+	GameTooltip:SetText(header);
+
+	if (text ~= nil) then
+		GameTooltip:AddLine(text);
+	end
+end
+
+function mttSetupUnit(id)
+	local grid = mttCallTooltipFunction(id);
+
+	local numOfLines = 0;
+	local curLine = 1;
+
+	for i = 1, mttGetNumTooltipRows(grid) do
+		mrpTempString = "";
+
+		for j = 1, mttGetNumGridColumns(grid, i) do
+			if (mrpSecondTempString ~= MRP_TOOLTIP_EMPTY_STRING) then
+				mrpTempString = mrpTempString .. mrpSecondTempString;
+			end
+		end
+
+		if (firstRun == 1) then
+			GameTooltip:SetUnit(target);
+			numOfLines = GameTooltip:NumLines();
+
+			if (mrpTempString ~= MRP_TOOLTIP_EMPTY_STRING) then
+				GameTooltipTextLeft1:SetText(mrpTempString);
+				firstRun = 0;
+			end
+		else
+			if (mrpTempString ~= MRP_TOOLTIP_EMPTY_STRING) then
+				curLine = curLine + 1;
+
+				if (curLine <= numOfLines) then
+					getglobal("GameTooltipTextLeft" .. curLine):SetText(mrpTempString);
+				else
+					GameTooltip:AddLine(mrpTempString);
+				end
+			end
+		end
+	end
+
+	for (i = curline + 1, numOfLines) do
+		getglobal("GameTooltipTextLeft" .. i):SetText(nil);
+	end
+end
+
+function mttSetupUnitAdvanced(id)
+
+end
+
+function mttSetupItem(id)
+
+end
+
+function mttSetupSpell(id)
+
+end
+
+function mttSetupCustom(id)
+
+end
 
