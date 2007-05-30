@@ -46,7 +46,7 @@
 
 		</Scripts>
 
-		<NormalTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptions.tga" />
+		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptions.tga" />
 		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
 		<CheckedTexture file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD"/>
 	</CheckButton>
@@ -143,7 +143,7 @@
 			</OnLeave>
 		</Scripts>
 
-		<NormalTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonHelp.tga" />
+		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonHelp.tga" />
 	</Button>
 
 <!--*************************************************************************************************************************-->
@@ -231,7 +231,7 @@
 				</FontString>
 			</Layer>
 			<Layer level="BACKGROUND">
-				<Texture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPage.tga">
+				<Texture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPage.tga">
 					<Size>
 						<AbsDimension x="64" y="32"/>
 					</Size>
@@ -264,8 +264,8 @@
 
 		</Scripts>
 
-		<HighlightTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPageHilight.tga" alphaMode="ADD"/>
-		<CheckedTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonOptionsPageCheck.tga" alphaMode="ADD"/>
+		<HighlightTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPageHilight.tga" alphaMode="ADD"/>
+		<CheckedTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonOptionsPageCheck.tga" alphaMode="ADD"/>
 	</CheckButton>
 
 	<CheckButton name="mrpRelativeLevelOptionButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">

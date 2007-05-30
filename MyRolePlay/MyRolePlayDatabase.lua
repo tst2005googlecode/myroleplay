@@ -87,6 +87,8 @@ function mrpInitializeRAM()
 		mdbAddColumn("MyRolePlayPlayerList", "Misc", "playerName");
 		mdbAddColumn("MyRolePlayPlayerList", "Misc", "hasInfo");
 		mdbAddColumn("MyRolePlayPlayerList", "Misc", "channel");
+		mdbAddColumn("MyRolePlayPlayerList", "Misc", "version");
+		mdbAddColumn("MyRolePlayPlayerList", "Misc", "supports");
 
 	mdbCreateTable("MyRolePlayPlayerList", "Identification");
 		mdbAddColumn("MyRolePlayPlayerList", "Identification", "playerName");
@@ -203,6 +205,13 @@ function mrpInitializeExtras()
 			mrpAddAddonCompatability("FlagRSP2/ImmersionRP");
 			--mrpAddAddonCompatability("Outfitter");
 	end
+
+  if (not mrpSettingFieldExists("Addon Compatability")) then
+		mrpAddSettingField("Addon Compatability");
+  		mrpAddAddonCompatability("FlagRSP2/ImmersionRP");
+			--mrpAddAddonCompatability("Outfitter");
+  end
+  
 
 	if (mdbDatabaseExists("MyRolePlayTooltip") == false) then
 		mdbCreateDatabase("MyRolePlayTooltip", true, false);

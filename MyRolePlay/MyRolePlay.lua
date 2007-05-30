@@ -1,3 +1,6 @@
+mrpVersion = "MyRolePlay/2.7.25"
+mrpSupports = "mrp"
+
 MRP_EMPTY_STRING = "";
 mrpIsInitialized = false;
 mrpIsRSPInitialized = false;
@@ -185,11 +188,6 @@ function mrpUpdatePlayerListDescription(playerName, descriptionPiece, descriptio
 
 		if (mrpCharacterSheet1Main:IsShown() and mrpCurCharacterSheetTarget == mrpDescriptionList[1].playerName) then
 			mrpCharSheet1DescBox:SetText(mrpDescriptionList[1].description);
-			if (string.sub(mrpDescriptionList[1].description, string.len(mrpDescriptionList[1].description) - 3, string.len(mrpDescriptionList[1].description)) == "\\eod") then
-				mrpCharSheet1DescBox:SetText(string.sub(mrpDescriptionList[1].description, 1, string.len(mrpDescriptionList[1].description) - 4));
-				local temp = string.gsub(mrpCharSheet1DescBox:GetText(), "\\l", "\r");
-				mrpCharSheet1DescBox:SetText(temp);
-			end
 		end
 
 	elseif (mrpIsWaitingForDescription(playerName) == false) then
@@ -209,11 +207,6 @@ function mrpUpdatePlayerListDescription(playerName, descriptionPiece, descriptio
 
 				if (mrpCharacterSheet1Main:IsShown() and mrpCurCharacterSheetTarget == mrpDescriptionList[i].playerName) then
 					mrpCharSheet1DescBox:SetText(mrpDescriptionList[i].description);
-					if (string.sub(mrpDescriptionList[i].description, string.len(mrpDescriptionList[i].description) - 3) == "\\eod") then
-						mrpCharSheet1DescBox:SetText(string.sub(mrpDescriptionList[i].description, 1, string.len(mrpDescriptionList[i].description) - 4));
-						local temp = string.gsub(mrpCharSheet1DescBox:GetText(), "\\l", "\r");
-						mrpCharSheet1DescBox:SetText(temp);
-					end
 				end
 
 				return;
@@ -234,11 +227,6 @@ function mrpUpdatePlayerListDescription(playerName, descriptionPiece, descriptio
 
 				if (mrpCharacterSheet1Main:IsShown() and mrpCurCharacterSheetTarget == mrpDescriptionList[i].playerName) then
 					mrpCharSheet1DescBox:SetText(mrpDescriptionList[i].description);
-					if (string.sub(mrpDescriptionList[i].description, string.len(mrpDescriptionList[i].description) - 3) == "\\eod") then
-						mrpCharSheet1DescBox:SetText(string.sub(mrpDescriptionList[i].description, 1, string.len(mrpDescriptionList[i].description) - 4));
-						local temp = string.gsub(mrpCharSheet1DescBox:GetText(), "\\l", "\r");
-						mrpCharSheet1DescBox:SetText(temp);
-					end
 				end
 
 				return;
@@ -259,11 +247,6 @@ function mrpUpdatePlayerListDescription(playerName, descriptionPiece, descriptio
 
 		if (mrpCharacterSheet1Main:IsShown() and mrpCurCharacterSheetTarget == mrpDescriptionList[newSize].playerName) then
 			mrpCharSheet1DescBox:SetText(mrpDescriptionList[newSize].description);
-			if (string.sub(mrpDescriptionList[newSize].description, string.len(mrpDescriptionList[newSize].description) - 3) == "\\eod") then
-				mrpCharSheet1DescBox:SetText(string.sub(mrpDescriptionList[newSize].description, 1, string.len(mrpDescriptionList[newSize].description) - 4));
-				local temp = string.gsub(mrpCharSheet1DescBox:GetText(), "\\l", "\r");
-				mrpCharSheet1DescBox:SetText(temp);
-			end
 		end
 
 		return;
@@ -483,6 +466,7 @@ function mrpFinalizeInit()
 end
 
 function mrpEnableRSPCompat()
+	mrpSupports = mrpSupports .. ",rsp";
 	mcoRegisterEvent("MCO_CHANNEL_JOINED", mrpInitRSP);
 	mcoRegisterChannel("xtensionxtooltip2");
 end
@@ -491,6 +475,7 @@ function mrpDisableRSPCompat()
 	mtiRemoveTimer(mrpRSPDescriptionTimer);
 	mtiRemoveTimer(mrpRSPBroadcastTimer);
 	mcoUnregisterChannel("xtensionxtooltip2");
+	mrpSupports = string.gsub(mrpSupports, ",rsp", "");
 end
 
 function mrpInitRSP(channelName)
@@ -1374,6 +1359,20 @@ function mrpUpdatePlayerListInfo()
 
 			if (temp and temp ~= nil) then
 				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Status", "character", temp);
+			end
+
+
+			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_VERSION .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+
+			if (temp and temp ~= nil) then
+				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Misc", "version", temp);
+			end
+
+
+			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_SUPPORTS .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+
+			if (temp and temp ~= nil) then
+				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Misc", "supports", temp);
 			end
 
 
