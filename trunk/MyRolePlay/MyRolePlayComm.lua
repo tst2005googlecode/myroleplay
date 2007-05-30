@@ -60,7 +60,7 @@ function mrpRSPBroadcastData()
 end
 
 function mrpRSPEncodeMessage(data)
-	return string.gsub(data, "\n", "\\l");
+	return string.gsub(string.gsub(data, "|", ""), "\n", "\\l");
 end
 
 function mrpRSPEncodePayload(data)
