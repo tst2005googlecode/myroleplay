@@ -24,6 +24,8 @@ MRP_INFO_INDEX_BIRTHPLACE = string.char(5) .. "013";
 MRP_INFO_INDEX_ROLEPLAYSTATUS = string.char(5) .. "014";
 MRP_INFO_INDEX_CHARACTERSTATUS = string.char(5) .. "015";
 MRP_INFO_INDEX_MOTTO = string.char(5) .. "016";
+MRP_INFO_INDEX_VERSION = string.char(5) .. "017";
+MRP_INFO_INDEX_SUPPORTS = string.char(5) .. "018";
 
 MRP_GET_FLAGRSP_DESC = "<DP>";
 
@@ -37,7 +39,7 @@ mrpPacketHolder = {};
 --/script mrpSaveVariable("Appearance", "description", mrpLongText);
 function mrpCreateRSPDescription()
 	local description = mrpGetInfo("Appearance", "description", mrpGetCurProfile()) .. "\\eod";
-	description = string.gsub(description, "\n", "\\l");
+	description = string.gsub(string.gsub(string.gsub(description, "<", "\\%("), ">", "\\%)"), "\n", "\\l");
 	local length = string.len(description);
 	local finalDescription = "";
 
@@ -50,17 +52,27 @@ end
 
 function mrpRSPBroadcastData()
 	local curProfile = mrpGetCurProfile();
-	mcoSendHardMessage("<N>" .. mrpGetInfo("Identification", "surname", curProfile) .. "<T>" .. mrpGetInfo("Identification", "title", curProfile) .. "<" .. mrpGetInfo("Status", "roleplay", curProfile) .. ">" .. "<" .. mrpGetInfo("Status", "character", curProfile) .. ">" .. "<DV>" .. mrpRSPDescriptionVersion, "xtensionxtooltip2", mrpRSPEncodeMessage);
-	mcoSendHardMessage("<AN1>" .. mrpGetInfo("Identification", "prefix", curProfile) .. "<AN2>" .. mrpGetInfo("Identification", "middlename", curProfile) .. "<AN3>" .. mrpGetInfo("Identification", "surname", curProfile), "xtensionxtooltip2", mrpRSPEncodeMessage);
+	mcoSendHardMessage("<V>" .. mrpVersion .. "<S>" .. mrpSupports .. "<" .. mrpGetInfo("Status", "roleplay", curProfile) .. ">" .. "<" .. mrpGetInfo("Status", "character", curProfile) .. ">" .. "<DV>" .. mrpRSPDescriptionVersion .. "<T>" .. mrpGetInfo("Identification", "title", curProfile), "xtensionxtooltip2", mrpRSPEncodeMessage);
+	mcoSendHardMessage("<N>" .. mrpGetInfo("Identification", "surname", curProfile) .. "<AN1>" .. mrpGetInfo("Identification", "prefix", curProfile) .. "<AN2>" .. mrpGetInfo("Identification", "middlename", curProfile) .. "<AN3>" .. mrpGetInfo("Identification", "surname", curProfile), "xtensionxtooltip2", mrpRSPEncodeMessage);
 
 	mtiResetTimer(mrpRSPBroadcastTimer);
 	mtiStartTimer(mrpRSPBroadcastTimer);
 end
 
 function mrpRSPEncodeMessage(data)
-	data = string.gsub(data, "\n", "\\l");
+	return string.gsub(data, "\n", "\\l");
+end
 
-	return (data);
+function mrpRSPEncodePayload(data)
+	return string.gsub(string.gsub(data, "<", "\\%("), ">", "\\%)");
+end
+
+function mrpRSPDecodeMessage(data)
+	return string.gsub(data, "\\l", "\n");
+end
+
+function mrpRSPDecodePayload(data)
+	return string.gsub(string.gsub(data, "\\%(", ">"), "\\%)", ">");
 end
 
 function mrpOnCommEvent(event)
@@ -92,9 +104,34 @@ function mrpOnCommEvent(event)
 
 
 				temp = nil;
+				temp = string.match(arg1, "<S>([^<.]*)");
+
+				if (temp and temp ~= nil and temp ~= "") then
+				  temp = mrpRSPDecodePayload(temp);
+					mrpEditPlayerListInfo(arg2, "Misc", "supports", temp);
+					--if (playerType == false) then
+						mrpEditPlayerListInfo(arg2, "Misc", "hasInfo", true);
+					--end
+				end
+
+
+				temp = nil;
+				temp = string.match(arg1, "<V>([^<.]*)");
+
+				if (temp and temp ~= nil and temp ~= "") then
+				  temp = mrpRSPDecodePayload(temp);
+					mrpEditPlayerListInfo(arg2, "Misc", "version", temp);
+					--if (playerType == false) then
+						mrpEditPlayerListInfo(arg2, "Misc", "hasInfo", true);
+					--end
+				end
+
+
+				temp = nil;
 				temp = string.match(arg1, "<N>([^<.]*)");
 
 				if (temp and temp ~= nil and temp ~= "") then
+				  temp = mrpRSPDecodePayload(temp);
 					mrpEditPlayerListInfo(arg2, "Identification", "surname", temp);
 					--if (playerType == false) then
 						mrpEditPlayerListInfo(arg2, "Misc", "hasInfo", true);
@@ -128,10 +165,16 @@ function mrpOnCommEvent(event)
 				temp = string.match(arg1, "<AN1>([^<.]*)");
 
 				if (temp and temp ~= nil and temp ~= "") then
-					mrpEditPlayerListInfo(arg2, "Identification", "firstname", temp);
+					temp = mrpRSPDecodePayload(temp);
+					-- It's not really a first name, it's used as a prefix. The documentation lies!
+					-- But early versions sent it as a firstname. Let's check, because it can never differ...
+					if ( temp ~= arg2 ) then
+						mrpEditPlayerListInfo(arg2, "Identification", "prefix", temp);
+					end
 					--if (playerType == false) then
 						mrpEditPlayerListInfo(arg2, "Misc", "hasInfo", true);
 					--end
+					tempver = nil;
 				end
 
 
@@ -139,6 +182,7 @@ function mrpOnCommEvent(event)
 				temp = string.match(arg1, "<AN2>([^<.]*)");
 
 				if (temp and temp ~= nil and temp ~= "") then
+				  temp = mrpRSPDecodePayload(temp);
 					mrpEditPlayerListInfo(arg2, "Identification", "middlename", temp);
 					--if (playerType == false) then
 						mrpEditPlayerListInfo(arg2, "Misc", "hasInfo", true);
@@ -150,6 +194,7 @@ function mrpOnCommEvent(event)
 				temp = string.match(arg1, "<AN3>([^<.]*)");
 
 				if (temp and temp ~= nil and temp ~= "") then
+				  temp = mrpRSPDecodePayload(temp);
 					mrpEditPlayerListInfo(arg2, "Identification", "surname", temp);
 					--if (playerType == false) then
 						mrpEditPlayerListInfo(arg2, "Misc", "hasInfo", true);
@@ -164,6 +209,9 @@ function mrpOnCommEvent(event)
 					end
 
 					local descriptionVersion = (descriptionVersionOne * 10) + descriptionVersionTwo;
+
+          descriptionPiece = mrpRSPDecodeMessage(descriptionPiece)
+          descriptionPiece = string.gsub(descriptionPiece, "\\eod", "");
 
 					mrpUpdatePlayerListDescription(arg2, descriptionPiece, tonumber(descriptionVersion));
 					--if (playerType == false) then
@@ -185,7 +233,8 @@ function mrpOnCommEvent(event)
 				mdbInsertData("MyRolePlayPlayerList", "PetInfo", arg2);
 				mdbInsertData("MyRolePlayPlayerList", "OocInfo", arg2, "");
 				mdbInsertData("MyRolePlayPlayerList", "Misc", arg2, false, "MyWarcraftCo");
-
+				mrpEditPlayerListInfo(arg2, "Misc", "supports", "mrp");
+				
 			elseif (arg2 ~= UnitName("player") and mrpIsPlayerInMRP(arg2) == false) then
 				mdbEditData("MyRolePlayPlayerList", "Misc", "channel", "MyWarcraftCo", mdbCreateSearchPacket("playerName", "=", arg2));
 			end
@@ -199,6 +248,7 @@ function mrpOnCommEvent(event)
 				mdbInsertData("MyRolePlayPlayerList", "PetInfo", arg2);
 				mdbInsertData("MyRolePlayPlayerList", "OocInfo", arg2, "");
 				mdbInsertData("MyRolePlayPlayerList", "Misc", arg2, false, "xtensionxtooltip2");
+				mrpEditPlayerListInfo(arg2, "Misc", "supports", "rsp");
 			end
 		end
 	end
@@ -253,6 +303,7 @@ function mrpOnCommEvent(event)
 						mdbInsertData("MyRolePlayPlayerList", "PetInfo", mrpTempPlayerList[i].characterName);
 						mdbInsertData("MyRolePlayPlayerList", "OocInfo", mrpTempPlayerList[i].characterName, "");
 						mdbInsertData("MyRolePlayPlayerList", "Misc", mrpTempPlayerList[i].characterName, false, "xtensionxtooltip2");
+						mrpEditPlayerListInfo(mrpTempPlayerList[i].characterName, "Misc", "supports", "rsp");
 					end
 				end
 				if (mrpRSPMTI == nil) then
@@ -282,6 +333,7 @@ function mrpOnCommEvent(event)
 						mdbInsertData("MyRolePlayPlayerList", "PetInfo", mrpTempPlayerList[i].characterName);
 						mdbInsertData("MyRolePlayPlayerList", "OocInfo", mrpTempPlayerList[i].characterName, "");
 						mdbInsertData("MyRolePlayPlayerList", "Misc", mrpTempPlayerList[i].characterName, false, "MyWarcraftCo");
+						mrpEditPlayerListInfo(mrpTempPlayerList[i].characterName, "Misc", "supports", "mrp");
 					end
 				end
 				if (mrpMTI == nil) then
@@ -355,7 +407,9 @@ end
 function mrpCreateRespondMessage()
 	local curProfile = mrpGetCurProfile();
 
-	local finalMessage = MRP_INFO_INDEX_PREFIX .. mrpGetInfo("Identification", "prefix", curProfile);
+	local finalMessage = MRP_INFO_INDEX_VERSION .. mrpVersion;
+	finalMessage = finalMessage .. MRP_INFO_INDEX_SUPPORTS .. mrpSupports
+	finalMessage = finalMessage .. MRP_INFO_INDEX_PREFIX .. mrpGetInfo("Identification", "prefix", curProfile);
 	finalMessage = finalMessage .. MRP_INFO_INDEX_FIRSTNAME .. mrpGetInfo("Identification", "firstname", curProfile);
 	finalMessage = finalMessage .. MRP_INFO_INDEX_MIDDLENAME .. mrpGetInfo("Identification", "middlename", curProfile);
 	finalMessage = finalMessage .. MRP_INFO_INDEX_SURNAME .. mrpGetInfo("Identification", "surname", curProfile);

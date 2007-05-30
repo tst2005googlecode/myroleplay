@@ -50,7 +50,7 @@
 
 		</Scripts>
 
-		<NormalTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonColour.tga" />
+		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonColour.tga" />
 		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
 		<CheckedTexture file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD"/>
 

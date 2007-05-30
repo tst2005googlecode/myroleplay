@@ -118,11 +118,6 @@ function mrpCharacterSheet1UpdateInformation()
 	mrpCharSheet1RPStatText:SetText(rpstattext);
 	mrpCharSheet1CharStatText:SetText(charstattext);
 	mrpCharSheet1DescBox:SetText(desctext);
-	if (string.sub(desctext, string.len(desctext) - 3, string.len(desctext)) == "\\eod") then
-		mrpCharSheet1DescBox:SetText(string.sub(desctext, 1, string.len(desctext) - 4));
-		local temp = string.gsub(mrpCharSheet1DescBox:GetText(), "\\l", "\r");
-		mrpCharSheet1DescBox:SetText(temp);
-	end
 	mrpCharSheet1HistBox:SetText(historytext);
 	mrpCharSheet1EyeColourText:SetText(eyecolourtext);
 	mrpCharSheet1EmotionText:SetText(emotiontext);

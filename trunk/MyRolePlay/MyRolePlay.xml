@@ -73,7 +73,7 @@
 		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture file="Interface\AddOns\MyRolePlayDev\Textures\PersonalFrameTopLeft.tga">
+				<Texture file="Interface\AddOns\MyRolePlay\Textures\PersonalFrameTopLeft.tga">
 					<Size>
 						<AbsDimension x="256" y="256" />
 					</Size>
@@ -85,7 +85,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\AddOns\MyRolePlayDev\Textures\PersonalFrameTopRight.tga">
+				<Texture file="Interface\AddOns\MyRolePlay\Textures\PersonalFrameTopRight.tga">
 					<Size>
 						<AbsDimension x="128" y="256" />
 					</Size>
@@ -97,7 +97,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\AddOns\MyRolePlayDev\Textures\PersonalFrameBottomLeft.tga">
+				<Texture file="Interface\AddOns\MyRolePlay\Textures\PersonalFrameBottomLeft.tga">
 					<Size>
 						<AbsDimension x="256" y="256" />
 					</Size>
@@ -109,7 +109,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\AddOns\MyRolePlayDev\Textures\PersonalFrameBottomRight.tga">
+				<Texture file="Interface\AddOns\MyRolePlay\Textures\PersonalFrameBottomRight.tga">
 					<Size>
 						<AbsDimension x="128" y="256" />
 					</Size>
@@ -181,7 +181,7 @@
 
 		</Scripts>
 
-		<NormalTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonCharacterInfo.tga" />
+		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonCharacterInfo.tga" />
 		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
 		<CheckedTexture file="Interface\Buttons\CheckButtonHilight" alphaMode="ADD"/>
 	</CheckButton>
@@ -1661,7 +1661,7 @@
 		<Size>
 			<AbsDimension x="480" y="300" />
 		</Size>
-		<Backdrop bgFile="Interface\AddOns\MyRolePlayDev\Textures\EnterInformationBackground.tga" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+		<Backdrop bgFile="Interface\AddOns\MyRolePlay\Textures\EnterInformationBackground.tga" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
 			<BackgroundInsets>
 				<AbsInset left="11" right="12" top="12" bottom="11"/>
 			</BackgroundInsets>
@@ -1929,7 +1929,7 @@
 			</OnLeave>
 		</Scripts>
 
-		<NormalTexture file="Interface\AddOns\MyRolePlayDev\Buttons\ButtonHelp.tga" />
+		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonHelp.tga" />
 	</Button>
 
 	<Button name="mrpButtonIconFrame" frameStrata="LOW" parent="UIParent" enableMouse="true" movable="true" hidden="true">
@@ -1943,8 +1943,8 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
-		<NormalTexture file="Interface\AddOns\MyRolePlayDev\Buttons\MRPInfoBoxButton_Up.tga" />
-		<PushedTexture file="Interface\AddOns\MyRolePlayDev\Buttons\MRPInfoBoxButton_Down.tga" />
+		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\MRPInfoBoxButton_Up.tga" />
+		<PushedTexture file="Interface\AddOns\MyRolePlay\Buttons\MRPInfoBoxButton_Down.tga" />
 		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight" />
 		<Scripts>
 			<OnLoad>
