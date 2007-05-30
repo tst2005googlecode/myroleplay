@@ -493,7 +493,7 @@ function mcoRecieveMessage(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
 
 	for i, channelLevelZero in ipairs(mcoJoinedChannelList) do
 		if (channelLevelZero == masterChannel) then
-			local subChannelOne, subChannelTwo, subChannelThree, target, dataId, dataType, dataLength, dataVersion, data = string.match(arg1, "<mco(%w+)%.(%w+)%.(%w+)>%[(%w+)%]{(%d+)}:(%d+):`(%d+)`%*(%d+)%*(.*)");
+			local subChannelOne, subChannelTwo, subChannelThree, target, dataId, dataType, dataLength, dataVersion, data = string.match(arg1, "<mco([^%.]+)%.([^%.]+)%.([^>]+)>%[([^%]]+)%]{(%d+)}:(%d+):`(%d+)`%*(%d+)%*(.*)");
 
 			if (subChannelOne == nil) then
 				return;
