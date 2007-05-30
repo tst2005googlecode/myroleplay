@@ -1,6 +1,6 @@
 ## Interface: 20003
 ## Title: MyWarcraftSuite
-## Version: Beta 2.6.5
+## Version: Beta 2.7.29
 ## Author: MyWarcraft Suite Dev Team
 ## Email: moncader@mywarcraft.net
 ## Notes: Role Playing System for the ultimate role play experience.
