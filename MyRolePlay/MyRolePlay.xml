@@ -1932,14 +1932,14 @@
 		<NormalTexture file="Interface\AddOns\MyRolePlay\Buttons\ButtonHelp.tga" />
 	</Button>
 
-	<Button name="mrpButtonIconFrame" frameStrata="LOW" parent="UIParent" enableMouse="true" movable="true" hidden="true">
+	<Button name="mrpButtonIconFrame" frameStrata="LOW" parent="TargetFrame" enableMouse="true" movable="true" hidden="true">
 		<Size>
 			<AbsDimension x="28" y="28"/>
 		</Size>
 		<Anchors>
-			<Anchor point="CENTER" relativePoint="CENTER" relativeTo="UIParent">
+			<Anchor point="CENTER" relativePoint="CENTER" relativeTo="TargetFrame">
 				<Offset>
-					<AbsDimension x="0" y="0" />
+					<AbsDimension x="2" y="0" />
 				</Offset>
 			</Anchor>
 		</Anchors>

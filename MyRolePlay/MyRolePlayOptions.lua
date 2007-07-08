@@ -1,7 +1,7 @@
 function mrpSetOptionsCheckButtons()
-	mrpDisplayMessage(mrpCheckSettings("Tooltip", "relativeLevel"));
-	mrpDisplayMessage(mrpCheckSettings("Tooltip", "enabled"));
-	mrpDisplayMessage(mrpCheckSettings("Addon Compatability", "FlagRSP2/ImmersionRP"));
+	-- mrpDisplayMessage(mrpCheckSettings("Tooltip", "relativeLevel"));
+	-- mrpDisplayMessage(mrpCheckSettings("Tooltip", "enabled"));
+	-- mrpDisplayMessage(mrpCheckSettings("Addon Compatability", "FlagRSP2/ImmersionRP"));
 
 	if (mrpCheckSettings("Tooltip", "relativeLevel") == false) then
 		mrpRelativeLevelOptionButton:SetChecked(false);

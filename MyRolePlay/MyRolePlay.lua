@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.29"
+mrpVersion = "MyRolePlay/2.7.30"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
