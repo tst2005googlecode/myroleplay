@@ -139,13 +139,13 @@ function mtiPlayEvents(wowEvent, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
 	mtiCurrentServerTime.hours, mtiCurrentServerTime.minutes = GetGameTime();
 	--mtiUpTime = mtiUpTime + (mtiCurrentSystemTime - mtiPreviousSystemTime);
 
-	for i = 1, table.maxn(mtiQuedEvents) do
-		if (mtiQuedEvents[i] and GetTime() >= mtiQuedEvents[i].updateInterval + mtiQuedEvents[i].lastIntervalTime) then
-			mtiQuedEvents[i].lastIntervalTime = mtiCurrentSystemTime;
-			mtiQuedEvents[i].numOfCues = mtiQuedEvents[i].numOfCues - 1;
-			mtiCurrentEventId = mtiQuedEvents[i].id;
-			mtiQuedEvents[i].eventFunction(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-			if (mtiQuedEvents[i] and mtiQuedEvents[i].numOfCues == 0) then
+	for i, event in ipairs(mtiQuedEvents) do
+		if (event and GetTime() >= event.updateInterval + event.lastIntervalTime) then
+			event.lastIntervalTime = mtiCurrentSystemTime;
+			event.numOfCues = event.numOfCues - 1;
+			mtiCurrentEventId = event.id;
+			event.eventFunction(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+			if (event and event.numOfCues == 0) then
 				table.remove(mtiQuedEvents, i);
 			end
 		end

@@ -994,8 +994,8 @@ function mrpSaveTooltipOrder(row)
 				curText = "";
 				userTextEnabled = true;
 
-				for textCheck = 1, table.maxn(MyRolePlay.Settings.Tooltip.Order.MRP_TEXT) do
-					if (MyRolePlay.Settings.Tooltip.Order.MRP[row][i] == MyRolePlay.Settings.Tooltip.Order.MRP_TEXT[textCheck]) then
+				for textCheck, text in ipairs(MyRolePlay.Settings.Tooltip.Order.MRP_TEXT) do
+					if (MyRolePlay.Settings.Tooltip.Order.MRP[row][i] == text) then
 						table.remove(MyRolePlay.Settings.Tooltip.Order.MRP_TEXT, textCheck);
 					end
 				end

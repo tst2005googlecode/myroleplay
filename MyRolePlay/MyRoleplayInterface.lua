@@ -206,8 +206,8 @@ end
 function mrpiRemoveFadeFrame(frameName)
 	local temp = mrpCheckSettings("MyRolePlay Interface", "Fade List");
 
-	for i = 1, table.maxn(temp) do
-		if (temp[i].frameName == frameName) then
+	for i, value in ipairs(temp) do
+		if (value.frameName == frameName) then
 			table.remove(temp, i);
 
 			mrpChangeSettings("MyRolePlay Interface", "Fade List", temp);
@@ -240,8 +240,8 @@ end
 function mrpiRemoveHideFrame(frameName)
 	local temp = mrpCheckSettings("MyRolePlay Interface", "Hide List");
 
-	for i = 1, table.maxn(temp) do
-		if (temp[i].frameName == frameName) then
+	for i, value in ipairs(temp) do
+		if (value.frameName == frameName) then
 			table.remove(temp, i);
 
 			mrpChangeSettings("MyRolePlay Interface", "Hide List", temp);
@@ -276,8 +276,8 @@ end
 function mrpiRemoveSwitchFrame(frameName)
 	local temp = mrpCheckSettings("MyRolePlay Interface", "Switch List");
 
-	for i = 1, table.maxn(temp) do
-		if (temp[i].frameName == frameName) then
+	for i, value in ipairs(temp) do
+		if (value.frameName == frameName) then
 			table.remove(temp, i);
 
 			mrpChangeSettings("MyRolePlay Interface", "Switch List", temp);
