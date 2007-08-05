@@ -177,8 +177,8 @@ function mduRegisterEvent(event, eventFunction)
 end
 
 function mduUnregisterEvent(event, eventFunction)
-	for i = 1, table.maxn(mduEventList[event].eventFunctions) do
-		if (mduEventList[event].eventFunctions[i] == eventFunction) then
+	for i, eventFunctionToTest in ipairs(mduEventList[event].eventFunctions) do
+		if (eventFunctionToTest == eventFunction) then
 			table.remove(mduEventList[event].eventFunctions, i);
 
 			for j, eventName in ipairs(mduEventList) do

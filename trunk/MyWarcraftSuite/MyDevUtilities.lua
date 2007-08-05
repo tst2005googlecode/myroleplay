@@ -60,6 +60,14 @@ function mduGetIndexOfId(t, id)
 	end
 end
 
+function mduGetIndexOfTable(t, value)
+	for i, v in ipairs(t) do
+		if (v == value) then
+			return (i);
+		end
+	end
+end
+
 function mduHandleSlashCommand(arg1)
 	if (arg1 == "d") then
 		mduDisplayMessage();
@@ -112,44 +120,14 @@ function mduDisplayMessage(msg, owner, ownerR, ownerG, ownerB, messageR, message
 	end
 end
 
-function mduCreateColour(r, g, b)
-	local temp = {};
-
-	temp.r = r;
-	temp.g = g;
-	temp.b = b;
-
-	return temp;
-end
-
 function mduColourToHex(r, g, b)
-	local red = nil;
-	local green = nil;
-	local blue = nil;
-
-	if (type(r) == "table") then
-		red = r.r;
-		green = r.g;
-		blue = r.b;
-	end
-
-	if (r <= 1 and g <= 1 and b <= 1) then
-		red = string.format("%.2X", (r * 255));
-		green = string.format("%.2X", (g * 255));
-		blue = string.format("%.2X", (b * 255));
-	else
-		red = string.format("%.2X", r);
-		green = string.format("%.2X", g);
-		blue = string.format("%.2X", b);
-	end
+	local red = string.format("%.2X", (r * 255));
+	local green = string.format("%.2X", (g * 255));
+	local blue = string.format("%.2X", (b * 255));
 
 	local colour = red .. green .. blue;
 
 	return (colour);
-end
-
-function mduAlphaToHex(a)
-	return string.format("%.2X", (a * 255));
 end
 
 -- splits the specified text into an array on the specified separator
@@ -186,26 +164,6 @@ function mduConvertStringToDecimal(str)
 	return finalNumber;
 end
 
-function mduCreateString(str, red, green, blue, alpha)
-	if (alpha == nil) then
-		alpha = 1.0;
-	end
-
-	if (red == nil) then
-		red = 255;
-	end
-
-	if (green == nil) then
-		green = 255;
-	end
-
-	if (blue == nil) then
-		blue = 255;
-	end
-
-	return ("|C" .. mduAlphaToHex(alpha) .. mduColourToHex(red, green, blue) .. tostring(str) .. "|r");
-end
-
 function mduRegisterEvent(event, eventFunction)
 	if (not mduEventList[event]) then
 		table.insert(mduEventList, event);
@@ -219,8 +177,8 @@ function mduRegisterEvent(event, eventFunction)
 end
 
 function mduUnregisterEvent(event, eventFunction)
-	for i = 1, table.maxn(mduEventList[event].eventFunctions) do
-		if (mduEventList[event].eventFunctions[i] == eventFunction) then
+	for i, eventFunctionToTest in ipairs(mduEventList[event].eventFunctions) do
+		if (eventFunctionToTest == eventFunction) then
 			table.remove(mduEventList[event].eventFunctions, i);
 
 			for j, eventName in ipairs(mduEventList) do

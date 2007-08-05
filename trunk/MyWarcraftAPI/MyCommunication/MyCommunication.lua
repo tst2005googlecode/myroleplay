@@ -153,8 +153,8 @@ function mcoRegisterEvent(event, eventFunction)
 end
 
 function mcoUnregisterEvent(event, eventFunction)
-	for i = 1, table.maxn(mcoEventList[event].eventFunctions) do
-		if (mcoEventList[event].eventFunctions[i] == eventFunction) then
+	for i, eventFunctionToTest in ipairs(mcoEventList[event].eventFunctions) do
+		if (eventFunctionToTest == eventFunction) then
 			table.remove(mcoEventList[event].eventFunctions, i);
 
 			for j, eventName in ipairs(mcoEventList) do

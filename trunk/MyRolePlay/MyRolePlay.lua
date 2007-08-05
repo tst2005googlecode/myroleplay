@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.30"
+mrpVersion = "MyRolePlay/2.7.31"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
@@ -416,7 +416,6 @@ function mrpIsWaitingForDescription(target)
 			return true;
 		end
 	end
-
 	return false;
 end
 
@@ -426,25 +425,22 @@ function mrpIsWaitingForHistory(target)
 			return true;
 		end
 	end
-
 	return false;
 end
 
 function mrpRemoveWaitingForDescription(target)
-	for i = 1, table.maxn(mrpWaitingForDescriptionList) do
-		if (mrpWaitingForDescriptionList[i] == target) then
+	for i, waiting in ipairs(mrpWaitingForDescriptionList) do
+		if (waiting == target) then
 			table.remove(mrpWaitingForDescriptionList, i);
-
 			return;
 		end
 	end
 end
 
 function mrpRemoveWaitingForHistory(target)
-	for i = 1, table.maxn(mrpWaitingForHistoryList) do
-		if (mrpWaitingForHistoryList[i] == target) then
+	for i, waiting in ipairs(mrpWaitingForHistoryList) do
+		if (waiting == target) then
 			table.remove(mrpWaitingForHistoryList, i);
-
 			return;
 		end
 	end
@@ -1241,163 +1237,113 @@ function mrpGetNumOfPlayersInList()
 	return table.maxn(temp);
 end
 
+-- Parse data for a given player to update their player list info
+function mrpUpdatePlayerListInfoFor(playerName, data)
+	local temp = string.match(data, MRP_INFO_INDEX_PREFIX .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Identification", "prefix", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_FIRSTNAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Identification", "firstname", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_MIDDLENAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Identification", "middlename", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_SURNAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Identification", "surname", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_TITLE .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Identification", "title", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_NICKNAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Identification", "nickname", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_HOUSENAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Identification", "housename", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_HEIGHT .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Appearance", "height", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_WEIGHT .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Appearance", "weight", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_EYECOLOUR .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Appearance", "eyeColour", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_APPARENTAGE .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Appearance", "apparentAge", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_CURRENTEMOTION .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Appearance", "currentEmotion", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_CURHOME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Lore", "curHome", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_BIRTHPLACE .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Lore", "birthPlace", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_MOTTO .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Lore", "motto", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_ROLEPLAYSTATUS .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Status", "roleplay", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_CHARACTERSTATUS .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Status", "character", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_VERSION .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Misc", "version", temp);
+	end
+
+	temp = string.match(data, MRP_INFO_INDEX_SUPPORTS .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
+	if (temp and temp ~= nil) then
+		mrpEditPlayerListInfo(playerName, "Misc", "supports", temp);
+	end
+
+	mrpEditPlayerListInfo(playerName, "Misc", "hasInfo", true);
+end
+
+-- Process completed fields and hand them to mrpUpdatePlayerListInfoFor() for parsing.
+-- Warning: This function removes completed packets from mrpPacketHolder().
 function mrpUpdatePlayerListInfo()
-	for i = 1, table.maxn(mrpPacketHolder) do
-		if (tonumber(mrpPacketHolder[i].dataLength) == tonumber(string.len(mrpPacketHolder[i].data))) then
-			local temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_PREFIX .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Identification", "prefix", temp);
-			end
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_FIRSTNAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Identification", "firstname", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_MIDDLENAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Identification", "middlename", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_SURNAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Identification", "surname", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_TITLE .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Identification", "title", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_NICKNAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Identification", "nickname", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_HOUSENAME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Identification", "housename", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_HEIGHT .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Appearance", "height", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_WEIGHT .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Appearance", "weight", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_EYECOLOUR .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Appearance", "eyeColour", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_APPARENTAGE .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Appearance", "apparentAge", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_CURRENTEMOTION .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Appearance", "currentEmotion", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_CURHOME .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Lore", "curHome", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_BIRTHPLACE .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Lore", "birthPlace", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_MOTTO .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Lore", "motto", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_ROLEPLAYSTATUS .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Status", "roleplay", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_CHARACTERSTATUS .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Status", "character", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_VERSION .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Misc", "version", temp);
-			end
-
-
-			temp = string.match(mrpPacketHolder[i].data, MRP_INFO_INDEX_SUPPORTS .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
-
-			if (temp and temp ~= nil) then
-				mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Misc", "supports", temp);
-			end
-
-
-			mrpEditPlayerListInfo(mrpPacketHolder[i].playerName, "Misc", "hasInfo", true);
+	for i, packet in ipairs(mrpPacketHolder) do
+		if ((tonumber(packet.dataLength) == tonumber(string.len(packet.data)))) then
+			mrpUpdatePlayerListInfoFor(packet.playerName, packet.data);
 			table.remove(mrpPacketHolder, i);
 		end
 	end
 end
-
---[[MRP_INFO_INDEX_PREFIX = string.char(5) .. "000";
-MRP_INFO_INDEX_FIRSTNAME = string.char(5) .. "001";
-MRP_INFO_INDEX_MIDDLENAME = string.char(5) .. "002";
-MRP_INFO_INDEX_SURNAME = string.char(5) .. "003";
-MRP_INFO_INDEX_TITLE = string.char(5) .. "004";
-MRP_INFO_INDEX_NICKNAME = string.char(5) .. "005";
-MRP_INFO_INDEX_HOUSENAME = string.char(5) .. "006";
-MRP_INFO_INDEX_EYECOLOUR = string.char(5) .. "007";
-
-
-MRP_INFO_INDEX_APPARENTAGE = string.char(5) .. "008";
-MRP_INFO_INDEX_CURRENTEMOTION = string.char(5) .. "009";
-MRP_INFO_INDEX_WEIGHT = string.char(5) .. "010";
-MRP_INFO_INDEX_HEIGHT = string.char(5) .. "011";
-MRP_INFO_INDEX_CURHOME = string.char(5) .. "012";
-MRP_INFO_INDEX_BIRTHPLACE = string.char(5) .. "013";
-MRP_INFO_INDEX_ROLEPLAYSTATUS = string.char(5) .. "014";
-MRP_INFO_INDEX_CHARACTERSTATUS = string.char(5) .. "015";
-MRP_INFO_INDEX_MOTTO = string.char(5) .. "016";]]
