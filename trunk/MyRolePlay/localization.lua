@@ -404,10 +404,11 @@ MRP_LOCALE_CLASS_PRIEST					= "Sacerdote";
 elseif (GetLocale() == "deDE") then
 
 -- Different rp type texts for drop down box.
-MRP_LOCALE_DropDownRP0               = "Kein Rollenspielstatus";
-MRP_LOCALE_DropDownRP1               = "Normaler Rollenspiel-Stil";
-MRP_LOCALE_DropDownRP2               = "Vollzeit-RP, gar kein OOC";
-MRP_LOCALE_DropDownRP3               = "Rollenspiel-Anf\195\164nger";
+MRP_LOCALE_DropDownRP0					= "Kein Rollenspielstatus";
+MRP_LOCALE_DropDownRP1					= "Normaler Rollenspiel-Stil";
+MRP_LOCALE_DropDownRP2					= "Beiläufiger Rollenspieler, teilweise OOC";
+MRP_LOCALE_DropDownRP3					= "Vollzeit-RP, gar kein OOC";
+MRP_LOCALE_DropDownRP4					= "Rollenspiel-Anf\195\164nger";
 
 -- Different character status texts for drop down box.
 MRP_LOCALE_DropDownCSNone            = "Kein Charakter-Status";
@@ -420,8 +421,9 @@ MRP_LOCALE_DropDownCSST              = "Spielt als Spielleiter"
 -- again color codes and others.
 MRP_LOCALE_DropDownRP0Expl            = "W\195\164hle diesen Status aus wenn Du \195\188berhaupt keinen Rollenspielstatus anzeigen willst. Der Sinn dieser Notiz ist, anderen Spielern zu zeigen, welche Art von Rollenspiel Du bevorzugst. Also solltest Du sorgf\195\164ltig nachdenken bevor Du Dich entschlie\195\159t es abzuschalten.\nBitte ber\195\188cksichtige, dass die RP-Notiz nicht dazu gedacht ist, zu zeigen wie gut man die Rolle spielt. Es soll nur zeigen, in welcher Art und Weise Du Deine Rolle spielen willst.";
 MRP_LOCALE_DropDownRP1Expl            = "Ein |cffE0E0E0normaler Rollenspieler|r ist jemand, der haupts\195\164chlich seine Rolle spielt. (d.h. in seinem Charakter bleibt). Aber er spricht manchmal nicht in der Rolle seines Charakters (z.B. fr Koordination im Gruppenchat) oder er akzeptiert die eine oder andere Nicht-Rollenspiel-Konversation. \nBitte ber\195\188cksichtige, dass dies nur Dein bevorzugter Stil ist. Du kannst Dich immer anpassen, wenn Du mit Leuten spielst, die eine andere Art bevorzugen.";
-MRP_LOCALE_DropDownRP2Expl            = "Ein |cffE0E0E0Vollzeit-Rollenspieler|r will seine Rolle die ganze Zeit spielen und nie OOC-Kommunikation h\195\182ren oder benutzen.\nBitte ber\195\188cksichtige, dass dies nur Dein bevorzugter Stil ist. Du kannst dich immer anpassen, wenn Du mit Leuten spielst, die eine andere Art bevorzugen. Du solltest auch bedenken, dass manche Spieler OOC-Kommunikation brauchen. Sei r\195\188cksichtsvoll und gelassen wenn es jemand macht.";
-MRP_LOCALE_DropDownRP3Expl            = "W\195\164hle |cffE0E0E0Rollenspiel-Anf\195\164nger|r aus, wenn Du neu in diesem Gebiet bist und Dich vor Situationen f\195\188rchtest, in denen Du nicht wei\195\159t, was Du machen sollst oder Fehler machst. Andere Spieler k\195\182nnen sehen, dass Du ein \'Gr\195\188nschnabel\' bist. Sie sollen Dich unterst\195\188tzen und Dir helfen. Scheu nicht davor zurck, nach Hilfe zu fragen! Normalerweise sind Rollenspieler sehr nett, wenn sie merken, dass jemand neu einsteigt. Auch gibt es auf der Projekt-Seite des \"Time of War\" einige Hilfestellungen f\195\188r Neulinge.";
+MRP_LOCALE_DropDownRP2Expl				= "Ein |cffE0E0E0Beil\195\164ufiger Rollenspieler|r m\195\182chte seine Rolle spielen, aber er ben\195\182tigt OOC-Kommunikation f\195\188r sein Spielen (z.B. f\195\188r Korrdination). Merken Sie bitte, dass dieses nur Ihre bevorzugte Art ist. Sie sollten immer f\195\164hig sich beim Spielen anzupassen mit anderen Spielern mit unterschiedlichen Pr\195\164ferenzen. Da OOC-Kommunikation eine sehr kritische Ausgabe f\195\188r einige Rollenspieler ist, sollten Sie sehr r\195\188cksichtsvoll sein, wenn Sie sie verwenden."; -- Warning: Babelfished. Must clean up with proper translation later.
+MRP_LOCALE_DropDownRP3Expl            = "Ein |cffE0E0E0Vollzeit-Rollenspieler|r will seine Rolle die ganze Zeit spielen und nie OOC-Kommunikation h\195\182ren oder benutzen.\nBitte ber\195\188cksichtige, dass dies nur Dein bevorzugter Stil ist. Du kannst dich immer anpassen, wenn Du mit Leuten spielst, die eine andere Art bevorzugen. Du solltest auch bedenken, dass manche Spieler OOC-Kommunikation brauchen. Sei r\195\188cksichtsvoll und gelassen wenn es jemand macht.";
+MRP_LOCALE_DropDownRP4Expl            = "W\195\164hle |cffE0E0E0Rollenspiel-Anf\195\164nger|r aus, wenn Du neu in diesem Gebiet bist und Dich vor Situationen f\195\188rchtest, in denen Du nicht wei\195\159t, was Du machen sollst oder Fehler machst. Andere Spieler k\195\182nnen sehen, dass Du ein \'Gr\195\188nschnabel\' bist. Sie sollen Dich unterst\195\188tzen und Dir helfen. Scheu nicht davor zurck, nach Hilfe zu fragen! Normalerweise sind Rollenspieler sehr nett, wenn sie merken, dass jemand neu einsteigt. Auch gibt es auf der Projekt-Seite des \"Time of War\" einige Hilfestellungen f\195\188r Neulinge.";
 
 -- Global Relative Level Replacements
 MRP_LOCALE_mrpRelative7l            = "Hoffnungslos Unterlegen";
@@ -654,16 +656,16 @@ MPR_LOCALE_MRPXML_DESCRIPTION_TT_TEXT         = "Bitte gib hier nur ein \195\164
 MPR_LOCALE_MRPXML_DESCRIPTION_EDITBOX_TEXT      = "Gib die \195\164u\195\164erliche Beschreibung Deines Charakters ein:";
 MRP_LOCALE_MRPXML_NEXTPAGE_TEXT            = "weiter";
 MRP_LOCALE_MRPXML_PREVPAGE_TEXT            = "zur\195\188ck"; --As in "Previous"
-MRP_LOCALE_MRPXML_PROFILE_SAVE_TEXT         = "Profil speichern";
+MRP_LOCALE_MRPXML_PROFILE_SAVE_TEXT         = "Speichern Wie";
 MRP_LOCALE_MRPXML_PROFILE_SAVE_ONCLICK         = "Gib den Namen ein, unter dem das Profil gespeichert werden soll:";
 MRP_LOCALE_MRPXML_PROFILE_SAVE_TT_HEADER      = "Ein anderes Profil abspeichern";
 MRP_LOCALE_MRPXML_PROFILE_SAVE_TT_TEXT1         = "Du musst das nicht immer tun, wenn Du Deine Information ab\195\164nderst";
 MRP_LOCALE_MRPXML_PROFILE_SAVE_TT_TEXT2         = "Nur Klicken, wenn Du Dein derzeitiges Profil unter einem anderen Namen abspeichern m\195\182chtest.";
-MRP_LOCALE_MRPXML_PROFILE_NEW_TEXT         = "Profil erstellen";
+MRP_LOCALE_MRPXML_PROFILE_NEW_TEXT         = "Neu";
 MRP_LOCALE_MRPXML_PROFILE_NEW_ONCLICK         = "Gib den Namen des Profils ein, das erstellt werden soll:";
 MRP_LOCALE_MRPXML_PROFILE_NEW_TT_HEADER         = "Neues Profil erstellen";
 MRP_LOCALE_MRPXML_PROFILE_NEW_TT_TEXT         = "Es wird automatisch abgespeichert, wenn Du es erstellst";
-MRP_LOCALE_MRPXML_PROFILE_DELETE_TEXT         = "Profil l\195\182schen";
+MRP_LOCALE_MRPXML_PROFILE_DELETE_TEXT         = "L\195\182schen";
 MRP_LOCALE_MRPXML_PROFILE_DELETE_TT_HEADER      = "Derzeitiges Profil l\195\182schen";
 MRP_LOCALE_MRPXML_PROFILE_DELETE_TT_TEXT      = "WARNUNG! Alle Informationen dieses Profils gehen verloren!";
 MRP_LOCALE_MRPXML_PROFILE_DROPDOWN_TEXT         = "Derzeitiges Profil:";
@@ -1060,16 +1062,16 @@ MPR_LOCALE_MRPXML_DESCRIPTION_TT_TEXT			= "Only put information about your appea
 MPR_LOCALE_MRPXML_DESCRIPTION_EDITBOX_TEXT		= "Enter your character's appearance description:";
 MRP_LOCALE_MRPXML_NEXTPAGE_TEXT				= "Next";
 MRP_LOCALE_MRPXML_PREVPAGE_TEXT				= "Prev"; --As in "Previous"
-MRP_LOCALE_MRPXML_PROFILE_SAVE_TEXT			= "Save Profile";
-MRP_LOCALE_MRPXML_PROFILE_SAVE_ONCLICK			= "Enter the name of the profile to save:";
-MRP_LOCALE_MRPXML_PROFILE_SAVE_TT_HEADER		= "Save another profile";
+MRP_LOCALE_MRPXML_PROFILE_SAVE_TEXT			= "Save As";
+MRP_LOCALE_MRPXML_PROFILE_SAVE_ONCLICK			= "Enter the name of the profile to save as:";
+MRP_LOCALE_MRPXML_PROFILE_SAVE_TT_HEADER		= "Save the current profile data as a new name.";
 MRP_LOCALE_MRPXML_PROFILE_SAVE_TT_TEXT1			= "You do not need to do this every time you change your information.";
 MRP_LOCALE_MRPXML_PROFILE_SAVE_TT_TEXT2			= "Only click on this if you want to save the current profile as something else.";
-MRP_LOCALE_MRPXML_PROFILE_NEW_TEXT			= "Make Profile";
+MRP_LOCALE_MRPXML_PROFILE_NEW_TEXT			= "New";
 MRP_LOCALE_MRPXML_PROFILE_NEW_ONCLICK			= "Enter the name of the profile to make:";
 MRP_LOCALE_MRPXML_PROFILE_NEW_TT_HEADER			= "Create a new profile";
 MRP_LOCALE_MRPXML_PROFILE_NEW_TT_TEXT			= "It will be automatically saved when you create it.";
-MRP_LOCALE_MRPXML_PROFILE_DELETE_TEXT			= "Delete Profile";
+MRP_LOCALE_MRPXML_PROFILE_DELETE_TEXT		= "Delete";
 MRP_LOCALE_MRPXML_PROFILE_DELETE_TT_HEADER		= "Delete the current profile";
 MRP_LOCALE_MRPXML_PROFILE_DELETE_TT_TEXT		= "WARNING! All information in this profile will be lost!";
 MRP_LOCALE_MRPXML_PROFILE_DROPDOWN_TEXT			= "Current Profile:";

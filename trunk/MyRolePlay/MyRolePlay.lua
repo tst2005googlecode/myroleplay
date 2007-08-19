@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.31"
+mrpVersion = "MyRolePlay/2.7.32"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
@@ -52,7 +52,7 @@ function mrpOnEvent(event)
 
 		mrpCurrentTarget = UnitName("target");
 
-		if (mrpIsPlayerInMRP(mrpCurrentTarget) ~= nil) then
+		if ((mrpIsPlayerInMRP(mrpCurrentTarget) ~= nil) or (UnitName("target")==UnitName("player"))) then
 			mrpButtonIconFrame:Show();
 		else
 			mrpButtonIconFrame:Hide();
@@ -1181,9 +1181,11 @@ function mrpButtonIconFrameOnClick(arg1)
 end
 
 -- moves the minimap icon to last position in settings or default angle of 45
+-- Lies! It does no such thing, it moves it into the centre! Cleared for testing.
 function mrpMoveIcon()
-	mrpButtonIconFrame:SetPoint("CENTER", "UIParent", "CENTER", 65, 30);
+--	mrpButtonIconFrame:SetPoint("CENTER", "UIParent", "CENTER", 65, 30);
 end
+
 --/script mrpDisplayMessage(tostring(mrpIsPlayerInList("Artemetria")));
 function mrpIsPlayerInList(name)
 	-- Checks to see if target is in the list
@@ -1200,8 +1202,9 @@ function mrpIsPlayerInList(name)
 	return false;
 end
 --/script mrpDisplayMessage(mrpGetNumOfPlayersInList());
+
+-- Checks to see if target has MyRolePlay
 function mrpIsPlayerInMRP(name)
-	-- Checks to see if target has MyRolePlay
 	if (mrpIsInitialized ~= true) then
 		return nil;
 	end
