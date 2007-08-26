@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.32"
+mrpVersion = "MyRolePlay/2.7.33"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
@@ -1180,10 +1180,12 @@ function mrpButtonIconFrameOnClick(arg1)
 	end
 end
 
--- moves the minimap icon to last position in settings or default angle of 45
--- Lies! It does no such thing, it moves it into the centre! Cleared for testing.
+-- Doesn't do anything normally (taken out for testing in 2.7, may be readded in 2.8).
+-- However, this function contains the workaround for XPerl unitframes, reanchoring the button if TargetFrame has been nuked.
 function mrpMoveIcon()
---	mrpButtonIconFrame:SetPoint("CENTER", "UIParent", "CENTER", 65, 30);
+	if (XPerl_Target~=nil) then
+		mrpButtonIconFrame:SetPoint("TOPLEFT","XPerl_Target","BOTTOMRIGHT",-8,0);
+	end
 end
 
 --/script mrpDisplayMessage(tostring(mrpIsPlayerInList("Artemetria")));
