@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.34"
+mrpVersion = "MyRolePlay/2.7.35"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
@@ -6,6 +6,8 @@ mrpIsInitialized = false;
 mrpIsRSPInitialized = false;
 
 mrpRSPEventTimer = nil;
+
+mrpWaitingForInfoList = {};
 
 mrpWaitingForDescriptionList = {};
 mrpDescriptionList = {};
@@ -396,6 +398,13 @@ function mrpHaveHistory(playerName)
 	return false;
 end
 
+function mrpAddWaitingForInfo(target)
+	local newSize = table.maxn(mrpWaitingForInfoList) + 1;
+
+	table.insert(mrpWaitingForInfoList, newSize);
+	mrpWaitingForInfoList[newSize] = target;
+end
+
 function mrpAddWaitingForDescription(target)
 	local newSize = table.maxn(mrpWaitingForDescriptionList) + 1;
 
@@ -408,6 +417,15 @@ function mrpAddWaitingForHistory(target)
 
 	table.insert(mrpWaitingForHistoryList, newSize);
 	mrpWaitingForHistoryList[newSize] = target;
+end
+
+function mrpIsWaitingForInfo(target)
+	for i = 1, table.maxn(mrpWaitingForInfoList) do
+		if (mrpWaitingForInfoList[i] == target) then
+			return true;
+		end
+	end
+	return false;
 end
 
 function mrpIsWaitingForDescription(target)
@@ -426,6 +444,15 @@ function mrpIsWaitingForHistory(target)
 		end
 	end
 	return false;
+end
+
+function mrpRemoveWaitingForInfo(target)
+	for i, waiting in ipairs(mrpWaitingForInfoList) do
+		if (waiting == target) then
+			table.remove(mrpWaitingForInfoList, i);
+			return;
+		end
+	end
 end
 
 function mrpRemoveWaitingForDescription(target)
@@ -807,9 +834,9 @@ function mrpEditTextPopup(location, field, whatToDoMessage, numLetters)
 		RenamePetition(text);
 		if (location ~= "CurProfile" and location ~= "makeNewProfile") then
 			mrpSaveVariable(location, field, text);
-		elseif (location == "CurProfile") then -- Save As
+		elseif (location == "CurProfile") then
 			mrpSaveProfile(text);
-		elseif (location == "makeNewProfile") then -- New
+		elseif (location == "makeNewProfile") then
 			mrpCreateNewProfile(text);
 		end
 	end,
@@ -1244,6 +1271,8 @@ end
 
 -- Parse data for a given player to update their player list info
 function mrpUpdatePlayerListInfoFor(playerName, data)
+	mrpRemoveWaitingForInfo(playerName); -- EM: We now have their info, no longer waiting on it.
+
 	local temp = string.match(data, MRP_INFO_INDEX_PREFIX .. "([^" .. string.char(5) .. "]*)" .. string.char(5));
 	if (temp and temp ~= nil) then
 		mrpEditPlayerListInfo(playerName, "Identification", "prefix", temp);

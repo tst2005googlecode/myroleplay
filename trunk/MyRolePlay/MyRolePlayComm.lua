@@ -254,6 +254,12 @@ function mrpOnCommEvent(event)
 	end
 
 	if (event == "CHAT_MSG_CHANNEL_LEAVE") then
+		-- EM: Make sure we don't remember waiting for them if they D/C, otherwise we'll be waiting forever.
+		if (arg2 ~= nil) then
+			mrpRemoveWaitingForInfo(arg2);
+			mrpRemoveWaitingForDescription(arg2);
+			mrpRemoveWaitingForHistory(arg2);
+		end
 		if (arg9 == "MyWarcraftCo") then
 			if (mrpIsPlayerInMRP(arg2) == true) then
 				local search = mdbCreateSearchPacket("playerName", "=", arg2);
@@ -359,6 +365,9 @@ function mrpSendMessage(msg, target)
 	end
 
 	if (msg == MRP_GET_INFO) then
+		if (mrpIsWaitingForInfo(target) == false) then
+			mrpAddWaitingForInfo(target);
+		end
 		mcoSendMessage("", "MyWarcraftCo", "MyRolePlay", nil, nil, MRP_GET_INFO, target);
 	elseif (msg == MRP_RESPOND) then
 		if (mtiGetTimerState(mrpRespondTimer) == MTI_TIMER_STATE_PENDING or mtiGetTimerTime(mrpRespondTimer) >= 5) then

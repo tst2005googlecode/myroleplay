@@ -85,10 +85,10 @@ function mrpDisplayTooltip(target, mrpFromWhere)
 							local inMRP = mrpIsPlayerInMRP(name);
 
 							if (inMRP == true) then
-								if (UnitIsAFK("mouseover") ~= 1) then
+								-- Experimental here, to stop us sending more than one request at a time!
+								if ((UnitIsAFK("mouseover") ~= 1) and (mrpIsWaitingForInfo(playerName) == false)) then
 									mrpSendMessage(MRP_GET_INFO, name);
 								end
-
 
 								mrpTarget = {};
 								mrpTarget.Identification = {};
