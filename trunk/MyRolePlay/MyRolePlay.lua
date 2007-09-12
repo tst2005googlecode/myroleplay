@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.33"
+mrpVersion = "MyRolePlay/2.7.34"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
@@ -579,7 +579,7 @@ function mrpGetNumProfiles()
 end
 
 function mrpProfileExists(profileName)
-	local temp = mdbSearchData("MyRolePlayCharacter", mdbCreateTablePacket(nil, "Identification"), mdbCreateColumnPacket("profile"), mdbCreateSearchPacket("profile", "=", profile));
+	local temp = mdbSearchData("MyRolePlayCharacter", mdbCreateTablePacket(nil, "Identification"), mdbCreateColumnPacket("profile"), mdbCreateSearchPacket("profile", "=", profileName));
 
 	if (temp and temp ~= nil and temp[1] and temp[1] ~= nil) then
 		return true;
@@ -807,9 +807,9 @@ function mrpEditTextPopup(location, field, whatToDoMessage, numLetters)
 		RenamePetition(text);
 		if (location ~= "CurProfile" and location ~= "makeNewProfile") then
 			mrpSaveVariable(location, field, text);
-		elseif (location == "CurProfile") then
+		elseif (location == "CurProfile") then -- Save As
 			mrpSaveProfile(text);
-		elseif (location == "makeNewProfile") then
+		elseif (location == "makeNewProfile") then -- New
 			mrpCreateNewProfile(text);
 		end
 	end,
