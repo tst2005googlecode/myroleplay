@@ -86,7 +86,7 @@ function mrpDisplayTooltip(target, mrpFromWhere)
 
 							if (inMRP == true) then
 								-- Experimental here, to stop us sending more than one request at a time!
-								if ((UnitIsAFK("mouseover") ~= 1) and (mrpIsWaitingForInfo(playerName) == false)) then
+								if ((UnitIsAFK("mouseover") ~= 1) and (mrpIsWaitingForInfo(name) == false)) then
 									mrpSendMessage(MRP_GET_INFO, name);
 								end
 
