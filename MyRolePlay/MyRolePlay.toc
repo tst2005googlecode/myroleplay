@@ -1,9 +1,9 @@
 ## Interface: 20100
 ## Title: MyRolePlay
-## Version: Alpha 2.7.34
+## Version: Alpha 2.7.35
 ## Author: MyWarcraft Suite Dev Team
 ## Email: moncader@gmail.com
-## Notes: (Alpha 2.7.34) Role Playing System for the ultimate role play experience.
+## Notes: (Alpha 2.7.35) Role Playing System for the ultimate role play experience.
 ## SavedVariablesPerCharacter: mdbSaved
 ## SavedVariables: mdbGlobalSaved
 localization.lua
