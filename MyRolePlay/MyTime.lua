@@ -115,6 +115,11 @@ function mtiUnregisterEvent(id)
 		end
 	end
 
+	if (indexOfid == nil) then
+		mduDisplayMessage(MTI_LOCALE_UNREGISTER_ERROR_CANNOTFINDEVENT, MTI_NAME, 0, 0, .7, 1, 0, 0);
+		return;
+	end
+
 	for i = 1, table.maxn(registeredEvents) do
 		if (registeredEvents[i] == eventToUnregister) then
 			eventExists = true;
@@ -125,12 +130,8 @@ function mtiUnregisterEvent(id)
 		mtiTimeWatcher:UnregisterEvent(eventToUnregister);
 	end
 
-	if (indexOfid ~= nil) then
-		mduSendEvent("MYTIME_EVENT_UNREGISTERED", mtiEvents[indexOfid].id);
-		table.remove(mtiEvents, indexOfid);
-	else
-		mduDisplayMessage(MTI_LOCALE_UNREGISTER_ERROR_CANNOTFINDEVENT, MTI_NAME, 0, 0, .7, 1, 0, 0);
-	end
+	mduSendEvent("MYTIME_EVENT_UNREGISTERED", mtiEvents[indexOfid].id);
+	table.remove(mtiEvents, indexOfid);
 end
 
 function mtiPlayEvents(wowEvent, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
@@ -289,7 +290,6 @@ end
 function mtiRemoveTimer(id)
 	local index = mduGetIndexOfId(mtiTimers, id);
 
-	mtiUnregisterEvent(mtiTimers[index].eventId);
 	mduSendEvent("MYTIME_TIMER_REMOVED", mtiTimers[index].id);
 	table.remove(mtiTimers, index);
 end

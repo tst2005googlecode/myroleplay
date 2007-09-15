@@ -1,3 +1,13 @@
+-- MyCommunication v0.9
+
+
+-- Timeout for joining channels; if we haven't already joined a channel by the time this many seconds
+-- has elapsed, force joining them anyway (in case of /console reloadui or having no zonechannels open)
+-- NOTE: Addon communication channels may appear as \1 if this timeout is too low (if your computer
+--       takes >60 sec to enter the world from when you hit Enter World, you may wish to increase it).
+MCO_JOIN_CHANNEL_TIMEOUT = 60;
+
+
 ----------------------------------------------------------------------------------------------------------
 --			LOCALE										--
 ----------------------------------------------------------------------------------------------------------
@@ -9,6 +19,7 @@ if (GetLocale() == "enUS") then
 	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
 	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
 	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+	MCO_LOCALE_JOIN_CHANNEL_TIMEOUT				= "Now joining communication channels (forced, client took more than " .. tostring(MCO_JOIN_CHANNEL_TIMEOUT) .. "s to join any channels - if this isn't a reloadui, consider increasing MCO_JOIN_CHANNEL_TIMEOUT).";
 	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
 	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
 	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
@@ -21,6 +32,7 @@ else
 	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
 	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
 	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+	MCO_LOCALE_JOIN_CHANNEL_TIMEOUT				= "Now joining communication channels (forced, client took more than " .. tostring(MCO_JOIN_CHANNEL_TIMEOUT) .. "s to join any channels - if this isn't a reloadui, consider increasing MCO_JOIN_CHANNEL_TIMEOUT).";
 end
 
 
@@ -63,7 +75,7 @@ mcoStartupChannelList = {};
 ----------------------------------------------------------
 
 function mcoOnLoad()
-	ChatTypeInfo["CHANNEL"].sticky = 1;
+	ChatTypeInfo["CHANNEL"].sticky = 1; -- EM: As much as I like sticky channels, should we really be doing this in MRP?
 
 	if (not MTI_VERSION) then
 		mduDisplayMessage(MCO_LOCALE_MYTIME_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
@@ -116,10 +128,11 @@ function mcoRegisterAddonStartupChannel(masterChannel, subChannelOne, subChannel
 	mcoStartupChannelList[newSize].subChannelTwo = subChannelTwo;
 	mcoStartupChannelList[newSize].subChannelThree = subChannelThree;
 
-	mcoJoinChannelId = mtiRegisterEvent(40, mcoJoinChannel, false);
+	mcoJoinChannelId = mtiRegisterEvent(MCO_JOIN_CHANNEL_TIMEOUT, mcoJoinChannel, false);
 	mcoJoinChannelWatcherId = mtiRegisterEvent(0, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
 end
 
+-- Normal initialisation for addon-startup channels (fires when we join any other channel for the first time, e.g., /1)
 function mcoJoinChannelWatcher()
 	if (arg1 == "YOU_JOINED") then
 		for i = 1, table.maxn(mcoStartupChannelList) do
@@ -131,7 +144,18 @@ function mcoJoinChannelWatcher()
 	end
 end
 
+-- Emergency initialisation for addon-startup channels - fires after MCO_JOIN_CHANNEL_TIMEOUT if the normal one doesn't first
 function mcoJoinChannel()
+	-- EM: UnitOnTaxi fix - if player's on taxi, extend timeout (or until we land and join and JoinChannelWatcher fires).
+	if (UnitOnTaxi("player")) then
+		mtiUnregisterEvent(mcoJoinChannelId);
+		mcoJoinChannelId = mtiRegisterEvent(5, mcoJoinChannel, false);				-- Check again in 5s
+		return;
+	end
+	
+	-- Tell the user we're doing an emergency join.
+	mduDisplayMessage(MCO_LOCALE_JOIN_CHANNEL_TIMEOUT, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	
 	for i = 1, table.maxn(mcoStartupChannelList) do
 		mcoRegisterChannel(mcoStartupChannelList[i].masterChannel, mcoStartupChannelList[i].subChannelOne, mcoStartupChannelList[i].subChannelTwo, mcoStartupChannelList[i].subChannelThree);
 	end
