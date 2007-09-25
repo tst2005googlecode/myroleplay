@@ -153,6 +153,13 @@ function mcoJoinChannel()
 		return;
 	end
 	
+	-- EM: Cinematic fix - during opening cinematic, extend timeout by 20s (or until it finishes and we join channels).
+	if (InCinematic()) then
+		mtiUnregisterEvent(mcoJoinChannelId);
+		mcoJoinChannelId = mtiRegisterEvent(20, mcoJoinChannel, false);				-- Check again in 20s
+		return;
+	end
+	
 	-- Tell the user we're doing an emergency join.
 	mduDisplayMessage(MCO_LOCALE_JOIN_CHANNEL_TIMEOUT, MCO_NAME, .8, .8, 0, 1, 0, 0);
 	
