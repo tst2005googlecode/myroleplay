@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.37"
+mrpVersion = "MyRolePlay/2.7.38"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
@@ -26,6 +26,8 @@ function mrpRegisterSlashCommands()
 	SlashCmdList["MYROLEPLAY"] = function(args)
 		if (string.lower(args) == MRP_LOCALE_Slash_Help_Option) then
 			mrpDisplayMessage(MRP_LOCALE_Slash_Help);
+		elseif (string.lower(args) == "version") then
+			mrpDisplayMessage(mrpVersion);
 		else
 			mrpDisplayMessage(MRP_LOCALE_Slash_Not_A_Command);
 		end
