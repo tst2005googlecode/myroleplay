@@ -1,3 +1,22 @@
+-- MyCommunication v0.9
+
+
+-- Timeout for joining channels; if we haven't already joined a channel by the time this many seconds
+-- has elapsed, force joining them anyway (in case of /console reloadui or having no zonechannels open)
+-- NOTE: Addon communication channels may appear as \1 if this timeout is too low (if your computer
+--       takes >60 sec to enter the world from when you hit Enter World, you may wish to increase it).
+MCO_JOIN_CHANNEL_TIMEOUT = 60;
+
+-- The minimum amount of time in seconds between sending subsequent messages on any given channel, 
+-- to prevent chatflooding.
+MCO_MESSAGE_TIMER = 0.2;
+
+-- The minimum amount of time in seconds between sending ANY messages AT ALL, to prevent chatflooding.
+-- If this timer is higher than MCO_MESSAGE_TIMER (as it currently is by default), this takes precedence.
+-- Experimentally set to a very low 2 per second, to counteract a Blizzard issue with the handling of 
+-- chat throttling in moderated channels.
+MCO_MESSAGE_TIMER_GLOBAL = 0.5;
+
 ----------------------------------------------------------------------------------------------------------
 --			LOCALE										--
 ----------------------------------------------------------------------------------------------------------
@@ -9,6 +28,7 @@ if (GetLocale() == "enUS") then
 	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
 	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
 	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+	MCO_LOCALE_JOIN_CHANNEL_TIMEOUT				= "Now joining communication channels (forced, client took more than " .. tostring(MCO_JOIN_CHANNEL_TIMEOUT) .. "s to join any channels - if this isn't a reloadui, consider increasing MCO_JOIN_CHANNEL_TIMEOUT).";
 	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
 	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
 	--MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
@@ -21,6 +41,7 @@ else
 	MCO_LOCALE_CHANNELNAME_TOOLONG_ERROR			= "Cannot join a channel with more than 12 characters.";
 	MCO_LOCALE_DATA_MISSING_ERROR				= "ERROR: Data is missing in function mcoSendMessage.";
 	MCO_LOCALE_CHANNEL_DOESNOT_EXIST_ERROR			= "ERROR: The following channel does not exist. ";
+	MCO_LOCALE_JOIN_CHANNEL_TIMEOUT				= "Now joining communication channels (forced, client took more than " .. tostring(MCO_JOIN_CHANNEL_TIMEOUT) .. "s to join any channels - if this isn't a reloadui, consider increasing MCO_JOIN_CHANNEL_TIMEOUT).";
 end
 
 
@@ -28,7 +49,7 @@ end
 --			HEADER										--
 ----------------------------------------------------------------------------------------------------------
 MCO_NAME = "MyCommunications";
-MCO_VERSION = 0.9;
+MCO_VERSION = 0.92;
 
 MyCommunication = {};
 MyCommunication.System = {};
@@ -62,8 +83,37 @@ mcoStartupChannelList = {};
 --			FUNCTIONS                       --
 ----------------------------------------------------------
 
+function mcoGlobalTimerEnable()
+	if (mtiGetTimerTime(mcoGlobalTimer.id) >= MCO_MESSAGE_TIMER_GLOBAL) then
+		mcoGlobalTimer.isAble = true;
+	end
+end
+
+-- A global timer to prevent chat throttling. Across ALL channels. Yes. Even /say.
+function mcoBeginGlobalTimer()
+	if (not mcoGlobalTimer or mcoGlobalTimer == nil) then
+		mcoGlobalTimer = {};
+		mcoGlobalTimer.id = mtiCreateNewTimer(1, .1, mcoGlobalTimerEnable);
+	else
+		mtiResetTimer(mcoGlobalTimer.id);
+	end
+	mtiStartTimer(mcoGlobalTimer.id);
+	mcoGlobalTimer.isAble = false;
+end
+
+-- Hooks literally every single Chat message sent by anything. I'm so sorry - but needs must.
+-- We have to reset our timer every time we send something to any channel that affects the
+-- global chat throttle. The following as of 28th October 2007 are (apparently) not affected *by* the
+-- throttle, but do still affect its timer:
+-- PARTY, RAID, GUILD, and CHANNEL if <= 25 people in it (but how are we to know that?)
+function mcoHooked_SendChatMessage(msg, chatType, language, channel)
+	mcoBeginGlobalTimer();
+	return mcoBlizzard_SendChatMessage(msg, chatType, language, channel);
+end
+
+
 function mcoOnLoad()
-	ChatTypeInfo["CHANNEL"].sticky = 1;
+	ChatTypeInfo["CHANNEL"].sticky = 1; -- EM: As much as I like sticky channels, should we really be doing this in MRP?
 
 	if (not MTI_VERSION) then
 		mduDisplayMessage(MCO_LOCALE_MYTIME_MISSING_ERROR, MCO_NAME, .8, .8, 0, 1, 0, 0);
@@ -100,6 +150,14 @@ function mcoOnLoad()
 
 	--mcoRegisterChannel("MyWarcraftComm", "MyRolePlay", "sub2", "sub3");
 	--mcoRegisterDataId(7, mcoTest, "MyWarcraftComm", "MyRolePlay", "sub2");
+	
+	-- EM: Hi, I'm the world's dirtiest hook. If something breaks, it was probably me.
+	-- WTB a less horrific way of doing this, but until then, if it works...
+	mcoBeginGlobalTimer();
+	if (not mcoBlizzard_SendChatMessage) then
+		mcoBlizzard_SendChatMessage = SendChatMessage;
+		SendChatMessage = mcoHooked_SendChatMessage;
+	end
 end
 
 function mcoChannelJoined(arg1)
@@ -116,10 +174,11 @@ function mcoRegisterAddonStartupChannel(masterChannel, subChannelOne, subChannel
 	mcoStartupChannelList[newSize].subChannelTwo = subChannelTwo;
 	mcoStartupChannelList[newSize].subChannelThree = subChannelThree;
 
-	mcoJoinChannelId = mtiRegisterEvent(40, mcoJoinChannel, false);
+	mcoJoinChannelId = mtiRegisterEvent(MCO_JOIN_CHANNEL_TIMEOUT, mcoJoinChannel, false);
 	mcoJoinChannelWatcherId = mtiRegisterEvent(0, mcoJoinChannelWatcher, false, "CHAT_MSG_CHANNEL_NOTICE");
 end
 
+-- Normal initialisation for addon-startup channels (fires when we join any other channel for the first time, e.g., /1)
 function mcoJoinChannelWatcher()
 	if (arg1 == "YOU_JOINED") then
 		for i = 1, table.maxn(mcoStartupChannelList) do
@@ -131,7 +190,25 @@ function mcoJoinChannelWatcher()
 	end
 end
 
+-- Emergency initialisation for addon-startup channels - fires after MCO_JOIN_CHANNEL_TIMEOUT if the normal one doesn't first
 function mcoJoinChannel()
+	-- EM: UnitOnTaxi fix - if player's on taxi, extend timeout (or until we land and join and JoinChannelWatcher fires).
+	if (UnitOnTaxi("player")) then
+		mtiUnregisterEvent(mcoJoinChannelId);
+		mcoJoinChannelId = mtiRegisterEvent(5, mcoJoinChannel, false);				-- Check again in 5s
+		return;
+	end
+	
+	-- EM: Cinematic fix - during opening cinematic, extend timeout by 20s (or until it finishes and we join channels).
+	if (InCinematic()) then
+		mtiUnregisterEvent(mcoJoinChannelId);
+		mcoJoinChannelId = mtiRegisterEvent(20, mcoJoinChannel, false);				-- Check again in 20s
+		return;
+	end
+	
+	-- Tell the user we're doing an emergency join.
+	mduDisplayMessage(MCO_LOCALE_JOIN_CHANNEL_TIMEOUT, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	
 	for i = 1, table.maxn(mcoStartupChannelList) do
 		mcoRegisterChannel(mcoStartupChannelList[i].masterChannel, mcoStartupChannelList[i].subChannelOne, mcoStartupChannelList[i].subChannelTwo, mcoStartupChannelList[i].subChannelThree);
 	end
@@ -413,7 +490,7 @@ end
 -- /script mduDisplayMessage(gcinfo());
 -- /script mduDisplayMessage(mcoAbleToSendData[3].channelName);
 function mcoTransmitData()
-	if (UnitIsAFK("player") ~= 1) then
+	if ((UnitIsAFK("player") ~= 1) and (mcoGlobalTimer.isAble)) then
 		for i = 1, table.maxn(mcoAbleToSendData) do
 			local canContinue = true;
 
@@ -441,6 +518,7 @@ function mcoTransmitData()
 				end
 
 				mcoBeginTimer(nil, nil, nil, nil, nil, nil, nil, nil, mcoAbleToSendData[i].channelName);
+				return -- EM: We *can't* send more than one in a cycle anymore. The global timer, remember? /cry
 			end
 		end
 	end
@@ -612,7 +690,7 @@ end
 
 function mcoChannelTimerEnable(_, _, _, _, _, _, _, _, arg9)
 	for i = 1, table.maxn(mcoChannelTimerId) do
-		if (mtiGetTimerTime(mcoChannelTimerId[i].id) >= .2) then
+		if (mtiGetTimerTime(mcoChannelTimerId[i].id) >= MCO_MESSAGE_TIMER) then
 			mcoAbleToSendData[mcoGetIndexOfAbleToSend(mcoChannelTimerId[i].channelName)].isAble = true;
 		end
 	end
