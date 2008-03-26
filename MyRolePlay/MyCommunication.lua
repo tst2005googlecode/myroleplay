@@ -8,14 +8,9 @@
 MCO_JOIN_CHANNEL_TIMEOUT = 60;
 
 -- The minimum amount of time in seconds between sending subsequent messages on any given channel, 
--- to prevent chatflooding.
-MCO_MESSAGE_TIMER = 0.2;
-
--- The minimum amount of time in seconds between sending ANY messages AT ALL, to prevent chatflooding.
--- If this timer is higher than MCO_MESSAGE_TIMER (as it currently is by default), this takes precedence.
--- Experimentally set to a very low 2 per second, to counteract a Blizzard issue with the handling of 
--- chat throttling in moderated channels.
-MCO_MESSAGE_TIMER_GLOBAL = 0.5;
+-- to prevent too much chatflooding. Bear in mind the WoW client performs its own queuing now, so this is
+-- now largely to prevent us hogging the queue from every other mod.
+MCO_MESSAGE_TIMER = 0.1;
 
 ----------------------------------------------------------------------------------------------------------
 --			LOCALE										--
@@ -83,35 +78,6 @@ mcoStartupChannelList = {};
 --			FUNCTIONS                       --
 ----------------------------------------------------------
 
-function mcoGlobalTimerEnable()
-	if (mtiGetTimerTime(mcoGlobalTimer.id) >= MCO_MESSAGE_TIMER_GLOBAL) then
-		mcoGlobalTimer.isAble = true;
-	end
-end
-
--- A global timer to prevent chat throttling. Across ALL channels. Yes. Even /say.
-function mcoBeginGlobalTimer()
-	if (not mcoGlobalTimer or mcoGlobalTimer == nil) then
-		mcoGlobalTimer = {};
-		mcoGlobalTimer.id = mtiCreateNewTimer(1, .1, mcoGlobalTimerEnable);
-	else
-		mtiResetTimer(mcoGlobalTimer.id);
-	end
-	mtiStartTimer(mcoGlobalTimer.id);
-	mcoGlobalTimer.isAble = false;
-end
-
--- Hooks literally every single Chat message sent by anything. I'm so sorry - but needs must.
--- We have to reset our timer every time we send something to any channel that affects the
--- global chat throttle. The following as of 28th October 2007 are (apparently) not affected *by* the
--- throttle, but do still affect its timer:
--- PARTY, RAID, GUILD, and CHANNEL if <= 25 people in it (but how are we to know that?)
-function mcoHooked_SendChatMessage(msg, chatType, language, channel)
-	mcoBeginGlobalTimer();
-	return mcoBlizzard_SendChatMessage(msg, chatType, language, channel);
-end
-
-
 function mcoOnLoad()
 	ChatTypeInfo["CHANNEL"].sticky = 1; -- EM: As much as I like sticky channels, should we really be doing this in MRP?
 
@@ -151,13 +117,6 @@ function mcoOnLoad()
 	--mcoRegisterChannel("MyWarcraftComm", "MyRolePlay", "sub2", "sub3");
 	--mcoRegisterDataId(7, mcoTest, "MyWarcraftComm", "MyRolePlay", "sub2");
 	
-	-- EM: Hi, I'm the world's dirtiest hook. If something breaks, it was probably me.
-	-- WTB a less horrific way of doing this, but until then, if it works...
-	mcoBeginGlobalTimer();
-	if (not mcoBlizzard_SendChatMessage) then
-		mcoBlizzard_SendChatMessage = SendChatMessage;
-		SendChatMessage = mcoHooked_SendChatMessage;
-	end
 end
 
 function mcoChannelJoined(arg1)
@@ -490,7 +449,7 @@ end
 -- /script mduDisplayMessage(gcinfo());
 -- /script mduDisplayMessage(mcoAbleToSendData[3].channelName);
 function mcoTransmitData()
-	if ((UnitIsAFK("player") ~= 1) and (mcoGlobalTimer.isAble)) then
+	if ((UnitIsAFK("player") ~= 1)) then
 		for i = 1, table.maxn(mcoAbleToSendData) do
 			local canContinue = true;
 
@@ -518,7 +477,6 @@ function mcoTransmitData()
 				end
 
 				mcoBeginTimer(nil, nil, nil, nil, nil, nil, nil, nil, mcoAbleToSendData[i].channelName);
-				return -- EM: We *can't* send more than one in a cycle anymore. The global timer, remember? /cry
 			end
 		end
 	end

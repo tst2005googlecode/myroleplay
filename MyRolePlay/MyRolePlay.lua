@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.40"
+mrpVersion = "MyRolePlay/2.7.41"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
@@ -16,6 +16,8 @@ mrpWaitingForHistoryList = {};
 mrpHistoryList = {};
 
 mrpCurCharacterSheetTarget = "";
+
+MRP_DEBUG = true;
 
 BINDING_HEADER_MYROLEPLAY = "MyRolePlay";
 
@@ -171,7 +173,13 @@ end
 
 function mrpListMRPChannel()
 	mtiUnregisterEvent(mtiGetCurEventId());
-	ListChannelByName("MyWarcraftCo");
+	if (MRP_DEBUG) then
+		ListChannelByName("MyWarcraftCo");
+	else
+		DEFAULT_CHAT_FRAME:UnregisterEvent("CHAT_MSG_CHANNEL_LIST");
+		ListChannelByName("MyWarcraftCo");
+		DEFAULT_CHAT_FRAME:RegisterEvent("CHAT_MSG_CHANNEL_LIST");
+	end
 end
 
 function mrpUpdatePlayerListDescription(playerName, descriptionPiece, descriptionVersion)
@@ -476,7 +484,13 @@ function mrpRemoveWaitingForHistory(target)
 end
 
 function mrpGetRSPChannelList()
-	ListChannelByName("xtensionxtooltip2");
+	if (MRP_DEBUG) then
+		ListChannelByName("xtensionxtooltip2");
+	else
+		DEFAULT_CHAT_FRAME:UnregisterEvent("CHAT_MSG_CHANNEL_LIST");
+		ListChannelByName("xtensionxtooltip2");
+		DEFAULT_CHAT_FRAME:RegisterEvent("CHAT_MSG_CHANNEL_LIST");
+	end
 	mtiUnregisterEvent(mrpRSPEventTimer);
 end
 
