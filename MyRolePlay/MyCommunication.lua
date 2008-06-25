@@ -1,4 +1,4 @@
--- MyCommunication v0.9
+-- MyCommunication v0.93
 
 
 -- Timeout for joining channels; if we haven't already joined a channel by the time this many seconds
@@ -44,7 +44,7 @@ end
 --			HEADER										--
 ----------------------------------------------------------------------------------------------------------
 MCO_NAME = "MyCommunications";
-MCO_VERSION = 0.92;
+MCO_VERSION = 0.93;
 
 MyCommunication = {};
 MyCommunication.System = {};
@@ -77,6 +77,39 @@ mcoStartupChannelList = {};
 ---------------------------------------------------------
 --			FUNCTIONS                       --
 ----------------------------------------------------------
+
+-- Splits a string (data) into chunks no more than (but possibly less than) <maxlen> bytes long.
+-- mcoSafeSplit will guarantee *never* to split a UTF-8 character across chunks.
+-- It does not guarantee to use the minimum number of chunks (if the last character's UTF-8, it
+-- will probably end up in a chunk on its own).
+-- Chunks are returned in an ordered table.
+-- Do NOT use with maxlen < 8 or with invalid UTF-8.
+function mcoSafeSplit(maxlen, data)
+	if (not data or data == "") then
+		return { [1] = "" };
+	elseif (data:len() < maxlen) then
+		return { [1] = data };
+	end
+	local chunktable = {};
+	local nextchunk = "";
+	while (data:len() > 7) do
+		nextchunk = data:sub(1, maxlen);
+		if ((nextchunk:sub(-1,-1):byte()>127) and (nextchunk:sub(-1,-1):byte()<192)) then
+			while ((nextchunk:sub(-1,-1):byte()>127) and (nextchunk:sub(-1,-1):byte()<192)) do
+				nextchunk = data:sub(1, (nextchunk:len())-1);
+			end
+		end
+		if (nextchunk:sub(-1,-1):byte()>191) then
+			nextchunk = data:sub(1, (nextchunk:len())-1);
+		end
+		table.insert(chunktable,nextchunk);
+		data = data:sub(nextchunk:len()+1);
+	end
+	if (data:len() > 0) then
+		table.insert(chunktable,data);
+	end
+	return chunktable;
+end
 
 function mcoOnLoad()
 	ChatTypeInfo["CHANNEL"].sticky = 1; -- EM: As much as I like sticky channels, should we really be doing this in MRP?
@@ -419,21 +452,16 @@ function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subCh
 	end
 
 	data = mcoEncodeMessage(data);
+	local dataLength = data:len();
 
-	local dataLength = string.len(data);
+    local dataChunks = mcoSafeSplit(178, data);
 
-	if (dataLength == 0) then
-		dataLength = 1;
-	end
-
-	for i = 1, ceil(dataLength / 178) do
+	for dataChunkIndex,dataChunk in ipairs(dataChunks) do
 		local tempIndex = table.maxn(mcoMessagesToSend[masterChannel]) + 1;
-
-		local tempData = string.sub(data, ((178 * (i - 1))) + 1, (178 * i));
 
 		table.insert(mcoMessagesToSend[masterChannel], tempIndex);
 		mcoMessagesToSend[masterChannel][tempIndex] = {};
-		mcoMessagesToSend[masterChannel][tempIndex].data = tempData;
+		mcoMessagesToSend[masterChannel][tempIndex].data = dataChunk;
 		mcoMessagesToSend[masterChannel][tempIndex].masterChannel = masterChannel;
 		mcoMessagesToSend[masterChannel][tempIndex].subChannelOne = subChannelOne;
 		mcoMessagesToSend[masterChannel][tempIndex].subChannelTwo = subChannelTwo;
@@ -441,8 +469,8 @@ function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subCh
 		mcoMessagesToSend[masterChannel][tempIndex].dataId = dataId;
 		mcoMessagesToSend[masterChannel][tempIndex].target = target;
 		mcoMessagesToSend[masterChannel][tempIndex].dataTypeIndex = dataTypeIndex;
-		mcoMessagesToSend[masterChannel][tempIndex].dataLength = string.len(data);
-		mcoMessagesToSend[masterChannel][tempIndex].dataVersion = i;
+		mcoMessagesToSend[masterChannel][tempIndex].dataLength = dataLength;
+		mcoMessagesToSend[masterChannel][tempIndex].dataVersion = dataChunkIndex;
 		mcoMessagesToSend[masterChannel][tempIndex].isHardMessage = false;
 	end
 end

@@ -38,15 +38,11 @@ mrpPacketHolder = {};
 
 --/script mrpSaveVariable("Appearance", "description", mrpLongText);
 function mrpCreateRSPDescription()
-	local description = mrpGetInfo("Appearance", "description", mrpGetCurProfile()) .. "\\eod";
+	local description = mrpGetInfo("Appearance", "description", mrpGetCurProfile());
 	description = string.gsub(string.gsub(string.gsub(description, "<", "\\%("), ">", "\\%)"), "\n", "\\l");
 	local length = string.len(description);
-	local finalDescription = "";
-
-	for i = 1, ceil(length / 250) do
-		finalDescription = finalDescription .. "<D" .. string.format('%02d', i) .. ">" .. string.sub(description, ((250 * (i - 1))) + 1, (250 * i));
-	end
-
+	local finalDescription = mcoSafeSplit(240,description);
+	finalDescription[table.getn(finalDescription)]=finalDescription[table.getn(finalDescription)].."\\eod";
 	return finalDescription;
 end
 
@@ -85,7 +81,10 @@ function mrpOnCommEvent(event)
 
 			if (string.find(arg1, "<DP>" .. UnitName("player"))) then
 				if (mtiGetTimerState(mrpRSPDescriptionTimer) == MTI_TIMER_STATE_PENDING or mtiGetTimerTime(mrpRSPDescriptionTimer) >= 10) then
-					mcoSendHardMessage(mrpCreateRSPDescription(), "xtensionxtooltip2", 0);
+					local descriptionChunks = mrpCreateRSPDescription();
+					for chunkIndex,chunkData in ipairs(descriptionChunks) do
+						mcoSendHardMessage("<D" .. string.format('%02d', chunkIndex) .. ">" .. chunkData, "xtensionxtooltip2", 0);
+					end
 
 					mtiResetTimer(mrpRSPDescriptionTimer);
 					mtiStartTimer(mrpRSPDescriptionTimer);
