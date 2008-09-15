@@ -1,4 +1,4 @@
-mrpVersion = "MyRolePlay/2.7.42"
+mrpVersion = "MyRolePlay/3.0.43"
 mrpSupports = "mrp"
 
 MRP_EMPTY_STRING = "";
@@ -946,7 +946,7 @@ function mrpRPDropDownHandler()
 		end
 		mrpRPFirstRun = 0;
 	end
-	UIDropDownMenu_SetWidth(200, mrpRPDropDown);
+	UIDropDownMenu_SetWidth(mrpRPDropDown, 200); -- EM: changed to frame,width,padding in 3.0
 end
 
 function mrpRPDropDownInitialize()
@@ -1010,7 +1010,7 @@ function mrpCSDropDownHandler()
 		end
 		mrpCSFirstRun = 0;
 	end
-	UIDropDownMenu_SetWidth(200, mrpCSDropDown);
+	UIDropDownMenu_SetWidth(mrpCSDropDown, 200); -- EM: changed to frame,width,padding in 3.0
 end
 
 function mrpCSDropDownInitialize()
@@ -1070,7 +1070,7 @@ function mrpProfileDropDownHandler()
 
 	UIDropDownMenu_SetSelectedValue(mrpProfileDropDown, mrpGetCurProfile());
 
-	UIDropDownMenu_SetWidth(140, mrpProfileDropDown);
+	UIDropDownMenu_SetWidth(mrpProfileDropDown, 140); -- EM: changed to frame,width,padding in 3.0
 end
 
 function mrpProfileDropDownInitialize()

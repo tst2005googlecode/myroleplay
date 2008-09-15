@@ -1724,11 +1724,11 @@
 							<Anchors>
 								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
 									<Offset>
-										<AbsDimension x="-13" y="-2"/>
+										<AbsDimension x="-4" y="1"/>
 								</Offset>
 								</Anchor>
 							</Anchors>
-							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+							<TexCoords left="0" right="0.484375" top="0" bottom="0.29"/>
 						</Texture>
 						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
 							<Size>
@@ -1737,11 +1737,11 @@
 							<Anchors>
 								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
 									<Offset>
-										<AbsDimension x="-13" y="2"/>
+										<AbsDimension x="-4" y="1"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
-							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
+							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.42"/>
 						</Texture>
 					</Layer>
 				</Layers>
@@ -1758,7 +1758,7 @@
 							</Anchor>
 						</Anchors>
 						<Frames>
-							<EditBox name="mrpEnterInformationEditBox" multiLine="true" letters="3750" enableMouse="true" autoFocus="false">
+							<EditBox name="mrpEnterInformationEditBox" multiLine="true" letters="5000" enableMouse="true" autoFocus="false">
 								<Size>
 									<AbsDimension x="380" y="160" />
 								</Size>
@@ -1776,12 +1776,15 @@
 								</Anchors>
 								<FontString inherits="GameFontHighlight" />
 								<Scripts>
-									<OnEscapePressed>
-										this:ClearFocus()
-									</OnEscapePressed>
 									<OnTextChanged>
-										ScrollingEdit_OnTextChanged(mrpEnterInformationScrollFrame);
+										ScrollingEdit_OnTextChanged(self, self:GetParent():GetParent());
 									</OnTextChanged>
+									<OnCursorChanged>
+										ScrollingEdit_OnCursorChanged(self, x, y-10, w, h);
+									</OnCursorChanged>
+									<OnUpdate>
+										ScrollingEdit_OnUpdate(self, elapsed, self:GetParent():GetParent());
+									</OnUpdate>
 								</Scripts>
 							</EditBox>
 						</Frames>
@@ -1794,10 +1797,10 @@
 				</ScrollChild>
 				<Scripts>
 					<OnLoad>
-						this.scrollBarHideable = false;
-						ScrollFrame_OnScrollRangeChanged();
-						mrpEnterInformationScrollFrameScrollBar:SetPoint("TOPLEFT", "mrpEnterInformationScrollFrame", "TOPRIGHT", -4, -20);
-						mrpEnterInformationScrollFrameScrollBar:SetPoint("BOTTOMLEFT", "mrpEnterInformationScrollFrame", "BOTTOMRIGHT", -4, 20);
+						self.scrollBarHideable = false;
+						ScrollFrame_OnScrollRangeChanged(self); -- EM: Attempted 3.0 change
+						mrpEnterInformationScrollFrameScrollBar:SetPoint("TOPLEFT", "mrpEnterInformationScrollFrame", "TOPRIGHT", 4, -20);
+						mrpEnterInformationScrollFrameScrollBar:SetPoint("BOTTOMLEFT", "mrpEnterInformationScrollFrame", "BOTTOMRIGHT", 4, 20);
 					</OnLoad>
 				</Scripts>
 			</ScrollFrame>
