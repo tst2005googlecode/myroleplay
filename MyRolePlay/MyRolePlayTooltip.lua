@@ -540,12 +540,12 @@ function mrpAssessTooltipInfo(orderName, i, j, target)
 	end
 	if (info == MRP_TOOLTIP_PVPRANK) then
 		if (UnitPlayerControlled(target)) then
-			mrpTargetFaction = UnitFactionGroup(target);
+			local a, b = UnitFactionGroup(target);
 			if (mrpTarget.Identification.FactionRank ~= MRP_TOOLTIP_EMPTY_STRING) then
-				if (mrpTargetFaction == "Horde") then
-					return (mrpHexStart .. mduColourToHex(MyRolePlay.Settings.Colours.FactionHorde.red, MyRolePlay.Settings.Colours.FactionHorde.green, MyRolePlay.Settings.Colours.FactionHorde.blue) .. mrpTarget.Identification.FactionRank .. MRP_LOCALE_OFTHE_HORDE_FACTION .. " " .. mrpHexEnd);
+				if (a == "Horde") then
+					return (mrpHexStart .. mduColourToHex(MyRolePlay.Settings.Colours.FactionHorde.red, MyRolePlay.Settings.Colours.FactionHorde.green, MyRolePlay.Settings.Colours.FactionHorde.blue) .. mrpTarget.Identification.FactionRank .. " (" .. b .. ")" .. mrpHexEnd);
 				else
-					return (mrpHexStart .. mduColourToHex(MyRolePlay.Settings.Colours.FactionAlliance.red, MyRolePlay.Settings.Colours.FactionAlliance.green, MyRolePlay.Settings.Colours.FactionAlliance.blue) .. mrpTarget.Identification.FactionRank .. MRP_LOCALE_OFTHE_ALLIANCE_FACTION .. " " .. mrpHexEnd);
+					return (mrpHexStart .. mduColourToHex(MyRolePlay.Settings.Colours.FactionAlliance.red, MyRolePlay.Settings.Colours.FactionAlliance.green, MyRolePlay.Settings.Colours.FactionAlliance.blue) .. mrpTarget.Identification.FactionRank .. " (" .. b .. ")" .. mrpHexEnd);
 				end
 			end
 		end
