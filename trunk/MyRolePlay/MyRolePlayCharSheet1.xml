@@ -616,7 +616,7 @@
 		</Anchors>
 		<!-- Basically copy/pasted from MacroFrame -->
 		<ScrollChild>
-			<EditBox name="mrpCharSheet1DescBox" multiLine="true" maxLines="100" letters="1439" text="" enableKeyboard="false" nonspacewrap="false" spacing="2" autoFocus="false">
+			<EditBox name="mrpCharSheet1DescBox" multiLine="true" maxLines="200" letters="5000" text="" enableKeyboard="false" nonspacewrap="false" spacing="2" autoFocus="false">
 				<Size>
 					<AbsDimension x="300" y="200"/>
 				</Size>
@@ -823,7 +823,7 @@
 		</Anchors>
 		<!-- Basically copy/pasted from MacroFrame -->
 		<ScrollChild>
-			<EditBox name="mrpCharSheet1HistBox" multiLine="true" maxLines="100" letters="1439" text="" enableKeyboard="false" hidden="false" nonspacewrap="false" spacing="2" autoFocus="false">
+			<EditBox name="mrpCharSheet1HistBox" multiLine="true" maxLines="200" letters="5000" text="" enableKeyboard="false" hidden="false" nonspacewrap="false" spacing="2" autoFocus="false">
 				<Size>
 					<AbsDimension x="300" y="200"/>
 				</Size>

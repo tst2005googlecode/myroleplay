@@ -801,8 +801,8 @@ MRP_LOCALE_CLASS_WARLOCK            = "Hexer";
 MRP_LOCALE_CLASS_PRIEST               = "Priester";
 
 -- MyRolePlay tooltip text --
-MRP_LOCALE_OFTHE_ALLIANCE_FACTION		= " der Allianz";
-MRP_LOCALE_OFTHE_HORDE_FACTION		    = " der Horde";
+MRP_LOCALE_OFTHE_ALLIANCE_FACTION		= "(Allianz)";
+MRP_LOCALE_OFTHE_HORDE_FACTION		    = "(Horde)";
 
 else
 
@@ -1215,6 +1215,6 @@ MRP_LOCALE_CLASS_WARLOCK				= "Warlock";
 MRP_LOCALE_CLASS_PRIEST					= "Priest";
 
 -- MyRolePlay tooltip text --
-MRP_LOCALE_OFTHE_ALLIANCE_FACTION		= " of the Alliance";
-MRP_LOCALE_OFTHE_HORDE_FACTION			= " of the Horde";
+MRP_LOCALE_OFTHE_ALLIANCE_FACTION		= "(Alliance)";
+MRP_LOCALE_OFTHE_HORDE_FACTION			= "(Horde)";
 end

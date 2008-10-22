@@ -778,39 +778,11 @@ end
 
 function mrpSetTargetFactionRank(fromWhere)
 	if (UnitPlayerControlled("mouseover") or UnitPlayerControlled("player")) then
-		local mrpRank = nil;
-
 		if (fromWhere == "MOUSEOVER" or fromWhere == "CHATMESSAGE") then
-			mrpRank = mduStringSplit(" ", UnitPVPName("mouseover"));
+			mrpTarget.Identification.FactionRank = UnitPVPName("mouseover")
 		elseif (fromWhere == "PLAYER") then
-			mrpRank = mduStringSplit(" ", UnitPVPName("player"));
+			mrpTarget.Identification.FactionRank = UnitPVPName("target")
 		end
-
-		local num = table.maxn(mrpRank);
-
-		if (num == 1) then
-			mrpTarget.Identification.FactionRank = MRP_EMPTY_STRING;
-
-			return;
-		elseif (num == 2) then
-			mrpTarget.Identification.FactionRank = mrpRank[1];
-
-			return;
-		elseif (num == 3) then
-			mrpTarget.Identification.FactionRank = mrpRank[1] .. " " .. mrpRank[2];
-
-			return;
-		elseif (num == 4) then
-			mrpTarget.Identification.FactionRank = mrpRank[1] .. " " .. mrpRank[2] .. " " .. mrpRank[3];
-
-			return;
-		elseif (num == 5) then
-			mrpTarget.Identification.FactionRank = mrpRank[1] .. " " .. mrpRank[2] .. " " .. mrpRank[3] .. " " .. mrpRank[4];
-
-			return;
-		end
-
-		mrpTarget.Identification.FactionRank = "";
 	end
 end
 
@@ -1199,15 +1171,17 @@ function mrpButtonIconDraggingFrameOnUpdate(arg1)
 	mrpIconPos = math.deg(math.atan2(ypos, xpos));
 	mrpMoveIcon();
 end
-mrpLocked = 0;
+mrpLocked = 1
 function mrpButtonIconFrameOnClick(arg1)
 	if arg1 == "LeftButton" then
 		mrpViewTargetCharacterSheet();
 	elseif arg1 == "RightButton" then
 		if (mrpLocked == 0) then
 			mrpLocked = 1;
+			mrpDisplayMessage("MRP Display Button now locked; right-click the button to unlock for moving.");
 		else
 			mrpLocked = 0;
+			mrpDisplayMessage("MRP Display Button now movable; right-click the button to lock.");
 		end
 	end
 end
