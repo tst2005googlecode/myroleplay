@@ -356,47 +356,4 @@
 		</Scripts>
 	</CheckButton>
 
-	<CheckButton name="mrpRSPCompatOptionButton" parent="mrpOptionsPage1" toplevel="true" inherits="OptionsCheckButtonTemplate" checked="true">
-		<Size>
-			<AbsDimension x="20" y="20"/>
-		</Size>
-		<Anchors>
-			<Anchor point="TOPLEFT" relativeTo="mrpMRPTooltipOptionButton" relativePoint="TOPLEFT">
-				<Offset>
-					<AbsDimension x="0" y="-40" />
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Layers>
-			<Layer level="ARTWORK">
-				<FontString name="$parentRelative" inherits="GameFontNormal" text="MRP_LOCALE_OPTIONSXML_RSPCOMPAT" justifyV="TOP" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="200" y="11" />
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="18" y="-3" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-
-		<Scripts>
-			<OnEnter>
-				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-				GameTooltip:SetText(MRP_LOCALE_OPTIONSXML_RSPCOMPAT_TT, 1.0, 1.0, 1.0, 0.5);
-				GameTooltip:Show();
-			</OnEnter>
-			<OnLeave>
-				GameTooltip:Hide();
-			</OnLeave>
-			<OnClick>
-				mrpOptionRSPCompat();
-				mrpSetOptionsCheckButtons();
-			</OnClick>
-		</Scripts>
-	</CheckButton>
 </Ui>

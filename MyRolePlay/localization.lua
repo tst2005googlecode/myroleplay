@@ -6,6 +6,8 @@ MRP_LOCALE_DropDownRP1					= "Rol Normal";
 MRP_LOCALE_DropDownRP2					= "Rol Casual, parcialmente OffRol";
 MRP_LOCALE_DropDownRP3					= "Rol Serio, nada de OffRol";
 MRP_LOCALE_DropDownRP4					= "Rolero principiante";
+-- MRP_LOCALE_DropDownRP5					= "Rolero 'adulto'";
+MRP_LOCALE_DropDownRP5					= "Rol";
 
 -- Different character status texts for drop down box.
 MRP_LOCALE_DropDownCSNone				= "Sin estado";
@@ -409,6 +411,9 @@ MRP_LOCALE_DropDownRP1					= "Normaler Rollenspiel-Stil";
 MRP_LOCALE_DropDownRP2					= "Beiläufiger Rollenspieler, teilweise OOC";
 MRP_LOCALE_DropDownRP3					= "Vollzeit-RP, gar kein OOC";
 MRP_LOCALE_DropDownRP4					= "Rollenspiel-Anf\195\164nger";
+-- MRP_LOCALE_DropDownRP5					= "'Reif' Rollenspieler";
+MRP_LOCALE_DropDownRP5					= "Rollenspieler";
+
 
 -- Different character status texts for drop down box.
 MRP_LOCALE_DropDownCSNone            = "Kein Charakter-Status";
@@ -807,6 +812,9 @@ MRP_LOCALE_DropDownRP1					= "Normal roleplaying style";
 MRP_LOCALE_DropDownRP2					= "Casual roleplaying, partial OOC";
 MRP_LOCALE_DropDownRP3					= "Fulltime roleplaying, no OOC at all";
 MRP_LOCALE_DropDownRP4					= "Roleplaying beginner";
+-- MRP_LOCALE_DropDownRP5					= "'Mature' roleplayer";
+MRP_LOCALE_DropDownRP5					= "Roleplayer";
+
 
 -- Different character status texts for drop down box.
 MRP_LOCALE_DropDownCSNone				= "No character status";

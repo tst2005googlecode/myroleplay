@@ -1,11 +1,11 @@
--- MyCommunication v0.93
+-- MyCommunication v0.96
 
 
 -- Timeout for joining channels; if we haven't already joined a channel by the time this many seconds
 -- has elapsed, force joining them anyway (in case of /console reloadui or having no zonechannels open)
 -- NOTE: Addon communication channels may appear as \1 if this timeout is too low (if your computer
---       takes >60 sec to enter the world from when you hit Enter World, you may wish to increase it).
-MCO_JOIN_CHANNEL_TIMEOUT = 60;
+--       takes >120 sec to enter the world from when you hit Enter World, you may wish to increase it).
+MCO_JOIN_CHANNEL_TIMEOUT = 120;
 
 -- The minimum amount of time in seconds between sending subsequent messages on any given channel, 
 -- to prevent too much chatflooding. Bear in mind the WoW client performs its own queuing now, so this is
@@ -71,7 +71,8 @@ mcoStartupChannelList = {};
 ----------------------------------------------------------
 
 -- Splits a UTF-8 string (data) into chunks no more than (maxlen) bytes long.
--- This will NOT split in the middle of a UTF-8 multibyte character sequence.
+-- This will NOT split in the middle of a UTF-8 multibyte character sequence, or
+-- in the middle of a \123 escape sequence.
 -- Returns an indexed table of chunks.
 -- Avoid: maxlen < 4, invalid/overlong UTF-8.
 function mcoSafeSplit(maxlen, data)
@@ -84,9 +85,26 @@ function mcoSafeSplit(maxlen, data)
 		local chunkseq = 1
 		local chop = 1
 		local c = 1
+		local d = 1
 		while (ldata > maxlen) do
 			c = data:byte(maxlen)
-			if (c<128) then
+			if (c<48) then
+				chop = maxlen
+			elseif (c<58) then
+				d = data:byte(maxlen-1)
+				if (d==92) then
+					chop = maxlen - 2
+				elseif (d>47 and d<58) then
+					d = data:byte(maxlen-2)
+					if (d==92) then
+						chop = maxlen - 3
+					else
+						chop = maxlen
+					end
+				end
+			elseif (c==92) then
+				chop = maxlen - 1
+			elseif (c<128) then
 				chop = maxlen
 			elseif (c>191) then
 				chop = maxlen - 1
@@ -96,7 +114,7 @@ function mcoSafeSplit(maxlen, data)
 				elseif (data:byte(maxlen-2)>191) then
 					chop = maxlen - 3
 				else
-					chop = maxlen - 4         
+					chop = maxlen
 				end
 			end
 			chunktable[chunkseq] = data:sub(1, chop)
@@ -451,26 +469,26 @@ function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subCh
 		mcoMessagesToSend[masterChannel] = {};
 	end
 
-	data = mcoEncodeMessage(data);
-	local dataLength = data:len();
+	local dataLength = #data
+	data = mcoEncodeMessage(data)
 
-    local dataChunks = mcoSafeSplit(178, data);
+    local dataChunks = mcoSafeSplit(178, data)
 	for dataChunkIndex,dataChunk in ipairs(dataChunks) do
-		local tempIndex = table.maxn(mcoMessagesToSend[masterChannel]) + 1;
+		local tempIndex = table.maxn(mcoMessagesToSend[masterChannel]) + 1
 
-		table.insert(mcoMessagesToSend[masterChannel], tempIndex);
-		mcoMessagesToSend[masterChannel][tempIndex] = {};
-		mcoMessagesToSend[masterChannel][tempIndex].data = dataChunk;
-		mcoMessagesToSend[masterChannel][tempIndex].masterChannel = masterChannel;
-		mcoMessagesToSend[masterChannel][tempIndex].subChannelOne = subChannelOne;
-		mcoMessagesToSend[masterChannel][tempIndex].subChannelTwo = subChannelTwo;
-		mcoMessagesToSend[masterChannel][tempIndex].subChannelThree = subChannelThree;
-		mcoMessagesToSend[masterChannel][tempIndex].dataId = dataId;
-		mcoMessagesToSend[masterChannel][tempIndex].target = target;
-		mcoMessagesToSend[masterChannel][tempIndex].dataTypeIndex = dataTypeIndex;
-		mcoMessagesToSend[masterChannel][tempIndex].dataLength = dataLength;
-		mcoMessagesToSend[masterChannel][tempIndex].dataVersion = dataChunkIndex;
-		mcoMessagesToSend[masterChannel][tempIndex].isHardMessage = false;
+		table.insert(mcoMessagesToSend[masterChannel], tempIndex)
+		mcoMessagesToSend[masterChannel][tempIndex] = {}
+		mcoMessagesToSend[masterChannel][tempIndex].data = dataChunk
+		mcoMessagesToSend[masterChannel][tempIndex].masterChannel = masterChannel
+		mcoMessagesToSend[masterChannel][tempIndex].subChannelOne = subChannelOne
+		mcoMessagesToSend[masterChannel][tempIndex].subChannelTwo = subChannelTwo
+		mcoMessagesToSend[masterChannel][tempIndex].subChannelThree = subChannelThree
+		mcoMessagesToSend[masterChannel][tempIndex].dataId = dataId
+		mcoMessagesToSend[masterChannel][tempIndex].target = target
+		mcoMessagesToSend[masterChannel][tempIndex].dataTypeIndex = dataTypeIndex
+		mcoMessagesToSend[masterChannel][tempIndex].dataLength = dataLength
+		mcoMessagesToSend[masterChannel][tempIndex].dataVersion = dataChunkIndex
+		mcoMessagesToSend[masterChannel][tempIndex].isHardMessage = false
 
 	end
 end
@@ -651,6 +669,7 @@ end
 -- Remember, if you want to add something new to be encoded, to add it to the gsub pattern as well.
 local mcoenc_table = {
 	[0] = "\\000",   -- null
+	[5] = "\\005",   -- mrp_split
 	[9] = "\\009",   -- tab
 	[10] = "\\010",  -- lf
 	[13] = "\\013",  -- cr
@@ -674,7 +693,7 @@ local function mcoenc_table_p(c)
 	return mcoenc_table[c:byte()]
 end
 function mcoEncodeMessage(data)
-	return data:gsub("([%z\009\010\013\015\020\029\031\034\037\058\061\063S\092hs\124\127])", mcoenc_table_p)
+	return data:gsub("([%z\005\009\010\013\015\020\029\031\034\037\058\061\063S\092hs\124\127])", mcoenc_table_p)
 end
 local function mcodec_p(s)
 	return string.char(tonumber(s))
