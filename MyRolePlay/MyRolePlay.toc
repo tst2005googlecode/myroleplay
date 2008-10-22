@@ -1,9 +1,9 @@
 ## Interface: 30000
 ## Title: MyRolePlay
-## Version: 3.0.46
+## Version: 3.0.47
 ## Author: MyWarcraft Suite Dev Team
 ## Email: moncader@gmail.com
-## Notes: (Alpha 3.0.46) Role Playing System for the ultimate role play experience.
+## Notes: (Alpha 3.0.47) Role Playing System for the ultimate role play experience.
 ## URL: http://www.moonshyne.org/
 ## SavedVariablesPerCharacter: mdbSaved
 ## SavedVariables: mdbGlobalSaved
