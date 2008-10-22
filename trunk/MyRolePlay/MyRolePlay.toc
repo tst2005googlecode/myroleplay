@@ -1,9 +1,9 @@
 ## Interface: 30000
 ## Title: MyRolePlay
-## Version: Alpha 3.0.43
+## Version: Alpha 3.0.44
 ## Author: MyWarcraft Suite Dev Team
 ## Email: moncader@gmail.com
-## Notes: (Alpha 3.0.43) Role Playing System for the ultimate role play experience.
+## Notes: (Alpha 3.0.44) Role Playing System for the ultimate role play experience.
 ## SavedVariablesPerCharacter: mdbSaved
 ## SavedVariables: mdbGlobalSaved
 localization.lua

@@ -63,14 +63,6 @@ MCO_DATA_TYPE_TABLE = 3;
 MCO_DATA_TYPE_FUNCTION = 4;
 MCO_DATA_TYPE_BOOLEAN = 5;
 
-MCO_NEWLINE_CHARACTER = "\r";
---MCO_ZERO_CHARACTER = string.char(1, 2, 4);
-MCO_BACKSLASH_CHARACTER = string.char(2);
---MCO_PERCENT_CHARACTER = string.char(1, 2, 2, 2, 4);
-MCO_BAR_CHARACTER = string.char(1);
-MCO_H_CHARACTER = string.char(3);
-MCO_DOTDOTDOT_CHARACTER = string.char(4);
-
 mcoAbleToSendData = {};
 mcoChannelTimerId = {};
 mcoStartupChannelList = {};
@@ -78,37 +70,45 @@ mcoStartupChannelList = {};
 --			FUNCTIONS                       --
 ----------------------------------------------------------
 
--- Splits a string (data) into chunks no more than (but possibly less than) <maxlen> bytes long.
--- mcoSafeSplit will guarantee *never* to split a UTF-8 character across chunks.
--- It does not guarantee to use the minimum number of chunks (if the last character's UTF-8, it
--- will probably end up in a chunk on its own).
--- Chunks are returned in an ordered table.
--- Do NOT use with maxlen < 8 or with invalid UTF-8.
+-- Splits a UTF-8 string (data) into chunks no more than (maxlen) bytes long.
+-- This will NOT split in the middle of a UTF-8 multibyte character sequence.
+-- Returns an indexed table of chunks.
+-- Avoid: maxlen < 4, invalid/overlong UTF-8.
 function mcoSafeSplit(maxlen, data)
-	if (not data or data == "") then
-		return { [1] = "" };
-	elseif (data:len() < maxlen) then
-		return { [1] = data };
-	end
-	local chunktable = {};
-	local nextchunk = "";
-	while (data:len() > 7) do
-		nextchunk = data:sub(1, maxlen);
-		if ((nextchunk:sub(-1,-1):byte()>127) and (nextchunk:sub(-1,-1):byte()<192)) then
-			while ((nextchunk:sub(-1,-1):byte()>127) and (nextchunk:sub(-1,-1):byte()<192)) do
-				nextchunk = data:sub(1, (nextchunk:len())-1);
+	data = data or ""
+	local ldata = #data
+	if (ldata <= maxlen) then
+		return { [1] = data }
+	else
+		local chunktable = {}
+		local chunkseq = 1
+		local chop = 1
+		local c = 1
+		while (ldata > maxlen) do
+			c = data:byte(maxlen)
+			if (c<128) then
+				chop = maxlen
+			elseif (c>191) then
+				chop = maxlen - 1
+			else
+				if (data:byte(maxlen-1)>191) then
+					chop = maxlen - 2
+				elseif (data:byte(maxlen-2)>191) then
+					chop = maxlen - 3
+				else
+					chop = maxlen - 4         
+				end
 			end
+			chunktable[chunkseq] = data:sub(1, chop)
+			chunkseq = chunkseq + 1
+			data = data:sub(chop+1)
+			ldata = ldata - chop
 		end
-		if (nextchunk:sub(-1,-1):byte()>191) then
-			nextchunk = data:sub(1, (nextchunk:len())-1);
+		if (data ~= "") then
+			chunktable[chunkseq] = data
 		end
-		table.insert(chunktable,nextchunk);
-		data = data:sub(nextchunk:len()+1);
+		return chunktable;
 	end
-	if (data:len() > 0) then
-		table.insert(chunktable,data);
-	end
-	return chunktable;
 end
 
 function mcoOnLoad()
@@ -455,7 +455,6 @@ function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subCh
 	local dataLength = data:len();
 
     local dataChunks = mcoSafeSplit(178, data);
-
 	for dataChunkIndex,dataChunk in ipairs(dataChunks) do
 		local tempIndex = table.maxn(mcoMessagesToSend[masterChannel]) + 1;
 
@@ -472,6 +471,7 @@ function mcoSendMessage(data, masterChannel, subChannelOne, subChannelTwo, subCh
 		mcoMessagesToSend[masterChannel][tempIndex].dataLength = dataLength;
 		mcoMessagesToSend[masterChannel][tempIndex].dataVersion = dataChunkIndex;
 		mcoMessagesToSend[masterChannel][tempIndex].isHardMessage = false;
+
 	end
 end
 -- /script mduDisplayMessage(gcinfo());
@@ -647,31 +647,43 @@ function mcoConvertData(data, dataType)
 	end
 end
 
-function mcoEncodeMessage(data)
-	data = string.gsub(data, "\n", MCO_NEWLINE_CHARACTER);
-	--data = string.gsub(data, "%%", MCO_PERCENT_CHARACTER);
-	--data = string.gsub(data, "\0", MCO_ZERO_CHARACTER);
-	data = string.gsub(data, "|", MCO_BAR_CHARACTER);
-	data = string.gsub(data, "\\", MCO_BACKSLASH_CHARACTER);
-	data = string.gsub(data, "%.%.%.hic!", MCO_DOTDOTDOT_CHARACTER);
-	data = string.gsub(data, "h", MCO_H_CHARACTER);
-
-	return (data);
+-- Have changed the whole encoding function to something much safer. Unfortunately not backwards-compatible :(
+-- Remember, if you want to add something new to be encoded, to add it to the gsub pattern as well.
+local mcoenc_table = {
+	[0] = "\\000",   -- null
+	[9] = "\\009",   -- tab
+	[10] = "\\010",  -- lf
+	[13] = "\\013",  -- cr
+	[15] = "\\015",
+	[20] = "\\020",
+	[29] = "\\029",
+	[31] = "\\031",
+	[34] = "\\034",  -- "
+	[37] = "\\037",  -- %
+	[58] = "\\058",  -- :
+	[61] = "\\061",  -- =
+	[63] = "\\063",  -- ?
+	[83] = "\\083",  -- S
+	[92] = "\\092",  -- \
+	[104] = "\\104", -- h
+	[115] = "\\115", -- s
+	[124] = "\\124", -- |
+	[127] = "\\127",
+}
+local function mcoenc_table_p(c)
+	return mcoenc_table[c:byte()]
 end
-
+function mcoEncodeMessage(data)
+	return data:gsub("([%z\009\010\013\015\020\029\031\034\037\058\061\063S\092hs\124\127])", mcoenc_table_p)
+end
+local function mcodec_p(s)
+	return string.char(tonumber(s))
+end
 function mcoDecodeMessage(data)
-	--data = string.gsub(data, MCO_PERCENT_CHARACTER, "%%");
-	--data = string.gsub(data, MCO_ZERO_CHARACTER, "\0");
-	data = string.gsub(data, MCO_BAR_CHARACTER, "|");
-	data = string.gsub(data, MCO_BACKSLASH_CHARACTER, "\\");
-	data = string.gsub(data, "sh", "s");
-	data = string.gsub(data, "Sh", "S");
-	data = string.gsub(data, MCO_H_CHARACTER, "h");
-	data = string.gsub(data, "%.%.%.hic!", "");
-	data = string.gsub(data, MCO_DOTDOTDOT_CHARACTER, "...hic!");
-
-
-	return (data);
+	data = data:gsub("^(.*) %.%.%.hic!$", "%1")
+	data = data:gsub("[%z\009\010\013\015\020\029\031\034\037\058\061\063Shs\124\127]", "")
+	data = data:gsub("\\(%d%d%d)",mcodec_p)
+	return data
 end
 
 function mcoChannelTimerEnable(_, _, _, _, _, _, _, _, arg9)
