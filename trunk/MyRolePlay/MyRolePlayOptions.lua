@@ -14,12 +14,6 @@ function mrpSetOptionsCheckButtons()
 	else
 		mrpMRPTooltipOptionButton:SetChecked(true);
 	end
-
-	if (mrpCheckSettings("Addon Compatability", "FlagRSP2/ImmersionRP") == false) then
-		mrpRSPCompatOptionButton:SetChecked(false);
-	else
-		mrpRSPCompatOptionButton:SetChecked(true);
-	end
 end
 
 function mrpOptionRelativeClick()
@@ -39,15 +33,5 @@ function mrpOptionMRPTooltips()
 	else
 		mrpChangeSettings("Tooltip", "enabled", false);
 		mrpDisplayMessage(MRP_LOCALE_Tooltips_MRPStyle_Disabled);
-	end
-end
-
-function mrpOptionRSPCompat()
-	if (mrpCheckSettings("Addon Compatability", "FlagRSP2/ImmersionRP") == false) then
-		mrpChangeSettings("Addon Compatability", "FlagRSP2/ImmersionRP", true);
-		mrpEnableRSPCompat();
-	else
-		mrpChangeSettings("Addon Compatability", "FlagRSP2/ImmersionRP", false);
-		mrpDisableRSPCompat();
 	end
 end

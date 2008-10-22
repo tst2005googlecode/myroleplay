@@ -1,5 +1,5 @@
-mrpVersion = "MyRolePlay/3.0.44"
-mrpSupports = "mrp"
+mrpVersion = "MyRolePlay/"..GetAddOnMetadata("MyRolePlay", "Version")
+mrpSupports = "mrp,rsp"
 
 MRP_EMPTY_STRING = "";
 mrpIsInitialized = false;
@@ -498,23 +498,8 @@ function mrpFinalizeInit()
 	mtiUnregisterEvent(mtiGetCurEventId());
 	mrpDisplayMessage(MRP_LOCALE_SUCCESS_INIT);
 	mrpIsInitialized = true;
-
-	if (mrpIsAddonCompatabilityEnabled("FlagRSP2/ImmersionRP") == true) then
-		mrpEnableRSPCompat();
-	end
-end
-
-function mrpEnableRSPCompat()
-	mrpSupports = mrpSupports .. ",rsp";
 	mcoRegisterEvent("MCO_CHANNEL_JOINED", mrpInitRSP);
 	mcoRegisterChannel("xtensionxtooltip2");
-end
-
-function mrpDisableRSPCompat()
-	mtiRemoveTimer(mrpRSPDescriptionTimer);
-	mtiRemoveTimer(mrpRSPBroadcastTimer);
-	mcoUnregisterChannel("xtensionxtooltip2");
-	mrpSupports = string.gsub(mrpSupports, ",rsp", "");
 end
 
 function mrpInitRSP(channelName)
@@ -759,6 +744,10 @@ function mrpDecodeStatus(status)
 		status = MRP_LOCALE_DropDownRP3;
 	elseif (status == "RP4") then
 		status = MRP_LOCALE_DropDownRP4;
+	elseif (status == "RP5") then
+		status = MRP_LOCALE_DropDownRP5; -- 'Mature' roleplayer
+										 -- EM: As per Blizzard's request, we will never _send_ this.
+										 -- As per Alsarna's request, we will display it simply as roleplayer.
 	end
 
 	return status;
