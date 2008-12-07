@@ -10,7 +10,7 @@ MCO_JOIN_CHANNEL_TIMEOUT = 120;
 -- The minimum amount of time in seconds between sending subsequent messages on any given channel, 
 -- to prevent too much chatflooding. Bear in mind the WoW client performs its own queuing now, so this is
 -- now largely to prevent us hogging the queue from every other mod.
-MCO_MESSAGE_TIMER = 0.1;
+MCO_MESSAGE_TIMER = 0.25;
 
 ----------------------------------------------------------------------------------------------------------
 --			LOCALE										--
