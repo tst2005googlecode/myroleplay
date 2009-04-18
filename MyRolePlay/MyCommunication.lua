@@ -4,13 +4,13 @@
 -- Timeout for joining channels; if we haven't already joined a channel by the time this many seconds
 -- has elapsed, force joining them anyway (in case of /console reloadui or having no zonechannels open)
 -- NOTE: Addon communication channels may appear as \1 if this timeout is too low (if your computer
---       takes >120 sec to enter the world from when you hit Enter World, you may wish to increase it).
-MCO_JOIN_CHANNEL_TIMEOUT = 120;
+--       takes >180 sec to enter the world from when you hit Enter World, you may wish to increase it).
+MCO_JOIN_CHANNEL_TIMEOUT = 180;
 
 -- The minimum amount of time in seconds between sending subsequent messages on any given channel, 
 -- to prevent too much chatflooding. Bear in mind the WoW client performs its own queuing now, so this is
 -- now largely to prevent us hogging the queue from every other mod.
-MCO_MESSAGE_TIMER = 0.25;
+MCO_MESSAGE_TIMER = 0.4;
 
 ----------------------------------------------------------------------------------------------------------
 --			LOCALE										--
