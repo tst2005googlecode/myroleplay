@@ -76,7 +76,7 @@ mcoStartupChannelList = {};
 -- Returns an indexed table of chunks.
 -- Avoid: maxlen < 4, invalid/overlong UTF-8.
 function mcoSafeSplit(maxlen, data)
-	data = data or ""
+	local data = data or ""
 	local ldata = #data
 	if (ldata <= maxlen) then
 		return { [1] = data }
@@ -171,7 +171,9 @@ function mcoOnLoad()
 end
 
 function mcoChannelJoined(arg1)
-	mduDisplayMessage(arg1 .. MCO_LOCALE_CHANNEL_INITIALIZED, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	if (MRP_DEBUG) then
+		mduDisplayMessage(arg1 .. MCO_LOCALE_CHANNEL_INITIALIZED, MCO_NAME, .8, .8, 0, 1, 0, 0);
+	end
 	mcoBeginTimer(nil, nil, nil, nil, nil, nil, nil, nil, arg1);
 end
 

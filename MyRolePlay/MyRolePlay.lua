@@ -17,7 +17,7 @@ mrpHistoryList = {};
 
 mrpCurCharacterSheetTarget = "";
 
-MRP_DEBUG = true;
+MRP_DEBUG = false;
 
 BINDING_HEADER_MYROLEPLAY = "MyRolePlay";
 
@@ -58,12 +58,29 @@ function mrpOnEvent(event)
 
 		mrpCurrentTarget = UnitName("target");
 
-		if ((mrpIsPlayerInMRP(mrpCurrentTarget) ~= nil) or (UnitName("target")==UnitName("player"))) then
+		if ((UnitIsPlayer("target")) and ((mrpIsPlayerInMRP(mrpCurrentTarget) ~= nil) or (mrpCurrentTarget==UnitName("player")))) then
 			mrpButtonIconFrame:Show();
 		else
 			mrpButtonIconFrame:Hide();
 		end
 	end
+end
+
+
+function mrpChannelListFilter(self,event,...)
+	local i = GetChannelName("xtensionxtooltip2");
+	if (i and i ~= 0) then
+		if (arg4 == i .. ". xtensionxtooltip2") then
+			return true
+		end
+	end
+	local i = GetChannelName("MyWarcraftCo");
+	if (i and i ~= 0) then
+		if (arg4 == i .. ". MyWarcraftCo") then
+			return true
+		end
+	end
+	return false
 end
 
 --[[ Outfitter
@@ -147,6 +164,9 @@ function mrpInitialize()
 	mrpOptionsPage1Button:SetChecked(true);
 	mrpOptionsPage1Button:Disable();
 
+	if (not MRP_DEBUG) then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL_LIST",mrpChannelListFilter);
+	end
 
 
 	--[[if (Outfitter_RegisterOutfitEvent) then
@@ -173,13 +193,7 @@ end
 
 function mrpListMRPChannel()
 	mtiUnregisterEvent(mtiGetCurEventId());
-	if (MRP_DEBUG) then
-		ListChannelByName("MyWarcraftCo");
-	else
-		DEFAULT_CHAT_FRAME:UnregisterEvent("CHAT_MSG_CHANNEL_LIST");
-		ListChannelByName("MyWarcraftCo");
-		DEFAULT_CHAT_FRAME:RegisterEvent("CHAT_MSG_CHANNEL_LIST");
-	end
+	ListChannelByName("MyWarcraftCo");
 end
 
 function mrpUpdatePlayerListDescription(playerName, descriptionPiece, descriptionVersion)
@@ -484,13 +498,7 @@ function mrpRemoveWaitingForHistory(target)
 end
 
 function mrpGetRSPChannelList()
-	if (MRP_DEBUG) then
-		ListChannelByName("xtensionxtooltip2");
-	else
-		DEFAULT_CHAT_FRAME:UnregisterEvent("CHAT_MSG_CHANNEL_LIST");
-		ListChannelByName("xtensionxtooltip2");
-		DEFAULT_CHAT_FRAME:RegisterEvent("CHAT_MSG_CHANNEL_LIST");
-	end
+	ListChannelByName("xtensionxtooltip2");
 	mtiUnregisterEvent(mrpRSPEventTimer);
 end
 
@@ -1140,21 +1148,23 @@ function mrpViewTargetCharacterSheet()
 	else
 		if (not UnitExists("target")) then
 			mrpDisplayMessage(MRP_LOCALE_CHARACTER_SHEET_NO_TARGET);
+		elseif (not UnitIsPlayer("target")) then
+			mrpDisplayMessage(MRP_LOCALE_CHARACTER_SHEET_NOT_VALID_TARGET);
 		elseif (mrpIsPlayerInMRP(UnitName("target")) == true) then
-			mrpDisplayMessage(MRP_LOCALE_CHARACTER_SHEET_MRP_USER);
+			if MRP_DEBUG then
+				mrpDisplayMessage(MRP_LOCALE_CHARACTER_SHEET_MRP_USER);
+			end
 			mrpCurCharacterSheetTarget = UnitName("target");
 			mrpCharacterSheet1Main:Show();
-
 		elseif (mrpIsPlayerInMRP(UnitName("target")) == false) then
+			if MRP_DEBUG then
+				mrpDisplayMessage(MRP_LOCALE_CHARACTER_SHEET_RSP_USER);
+			end
 			mrpCurCharacterSheetTarget = UnitName("target");
 			mrpCharacterSheet1Main:Show();
-			mrpDisplayMessage(MRP_LOCALE_CHARACTER_SHEET_RSP_USER);
-
 		elseif (UnitName("target") == UnitName("player")) then
 			mrpCurCharacterSheetTarget = UnitName("target");
 			mrpCharacterSheet1Main:Show();
-			mrpDisplayMessage(MRP_LOCALE_CHARACTER_SHEET_MRP_USER);
-
 		else
 			mrpDisplayMessage(MRP_LOCALE_CHARACTER_SHEET_NOT_VALID_TARGET);
 		end
