@@ -165,7 +165,7 @@ function TargetFrame_CheckLevel()
 		-- Color level number
 		end
 		if (UnitCanAttack("player", "target")) then
-			local color = GetDifficultyColor(targetLevel);
+			local color = GetQuestDifficultyColor(targetLevel);
 			TargetLevelText:SetVertexColor(color.r, color.g, color.b);
 		else
 			TargetLevelText:SetVertexColor(1.0, 0.82, 0.0);

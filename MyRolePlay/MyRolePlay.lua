@@ -138,10 +138,10 @@ function mrpInitialize()
 
 	mrpInitializeExtras();
 	--This is a really nasty hack. I am resetting the OnShow and OnHide scripts for the PaperDollFrame from Blizzard (the character sheet) and adding my own stuff to it.
-	getglobal("PaperDollFrame"):SetScript("OnShow", function() PaperDollFrame_OnShow() if (mrpUniversalFrameState == 1) then mrpUniversalFrame:Show() end mrpUniversalFrameToggle:Show() mrpUpdateText() end);
-	getglobal("PaperDollFrame"):SetScript("OnHide", function() PaperDollFrame_OnHide() mrpUniversalFrame:Hide() mrpUniversalFrameToggle:Hide() end);
+	_G["PaperDollFrame"]:SetScript("OnShow", function() PaperDollFrame_OnShow() if (mrpUniversalFrameState == 1) then mrpUniversalFrame:Show() end mrpUniversalFrameToggle:Show() mrpUpdateText() end);
+	_G["PaperDollFrame"]:SetScript("OnHide", function() PaperDollFrame_OnHide() mrpUniversalFrame:Hide() mrpUniversalFrameToggle:Hide() end);
 
-	getglobal("PlayerFrame"):SetScript("OnEnter", function()
+	_G["PlayerFrame"]:SetScript("OnEnter", function()
 		if ( SpellIsTargeting() ) then
 			if ( SpellCanTargetUnit(this.unit) ) then
 				SetCursor("CAST_CURSOR");
@@ -815,7 +815,7 @@ function mrpEditTextPopup(location, field, whatToDoMessage, numLetters)
 	button1 = "OK",
 	button2 = MRP_LOCALE_CANCEL,
 	OnAccept = function()
-		local text = getglobal(this:GetParent():GetName().."EditBox"):GetText();
+		local text = _G[this:GetParent():GetName().."EditBox"]:GetText();
 		RenamePetition(text);
 		if (location ~= "CurProfile" and location ~= "makeNewProfile") then
 			mrpSaveVariable(location, field, text);
@@ -826,7 +826,7 @@ function mrpEditTextPopup(location, field, whatToDoMessage, numLetters)
 		end
 	end,
 	EditBoxOnEnterPressed = function()
-		local text = getglobal(this:GetParent():GetName().."EditBox"):GetText();
+		local text = _G[this:GetParent():GetName().."EditBox"]:GetText();
 		RenamePetition(text);
 		if (location ~= "CurProfile" and location ~= "makeNewProfile") then
 			mrpSaveVariable(location, field, text);
@@ -838,18 +838,18 @@ function mrpEditTextPopup(location, field, whatToDoMessage, numLetters)
 		StaticPopup_Hide("MRP_EDITDIALOG");
 	end,
 	OnShow = function()
-		getglobal(this:GetName().."EditBox"):SetFocus();
+		_G[this:GetName().."EditBox"]:SetFocus();
 		if (location ~= "CurProfile" and location ~= "makeNewProfile") then
-			getglobal(this:GetName().."EditBox"):SetText(mrpGetInfo(location, field, mrpGetCurProfile()));
+			_G[this:GetName().."EditBox"]:SetText(mrpGetInfo(location, field, mrpGetCurProfile()));
 		elseif (location == "CurProfile") then
-			getglobal(this:GetName().."EditBox"):SetText(mrpGetCurProfile());
+			_G[this:GetName().."EditBox"]:SetText(mrpGetCurProfile());
 		end
 	end,
 	OnHide = function()
 		if (ChatFrameEditBox:IsVisible()) then
 			ChatFrameEditBox:SetFocus();
 		end
-		getglobal(this:GetName().."EditBox"):SetText(MRP_EMPTY_STRING);
+		_G[this:GetName().."EditBox"]:SetText(MRP_EMPTY_STRING);
 	end,
 	timeout = 0,
 	exclusive = 0,
@@ -875,7 +875,7 @@ function mrpErrorMessageBox(msg)
 end
 
 function mrpUpdateEditBoxScroller(editBox)
-	local scrollbar = getglobal(editBox:GetParent():GetParent():GetName() .. "ScrollBar");
+	local scrollbar = _G[editBox:GetParent():GetParent():GetName() .. "ScrollBar"];
 
 	editBox:GetParent():GetParent():UpdateScrollChildRect();
 
