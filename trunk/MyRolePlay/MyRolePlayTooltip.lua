@@ -206,7 +206,7 @@ function mrpDisplayTooltip(target, mrpFromWhere)
 								curLine = curLine + 1;
 
 								if (curLine <= numOfLines) then
-									getglobal("GameTooltipTextLeft" .. curLine):SetText(mrpTempString);
+									_G["GameTooltipTextLeft" .. curLine]:SetText(mrpTempString);
 								else
 									GameTooltip:AddLine(mrpTempString);
 								end
@@ -273,7 +273,7 @@ function mrpDisplayTooltip(target, mrpFromWhere)
 								curLine = curLine + 1;
 
 								if (curLine <= numOfLines) then
-									getglobal("GameTooltipTextLeft" .. curLine):SetText(mrpTempString);
+									_G["GameTooltipTextLeft" .. curLine]:SetText(mrpTempString);
 								else
 									GameTooltip:AddLine(mrpTempString);
 								end
@@ -337,7 +337,7 @@ function mrpDisplayTooltip(target, mrpFromWhere)
 							curLine = curLine + 1;
 
 							if (curLine <= numOfLines) then
-								getglobal("GameTooltipTextLeft" .. curLine):SetText(mrpTempString);
+								_G["GameTooltipTextLeft" .. curLine]:SetText(mrpTempString);
 							else
 								GameTooltip:AddLine(mrpTempString);
 							end
@@ -681,17 +681,17 @@ function mrpTooltipEditorOnUpdate()
 	local lineOffset = FauxScrollFrame_GetOffset(mrpTooltipScrollFrame);
 
 	for line = 1, 30 do
-		getglobal("mrpTooltipScrollFrameText" .. line):Hide();
-		getglobal("mrpTooltipScrollFrameText" .. line):ClearAllPoints();
+		_G["mrpTooltipScrollFrameText" .. line]:Hide();
+		_G["mrpTooltipScrollFrameText" .. line]:ClearAllPoints();
 		if (line == 1) then
-			getglobal("mrpTooltipScrollFrameText" .. line):SetPoint("TOPLEFT", "mrpTooltipScrollFrame", "TOPLEFT", 0, 17 * lineOffset);
+			_G["mrpTooltipScrollFrameText" .. line]:SetPoint("TOPLEFT", "mrpTooltipScrollFrame", "TOPLEFT", 0, 17 * lineOffset);
 		else
-			getglobal("mrpTooltipScrollFrameText" .. line):SetPoint("TOPLEFT", getglobal("mrpTooltipScrollFrameText" .. (line - 1)), "BOTTOMLEFT", 0, -2);
+			_G["mrpTooltipScrollFrameText" .. line]:SetPoint("TOPLEFT", _G["mrpTooltipScrollFrameText" .. (line - 1)], "BOTTOMLEFT", 0, -2);
 		end
 	end
 
 	for line = 1, 15 do
-		getglobal("mrpTooltipScrollFrameText" .. (line + lineOffset)):Show();
+		_G["mrpTooltipScrollFrameText" .. (line + lineOffset)]:Show();
 	end
 
 	mrpPrevOffset = lineOffset;
@@ -798,7 +798,7 @@ function mrpTooltipEditorUpdate(orderName)
 
 			lineText = lineText .. lineTextTwo;
 		end
-		getglobal("mrpTooltipScrollFrameText" .. i .. "String"):SetText(lineText);
+		_G["mrpTooltipScrollFrameText" .. i .. "String"]:SetText(lineText);
 	end
 end
 

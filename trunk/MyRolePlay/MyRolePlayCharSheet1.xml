@@ -626,7 +626,7 @@
 				</Anchors>
 				<Scripts>
 					<OnTextChanged>
-						local scrollBar = getglobal(this:GetParent():GetName().."ScrollBar")
+						local scrollBar = _G[this:GetParent():GetName().."ScrollBar"]
 						this:GetParent():UpdateScrollChildRect();
 						local min;
 						local max;
@@ -833,7 +833,7 @@
 				</Anchors>
 				<Scripts>
 					<OnTextChanged>
-						local scrollBar = getglobal(this:GetParent():GetName().."ScrollBar")
+						local scrollBar = _G[this:GetParent():GetName().."ScrollBar"]
 						this:GetParent():UpdateScrollChildRect();
 						local min;
 						local max;
