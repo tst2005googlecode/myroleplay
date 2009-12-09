@@ -130,61 +130,61 @@ function mrpCharacterSheet1UpdateInformation()
 
 end
 
+-- Note, this is a protected function, however, care is taken in the FrameXML code to minimise the bad effects of taint.
 TargetFrame_CheckLevel = NewTargetFrame_CheckLevel;
 
-function TargetFrame_CheckLevel()
-	local targetLevel = UnitLevel("target");
-
-	if ( UnitIsCorpse("target") ) then
-		TargetLevelText:Hide();
-		TargetHighLevelTexture:Show();
+function TargetFrame_CheckLevel (self)
+	local targetLevel = UnitLevel(self.unit);
+	
+	if ( UnitIsCorpse(self.unit) ) then
+		self.levelText:Hide();
+		self.highLevelTexture:Show();
 	elseif ( targetLevel > 0 ) then
 		if (mrpCheckSettings("Tooltip", "relativeLevel") == true) then
-			if ((UnitLevel("target")) == -1) then
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative10hshort);
-			elseif ((UnitLevel("target")) <= (UnitLevel("player") - 7)) then
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative7lshort);
-			elseif ( ((UnitLevel("target")) >= (UnitLevel("player")) - 6) and ((UnitLevel("target")) <= (UnitLevel("player") - 5  ))) then
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative5to6lshort);
-			elseif ( ((UnitLevel("target")) >= (UnitLevel("player")) - 4) and ((UnitLevel("target")) <= (UnitLevel("player") - 2  ))) then
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative2to4lshort);
-			elseif ( ((UnitLevel("target")) >= (UnitLevel("player")) - 1) and ((UnitLevel("target")) <= (UnitLevel("player") + 2  ))) then
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative1to1hshort);
-			elseif ( ((UnitLevel("target")) >= (UnitLevel("player")) + 2) and ((UnitLevel("target")) <= (UnitLevel("player") + 3  ))) then
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative2to3hshort);
-			elseif ( ((UnitLevel("target")) >= (UnitLevel("player")) + 4) and ((UnitLevel("target")) <= (UnitLevel("player") + 6  ))) then
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative4to6hshort);
-			elseif ( ((UnitLevel("target")) >= (UnitLevel("player")) + 7) and ((UnitLevel("target")) <= (UnitLevel("player") + 9  ))) then
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative7to9hshort);
+			if (targetLevel == -1) then
+				self.levelText:SetText(MRP_LOCALE_mrpRelative10hshort);
+			elseif (targetLevel <= (UnitLevel("player") - 7)) then
+				self.levelText:SetText(MRP_LOCALE_mrpRelative7lshort);
+			elseif ( (targetLevel >= (UnitLevel("player")) - 6) and (targetLevel <= (UnitLevel("player") - 5  ))) then
+				self.levelText:SetText(MRP_LOCALE_mrpRelative5to6lshort);
+			elseif ( (targetLevel >= (UnitLevel("player")) - 4) and (targetLevel <= (UnitLevel("player") - 2  ))) then
+				self.levelText:SetText(MRP_LOCALE_mrpRelative2to4lshort);
+			elseif ( (targetLevel >= (UnitLevel("player")) - 1) and (targetLevel <= (UnitLevel("player") + 2  ))) then
+				self.levelText:SetText(MRP_LOCALE_mrpRelative1to1hshort);
+			elseif ( (targetLevel >= (UnitLevel("player")) + 2) and (targetLevel <= (UnitLevel("player") + 3  ))) then
+				self.levelText:SetText(MRP_LOCALE_mrpRelative2to3hshort);
+			elseif ( (targetLevel >= (UnitLevel("player")) + 4) and (targetLevel <= (UnitLevel("player") + 6  ))) then
+				self.levelText:SetText(MRP_LOCALE_mrpRelative4to6hshort);
+			elseif ( (targetLevel >= (UnitLevel("player")) + 7) and (targetLevel <= (UnitLevel("player") + 9  ))) then
+				self.levelText:SetText(MRP_LOCALE_mrpRelative7to9hshort);
 			else
-				TargetLevelText:SetText(MRP_LOCALE_mrpRelative10hshort);
+				self.levelText:SetText(MRP_LOCALE_mrpRelative10hshort);
 			end
-
-		else	-- Normal level target
-		TargetLevelText:SetText(targetLevel);
-		-- Color level number
-		end
-		if (UnitCanAttack("player", "target")) then
-			local color = GetQuestDifficultyColor(targetLevel);
-			TargetLevelText:SetVertexColor(color.r, color.g, color.b);
 		else
-			TargetLevelText:SetVertexColor(1.0, 0.82, 0.0);
+			-- Normal level target
+			self.levelText:SetText(targetLevel);
 		end
-		TargetLevelText:Show();
-		TargetHighLevelTexture:Hide();
+		-- Color level number
+		if ( UnitCanAttack("player", self.unit) ) then
+			local color = GetQuestDifficultyColor(targetLevel);
+			self.levelText:SetVertexColor(color.r, color.g, color.b);
+		else
+			self.levelText:SetVertexColor(1.0, 0.82, 0.0);
+		end
+		self.levelText:Show();
+		self.highLevelTexture:Hide();
 	else
 		-- Target is too high level to tell
-		TargetLevelText:Hide();
-		TargetHighLevelTexture:Show();
+		self.levelText:Hide();
+		self.highLevelTexture:Show();
 	end
-
-
+	
+	-- Let's update the MRP data for the target here. It may be redundant, however this will do.
 	if (UnitName("target") == UnitName("player")) then
-		TargetName:SetText(mrpGetInfo("Identification", "firstname", mrpGetCurProfile()));
+		TargetFrameTextureFrameName:SetText(mrpGetInfo("Identification", "firstname", mrpGetCurProfile()));
 	elseif (mrpIsPlayerInList(UnitName("target") == true)) then
-		TargetName:SetText(mrpGetPlayerListInfo("Identification", "firstname", UnitName("target")));
+		TargetFrameTextureFrameName:SetText(mrpGetPlayerListInfo("Identification", "firstname", UnitName("target")));
 	else
-		TargetName:SetText(UnitName("target"));
+		TargetFrameTextureFrameName:SetText(UnitName("target"));
 	end
 end
-
